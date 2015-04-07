@@ -1,0 +1,77 @@
+﻿
+2015-04-06T00:30:09 1466.531 INF Player connected, clientid=15, entityid=40127, name=Not your average pineapple, steamid=76561197960840911, ip=
+
+2015-04-06T00:55:01 2958.505 INF Player disconnected: ClientID=10, EntityID=9556, PlayerID='76561198079847611', OwnerID='76561198079847611, PlayerName='hakyn'
+
+2015-04-06T01:36:47 5463.737 INF GMSG: Player ✝ agonii ✝ died
+2015-04-06T01:47:50 6127.553 INF GMSG: Player shadowmejister died
+2015-04-06T01:39:38 5634.598 INF GMSG: Player torplex WWR eliminated Player torplex WWR
+
+2015-04-06T01:49:42 6239.390 INF Telnet executed "lp" from: 127.0.0.1:48521
+1. id=61838, SkriLLeX, pos=(-593.7, 66.4, 737.9), rot=(-9.8, -250.3, 0.0), remote=True, health=100, deaths=0, zombies=0, players=0, score=0, steamid=76561197986818762, ip=192.168.0.53, ping=64
+2. id=6866, aifel65, pos=(541.4, 66.3, -388.9), rot=(-7.0, -120.5, 0.0), remote=True, health=52, deaths=8, zombies=86, players=0, score=61, steamid=76561198047659976, ip=192.168.1.99, ping=94
+3. id=6897, Indul^^Saurus, pos=(-385.0, 70.1, -888.2), rot=(-19.7, 208.1, 0.0), remote=True, health=52, deaths=17, zombies=171, players=0, score=86, steamid=76561197991585771, ip=192.168.88.252, ping=52
+4. id=31115, shadowmejister, pos=(-723.9, 68.3, -237.2), rot=(-5.6, 70.3, 0.0), remote=True, health=50, deaths=10, zombies=81, players=0, score=44, steamid=76561198051274865, ip=192.168.1.101, ping=88
+5. id=27869, Jörgen, pos=(142.8, 86.1, 154.8), rot=(-9.8, 229.2, 0.0), remote=True, health=46, deaths=11, zombies=50, players=0, score=5, steamid=76561198082701001, ip=192.168.38.104, ping=83
+6. id=12399, sYtekk, pos=(-90.0, 83.4, -4013.4), rot=(-28.5, -50.4, 0.0), remote=True, health=76, deaths=0, zombies=59, players=0, score=59, steamid=76561197991365893, ip=10.137.61.47, ping=99
+7. id=666, The Dude!, pos=(-591.3, 66.1, -209.6), rot=(-11.3, -331.9, 0.0), remote=True, health=18, deaths=4, zombies=50, players=1, score=30, steamid=76561197972443256, ip=192.168.1.100, ping=85
+8. id=569, ✝ agonii ✝, pos=(-920.0, 64.3, -263.0), rot=(-29.5, 16.9, 0.0), remote=True, health=50, deaths=18, zombies=130, players=2, score=70, steamid=76561197970374084, ip=217.208.139.173, ping=85
+9. id=9556, hakyn, pos=(-386.2, 70.1, -888.5), rot=(-50.6, 146.3, 0.0), remote=True, health=42, deaths=19, zombies=148, players=0, score=62, steamid=76561198079847611, ip=192.168.0.100, ping=83
+10. id=6890, sintaxcz, pos=(851.3, 75.1, -392.5), rot=(-39.9, 267.5, 0.0), remote=True, health=39, deaths=4, zombies=22, players=2, score=7, steamid=76561198025249640, ip=192.168.0.19, ping=84
+11. id=11116, torplex WWR, pos=(-5505.5, 65.0, 1093.6), rot=(4.0, -20.3, 0.0), remote=True, health=72, deaths=3, zombies=100, players=1, score=85, steamid=76561198098108112, ip=192.168.0.103, ping=72
+12. id=51022, DynamitHarry, pos=(137.3, 64.1, 186.1), rot=(-10.4, -132.3, 0.0), remote=True, health=80, deaths=1, zombies=34, players=0, score=29, steamid=76561198081180889, ip=90.225.45.188, ping=125
+Total of 12 in the game
+
+*** Commands ***
+debugmenu dm  => enables/disables the debugmenu 
+shownormals norms  => enables/disables display of normal maps in gBuffer
+showalbedo albedo  => enables/disables display of albedo in gBuffer
+showspecular spec  => enables/disables display of specular values in gBuffer
+creativemenu cm  => enables/disables the creativemenu
+mem   => Prints memory information and calls garbage collector
+sounddebug  => Toggles SoundManager debug output.
+enablescope es  => toggle debug scope
+admin   => admin control, use admin add playername permissionLevel, admin remove playername, admin update playername permissionLevel
+cp   => command permission control, use cp add command permissionLevel, cp remove command, whitelist update playername permissionLevel
+whitelist   => whitelist control, use whitelist add playername permissionLevel, whitelist remove playername, whitelist update playername permissionLevel
+kick   => Kicks user with optional reason. "kick playername reason"
+ban   => Bans user for x timeframe. "ban playername 1 hour" timeframes allowed: minutes, hours, days, weeks, months, years
+say   => Sends a message to all connected clients
+listthreads lt  => lists all threads
+gameover go  => sets the game state to GameOver
+setgamepref sg  => sets a game pref
+shutdown   => shuts down the game
+spawnentity se  => spawns an entity
+settime st  => sets the time
+aiddebug  => Toggles AIDirector debug output.
+spawnairdrop  => Spawns an air drop
+spawnsupplycrate  => Spawns a supply crate where the player is
+shownexthordetime  => Displays the wandering horde time
+saveworld sa  => Saves the world manually.
+buff  => Applies a buff to the local player
+debuff  => Removes a buff from the local player
+starve  => Makes the player starve.
+thirsty  => Makes the player thirsty.
+listents le  => lists all entities
+listplayers lp  => lists all players
+chunkcache cc  => shows all loaded chunks in cache
+showchunkdata sc  => shows some date of the current chunk
+getgamepref gg  => gets a game pref
+gettime gt  => retrieves current ingame time
+give   => give an item to a player (entity id or name)
+kill   => kill a given player (entity id or name)
+listitems li  => lists all items that contain the given substring
+listknownplayers lkp  => lists all players that were ever online (optionally filtered)
+listlandprotection llp  => lists all land protection blocks and owners
+listplayerids lpi  => lists all players with their IDs for ingame commands
+removelandprotection rlp  => removes the association of a land protection block to the owner
+reply re  => send a message to  the player who last sent you a PM
+sayplayer pm  => send a message to a single player
+settimereal str  => set current ingame time, params: <day> <hour> <min>
+showinventory si  => list inventory of a given player (steam id, entity id or name)
+teleportplayer tele  => teleport a player to a given location
+unban   => unban a player
+rendermap rm  => render the current map to a file
+enablerendering   => enable/disable live map rendering
+webstat   => DEBUG PURPOSES ONLY
+version   => get the currently running version of the server fixes and loaded mods
