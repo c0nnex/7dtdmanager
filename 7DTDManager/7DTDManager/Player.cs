@@ -114,7 +114,7 @@ namespace _7DTDManager
             return AddPlayer(name, steamid, entityid) as IPlayer;
         }
 
-        IPlayer IPlayers.FindPlayerByName(string name, bool onlyonline = true)
+        IPlayer IPlayers.FindPlayerByName(string name, bool onlyonline)
         {
             return FindPlayerByName(name) as IPlayer;
         }
