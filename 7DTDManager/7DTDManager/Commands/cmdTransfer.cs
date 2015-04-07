@@ -11,7 +11,7 @@ namespace _7DTDManager.Commands
 {
     public class cmdTransfer : PublicCommandBase
     {
-        static Regex rgTransfer = new Regex("transfer (?<count>[0-9]+) coins to (?<name>.*)");
+        static Regex rgTransfer = new Regex("transfer (?<coins>[0-9]+) coins to (?<name>.*)");
 
         public cmdTransfer()
         {
