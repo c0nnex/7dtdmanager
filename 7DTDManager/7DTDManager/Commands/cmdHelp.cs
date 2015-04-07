@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace _7dtdManager.Commands
+namespace _7DTDManager.Commands
 {
     public class cmdHelp : PublicCommandBase
     {

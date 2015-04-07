@@ -7,12 +7,13 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace _7dtdManager.LineHandlers
+namespace _7DTDManager.LineHandlers
 {
     public class lineListPlayers : IServerLineHandler
     {
         static Logger logger = LogManager.GetCurrentClassLogger();
         static Regex rgLPLine = new Regex("^[0-9]+. id=(?<enityid>[0-9]+), (?<name>.*), pos=\\((?<pos>.*)\\), rot=.*, deaths=(?<deaths>[0-9]+), zombies=(?<zombies>[0-9]+), players=(?<players>[0-9]+), score=.*, steamid=(?<steamid>[0-9]+), ip=.*, ping=(?<ping>[0-9]+)");
+
         public bool ProcessLine(IServerConnection serverConnection, string currentLine)
         {
             if (rgLPLine.IsMatch(currentLine))
@@ -21,8 +22,8 @@ namespace _7dtdManager.LineHandlers
                 GroupCollection groups = match.Groups;
                 if (Convert.ToInt32(groups["zombies"].Value) == 0)
                 {
-                    logger.Warn("LP PARSE ERROR: Zombies = 0");
-                    logger.Warn(currentLine);
+                    // logger.Warn("LP PARSE ERROR: Zombies = 0 ");
+                    // logger.Warn(currentLine);
                 }
                 IPlayer p = serverConnection.allPlayers.AddPlayer(groups["name"].Value, groups["steamid"].Value, groups["enityid"].Value);
                 p.Login();
@@ -33,10 +34,6 @@ namespace _7dtdManager.LineHandlers
             }
             return false;
         }
-
-        bool IServerLineHandler.ProcessLine(IServerConnection serverConnection, string currentLine)
-        {
-            throw new NotImplementedException();
-        }
+        
     }
 }

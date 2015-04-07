@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace _7dtdManager
+namespace _7DTDManager
 {
     [Serializable]
     [XmlRootAttribute("Config", Namespace = "http://fsgs.com/7DTD", IsNullable = false)]
@@ -47,8 +47,8 @@ namespace _7dtdManager
             }
             catch (Exception ex)
             {
-                logger.Info("Problem loading configuration, creating default one");
-                logger.Info(ex.ToString());
+                logger.Warn(ex.Message);
+                logger.Info("Problem loading configuration, creating default one");               
                 Configuration c = new Configuration();
                 c.Save();
                 return null;

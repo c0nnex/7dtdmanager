@@ -1,4 +1,4 @@
-﻿using _7dtdManager.Commands;
+﻿using _7DTDManager.Commands;
 using _7DTDManager.Interfaces;
 using NLog;
 using NLog.Config;
@@ -13,7 +13,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace _7dtdManager
+namespace _7DTDManager
 {
     class Program
     {

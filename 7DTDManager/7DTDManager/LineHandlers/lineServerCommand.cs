@@ -1,4 +1,4 @@
-﻿using _7dtdManager.Commands;
+﻿using _7DTDManager.Commands;
 using _7DTDManager.Interfaces;
 using _7DTDManager.Interfaces.Commands;
 using NLog;
@@ -9,7 +9,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace _7dtdManager.LineHandlers
+namespace _7DTDManager.LineHandlers
 {
     public class lineServerCommand : IServerLineHandler
     {

@@ -7,7 +7,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace _7dtdManager.Commands
+namespace _7DTDManager.Commands
 {
     public class cmdTransfer : PublicCommandBase
     {

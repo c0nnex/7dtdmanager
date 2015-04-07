@@ -6,7 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace _7dtdManager.LineHandlers
+namespace _7DTDManager.LineHandlers
 {
     public class linePlayerLogout : IServerLineHandler
     {

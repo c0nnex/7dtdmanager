@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace _7dtdManager
+namespace _7DTDManager
 {
     [Serializable]
     public class Players : IPlayers 
@@ -206,7 +206,7 @@ namespace _7dtdManager
                 if (span.Minutes > 0)
                 {
                     LastPayday = DateTime.Now;
-                    AddCoins(span.Minutes, "Payday");
+                    AddCoins(span.Minutes * Program.config.CoinsPerMinute, "Payday");
                     Age += span.Minutes;
                 }
             }
@@ -227,7 +227,7 @@ namespace _7dtdManager
                 logger.Info("Update {0}: ZK {1} LZK {2} D {3} LD {4} P {5} LP {6} Ping {7}", Name, ZombieKills, LastZombieKills, Deaths, LastDeaths, PlayerKills, LastPlayerKills, Ping);
                 if (ZombieKills > LastZombieKills)
                 {
-                    AddCoins((ZombieKills - LastZombieKills) * 5, "Zombiekills");
+                    AddCoins((ZombieKills - LastZombieKills) * Program.config.CoinsPerZombiekill, "Zombiekills");
 
                 }
                 LastZombieKills = ZombieKills;

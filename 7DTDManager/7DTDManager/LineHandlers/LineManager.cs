@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace _7dtdManager.Commands
+namespace _7DTDManager.Commands
 {
     public static class LineManager
     {

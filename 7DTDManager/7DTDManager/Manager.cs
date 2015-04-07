@@ -1,5 +1,5 @@
-﻿using _7dtdManager.Commands;
-using _7dtdManager.LineHandlers;
+﻿using _7DTDManager.Commands;
+using _7DTDManager.LineHandlers;
 using _7DTDManager.Interfaces;
 using NLog;
 using PrimS.Telnet;
@@ -13,20 +13,18 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace _7dtdManager
+namespace _7DTDManager
 {
 
     public delegate void ServerLineHandler(string currentLine);
 
     public class Manager : IServerConnection
-    {
-        bool bDebug = false;
+    {       
         static Logger logger = LogManager.GetCurrentClassLogger();
+     
         Client serverConnection = null;
         public Players allPlayers = new Players();
-       
-      
-
+             
         DateTime lastPayday = DateTime.Now;
         DateTime lastLP = DateTime.Now;
 

@@ -7,8 +7,8 @@
     <ProjectGuid>{CF5B72B6-F91B-4FB8-9298-F651A85DCFA6}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>_7dtdManager</RootNamespace>
-    <AssemblyName>7dtdManager</AssemblyName>
+    <RootNamespace>_7DTDManager</RootNamespace>
+    <AssemblyName>7DTDManager</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>
@@ -41,7 +41,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>_7dtdManager.Program</StartupObject>
+    <StartupObject>_7DTDManager.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
@@ -94,6 +94,14 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\..\LICENSE">
+      <Link>LICENSE</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\README.md">
+      <Link>README.md</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="7dtdmanager.snk" />
     <None Include="App.config" />
   </ItemGroup>
@@ -104,11 +112,15 @@
     <Content Include="Assemblies\NLog.xml" />
     <Content Include="Assemblies\PrimS.Telnet.40.dll" />
     <Content Include="Assemblies\PrimS.Telnet.40.xml" />
+    <Content Include="Licences\NLog-2.0-Mono2-License.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Licences\Telnet-2.0.5-PrimS.Telnet.40License.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="TextFile1.txt" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Licences\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\7DTDManager.Interfaces\7DTDManager.Interfaces.csproj">
       <Project>{04212d5d-973b-495a-ba06-6e2347e5fd67}</Project>
