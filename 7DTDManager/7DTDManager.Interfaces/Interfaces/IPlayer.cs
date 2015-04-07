@@ -39,5 +39,6 @@ namespace _7DTDManager.Interfaces
         bool CanExecute(ICommand cmd);
         int GetCoolDown(ICommand cmd);
         void SetCoolDown(ICommand cmd);
+        void ClearCooldowns();
     }
 }

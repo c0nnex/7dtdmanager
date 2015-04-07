@@ -16,13 +16,23 @@ namespace _7DTDManager
         static Logger logger = LogManager.GetCurrentClassLogger();
         public List<Player> players = new List<Player>();
 
-        public Player FindPlayerByName(string name)
+        public Player FindPlayerByName(string name,bool onlyonline = true)
         {
+            // Try exact match
             foreach (var item in players)
             {
-                if (String.Compare(item.Name, name, true) == 0)
+                if ( (String.Compare(item.Name, name, true) == 0) && ( !onlyonline || (item.IsOnline) ) )
                     return item;
             }
+            List<Player> foundPlayers = new List<Player>();
+            foreach (var item in players)
+            {
+                if (item.Name.ToLowerInvariant().Contains(name.ToLowerInvariant()) && (!onlyonline || (item.IsOnline)))
+                    foundPlayers.Add(item);
+            }
+            if (foundPlayers.Count == 1)
+                return foundPlayers[0];
+            // more than one match! Don't return any!
             return null;
         }
 
@@ -104,7 +114,7 @@ namespace _7DTDManager
             return AddPlayer(name, steamid, entityid) as IPlayer;
         }
 
-        IPlayer IPlayers.FindPlayerByName(string name)
+        IPlayer IPlayers.FindPlayerByName(string name, bool onlyonline = true)
         {
             return FindPlayerByName(name) as IPlayer;
         }
@@ -200,7 +210,9 @@ namespace _7DTDManager
                 if (heartbeat.TotalMinutes > 5)
                 {
                     logger.Info("{0} last heartbeath {1} Minutes ago. Setting offline", Name, heartbeat.Minutes);
+                    IsOnline = false;
                     Logout();
+                    return;
                 }
 
                 if (span.Minutes > 0)
@@ -312,6 +324,12 @@ namespace _7DTDManager
         IPosition IPlayer.HomePosition
         {
             get { return HomePosition as IPosition; }
+        }
+
+
+        public void ClearCooldowns()
+        {
+            cmdHistory.Clear();
         }
     }
 

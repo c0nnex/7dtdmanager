@@ -7,7 +7,7 @@ namespace _7DTDManager.Interfaces
         IReadOnlyList<IPlayer> AllPlayers { get; }
 
         IPlayer AddPlayer(string name, string steamid, string entityid);
-        IPlayer FindPlayerByName(string name);
+        IPlayer FindPlayerByName(string name, bool onlyonline = true);
         void Save();
     }
 }

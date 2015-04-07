@@ -82,7 +82,7 @@ namespace _7DTDManager
             catch { }
             for (int i = 19; i >= 0; i--)
             {
-                try { File.Move(Path.Combine(logPath, "7dtdmanager.log." + i.ToString()), Path.Combine(logPath, "spad.log." + (i + 1).ToString())); }
+                try { File.Move(Path.Combine(logPath, "7dtdmanager.log." + i.ToString()), Path.Combine(logPath, "7dtdmanager.log." + (i + 1).ToString())); }
                 catch { }
 
             }

@@ -76,6 +76,7 @@
     <Compile Include="Commands\cmdBuy.cs" />
     <Compile Include="Commands\cmdHelp.cs" />
     <Compile Include="Commands\cmdHome.cs" />
+    <Compile Include="Commands\cmdClearCooldown.cs" />
     <Compile Include="Commands\cmdRecalc.cs" />
     <Compile Include="Commands\cmdSetHome.cs" />
     <Compile Include="Commands\cmdShop.cs" />
