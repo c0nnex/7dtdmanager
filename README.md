@@ -12,4 +12,3 @@ sudo apt-get install mono-complete
 
 .Net Framework 4.0 (or higher) is needed to run 7dtdmanager
 
-
