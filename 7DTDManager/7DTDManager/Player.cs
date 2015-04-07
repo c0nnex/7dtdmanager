@@ -284,7 +284,7 @@ namespace _7DTDManager
         {
             zCoins = 0;
             AddCoins(Age, "Age");
-            AddCoins(ZombieKills * 5, "ZombieKills");
+            AddCoins(ZombieKills * Program.config.CoinsPerZombiekill, "ZombieKills");
             LastZombieKills = ZombieKills;
         }
 
