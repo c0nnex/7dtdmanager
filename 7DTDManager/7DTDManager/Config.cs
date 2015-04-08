@@ -23,6 +23,7 @@ namespace _7DTDManager
 
         public int CoinsPerMinute { get; set; }
         public int CoinsPerZombiekill { get; set; }
+        public int CoinLossPerDeath { get; set; }
 
         public Configuration()
         {
@@ -31,6 +32,7 @@ namespace _7DTDManager
             ServerPassword = "supersecret";
             CoinsPerMinute = 1;
             CoinsPerZombiekill = 5;
+            CoinLossPerDeath = 100;
         }
 
         public static Configuration Load()

@@ -8,5 +8,6 @@ namespace _7DTDManager.Interfaces
 
         int CoinsPerMinute { get; }
         int CoinsPerZombiekill { get; }
+        int CoinLossPerDeath { get; }
     }
 }

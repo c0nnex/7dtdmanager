@@ -29,7 +29,9 @@ namespace _7DTDManager.Commands
 
         public static void Init()
         {
-            allCommands["coins"] = new InfoCommand("You will get 1 coin for 1 minute playtime (not idletime!) and 5 coins per zombie slain.");
+            allCommands["coins"] = new InfoCommand(String.Format("You will get {0} coin(s) per minute playtime (not idletime!) and {1} coin(s) per zombie slain.",Program.config.CoinsPerMinute,Program.config.CoinsPerZombiekill));
+            allCommands["death"] = new InfoCommand(String.Format("You will loose {0} coin(s) if you die (not exterminated by another player!)",Program.config.CoinLossPerDeath));
+
 
             RegisterCommandHandlers(System.Reflection.Assembly.GetExecutingAssembly());
         }
