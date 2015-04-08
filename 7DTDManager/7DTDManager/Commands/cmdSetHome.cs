@@ -26,7 +26,7 @@ namespace _7DTDManager.Commands
                 p.Message("No valid position for you recorded. Wait a little please.");
                 return false;
             }
-            p.UpdateHomePosition(p.CurrentPosition.ToCommandString());
+            p.UpdateHomePosition(p.CurrentPosition);
             p.Message("Homeposition set to {0}", p.HomePosition.ToHumanString());
             return true;
         }

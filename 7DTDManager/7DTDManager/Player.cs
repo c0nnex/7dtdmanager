@@ -254,26 +254,34 @@ namespace _7DTDManager
 
         public void UpdatePosition(string pos)
         {
+           // logger.Debug("UpdatePosition {0}: {1}", Name, pos);
+
             string[] p = pos.Split(new char[] { ',' });
             CurrentPosition = new Position
             {
-                X = (int)Convert.ToDouble(p[0].Trim().ToLowerInvariant()),
-                Y = (int)Convert.ToDouble(p[1].Trim().ToLowerInvariant()),
-                Z = (int)Convert.ToDouble(p[2].Trim().ToLowerInvariant())
+                X = Convert.ToDouble(p[0].Trim().ToLowerInvariant()),
+                Y = Convert.ToDouble(p[1].Trim().ToLowerInvariant()),
+                Z = Convert.ToDouble(p[2].Trim().ToLowerInvariant())
             };
         }
 
         public void UpdateHomePosition(string pos)
         {
+           // logger.Debug("UpdateHomePosition {0}: {1}", Name, pos);
             string[] p = pos.Split(new char[] { ',' });
             HomePosition = new Position
             {
-                X = (int)Convert.ToDouble(p[0].Trim().ToLowerInvariant()),
-                Y = (int)Convert.ToDouble(p[1].Trim().ToLowerInvariant()),
-                Z = (int)Convert.ToDouble(p[2].Trim().ToLowerInvariant())
+                X = Convert.ToDouble(p[0].Trim().ToLowerInvariant()),
+                Y = Convert.ToDouble(p[1].Trim().ToLowerInvariant()),
+                Z = Convert.ToDouble(p[2].Trim().ToLowerInvariant())
             };
         }
 
+        public void UpdateHomePosition(IPosition newHome)
+        {
+            HomePosition = new Position { X = newHome.X, Y = newHome.Y, Z = newHome.Z };
+
+        }
         public virtual bool IsAdmin
         {
             get { return SteamID == "76561198003534614"; }

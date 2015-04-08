@@ -34,6 +34,7 @@ namespace _7DTDManager.Interfaces
         void UpdateStats(int deaths, int zombies, int players, int ping);
         void UpdatePosition(string pos);
         void UpdateHomePosition(string pos);
+        void UpdateHomePosition(IPosition newHome);
         void Message(string msg, params object[] args);
 
         bool CanExecute(ICommand cmd);
