@@ -28,7 +28,7 @@ namespace _7DTDManager.Commands
                 p.Message("Targetplayer '{0}' was not found or is not online.", args[1]);
                 return false;
             }
-            p.ClearCooldowns();
+            target.ClearCooldowns();
             p.Message("You cleared {0}'s cooldowns.",  target.Name);
             target.Message("{0} cleared your cooldowns.", p.Name);
             server.allPlayers.Save();
