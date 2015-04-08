@@ -372,7 +372,7 @@ namespace _7DTDManager
             return ((X != InvalidPosition.X) && (Y != InvalidPosition.Y) && (Z != InvalidPosition.Z));
         }
 
-        public static readonly Position InvalidPosition = new Position { X = Int32.MinValue, Y = Int32.MinValue, Z = Int32.MaxValue };
+        public static readonly Position InvalidPosition = new Position { X = Double.MinValue, Y = Double.MinValue, Z = Double.MinValue };
 
         
 
@@ -392,7 +392,7 @@ namespace _7DTDManager
 
         public string ToCommandString()
         {
-            return String.Format("{0} {1} {2}", X, Y + 1, Z);
+            return String.Format("{0} {1} {2}", X, Y, Z);
         }
 
 
