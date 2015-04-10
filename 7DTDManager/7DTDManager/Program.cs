@@ -1,4 +1,5 @@
 ﻿using _7DTDManager.Commands;
+using _7DTDManager.Config;
 using _7DTDManager.Interfaces;
 using NLog;
 using NLog.Config;
@@ -23,8 +24,8 @@ namespace _7DTDManager
             get { return _ApplicationDirectory ?? (_ApplicationDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)); }
         } private static String _ApplicationDirectory;
 
-        public static Manager server;
-        public static Configuration config;
+        public static Manager Server;
+        public static Configuration Config;
 
         static Player ServerPlayer = new ServerPlayer { Name = "ServerPlayer" };
 
@@ -33,22 +34,22 @@ namespace _7DTDManager
             Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.InvariantCulture;
 
             ConfigureLogging();
-            config = Configuration.Load();
-            if (config == null)
+            Config = Configuration.Load();
+            if (Config == null)
             {
                 Console.WriteLine("Configuration not found. A default-config has been created for you. Please change to your needs and restart the application.");
                 return;
             }
 
-            server = new Manager();
+            Server = new Manager();
 
-            server.Connect();
+            Server.Connect();
             while (1 == 1)
             {
                     string cline = Console.ReadLine();
                     if (cline == "exit")
                     {
-                        server.AllPlayers.Save();
+                        Server.AllPlayers.Save();
                         LogManager.Flush();
                         return;
                     }
@@ -61,7 +62,7 @@ namespace _7DTDManager
                             continue;
                         }
                         ICommand cmd = CommandManager.AllCommands[largs[0]];
-                        bool res = cmd.Execute(server, ServerPlayer, largs);
+                        bool res = cmd.Execute(Server, ServerPlayer, largs);
                     }                
             }
         }

@@ -250,7 +250,7 @@ namespace _7DTDManager
                 if (span.Minutes > 0)
                 {
                     LastPayday = DateTime.Now;
-                    AddCoins(span.Minutes * Program.config.CoinsPerMinute, "Payday");
+                    AddCoins(span.Minutes * Program.Config.CoinsPerMinute, "Payday");
                     Age += span.Minutes;
                     OnChanged();
                 }
@@ -259,7 +259,7 @@ namespace _7DTDManager
 
         public virtual void Message(string p, params object[] args)
         {
-            Program.server.PrivateMessage(this, String.Format(p, args));
+            Program.Server.PrivateMessage(this, String.Format(p, args));
         }
 
         public void UpdateStats(int deaths, int zombies, int players, int ping)
@@ -272,7 +272,7 @@ namespace _7DTDManager
                 logger.Info("Update {0}: ZK {1} LZK {2} D {3} LD {4} P {5} LP {6} Ping {7}", Name, ZombieKills, LastZombieKills, Deaths, LastDeaths, PlayerKills, LastPlayerKills, Ping);
                 if (ZombieKills > LastZombieKills)
                 {
-                    AddCoins((ZombieKills - LastZombieKills) * Program.config.CoinsPerZombiekill, "Zombiekills");
+                    AddCoins((ZombieKills - LastZombieKills) * Program.Config.CoinsPerZombiekill, "Zombiekills");
 
                 }
                 LastZombieKills = ZombieKills;
@@ -330,7 +330,7 @@ namespace _7DTDManager
         {
             zCoins = 0;
             AddCoins(Age, "Age");
-            AddCoins(ZombieKills * Program.config.CoinsPerZombiekill, "ZombieKills");
+            AddCoins(ZombieKills * Program.Config.CoinsPerZombiekill, "ZombieKills");
             LastZombieKills = ZombieKills;
         }
 

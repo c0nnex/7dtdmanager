@@ -78,7 +78,8 @@
     <Compile Include="Commands\cmdShop.cs" />
     <Compile Include="Commands\cmdTransfer.cs" />
     <Compile Include="Commands\cmdWallet.cs" />
-    <Compile Include="Config.cs" />
+    <Compile Include="Config\Config.cs" />
+    <Compile Include="Config\CommandConfigList.cs" />
     <Compile Include="LineHandlers\LineManager.cs" />
     <Compile Include="LineHandlers\lineListPlayers.cs" />
     <Compile Include="Commands\CommandManager.cs" />

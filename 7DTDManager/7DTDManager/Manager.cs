@@ -30,7 +30,7 @@ namespace _7DTDManager
         DateTime lastLP = DateTime.Now;
 
         // Set to true to have nothing send to the server but lp command
-        private bool _Testing = false;
+        private bool _Testing = true;
 
         public Manager()
         {
@@ -47,14 +47,14 @@ namespace _7DTDManager
                 bIsFirst = true;
                 logger.Info("Trying to connect....");
                 IPAddress addr = IPAddress.Loopback;
-                if (!IPAddress.TryParse(Program.config.ServerHost, out addr))
+                if (!IPAddress.TryParse(Program.Config.ServerHost, out addr))
                 {
-                    IPAddress[] addresses = Dns.GetHostAddresses(Program.config.ServerHost);
+                    IPAddress[] addresses = Dns.GetHostAddresses(Program.Config.ServerHost);
                     if (addresses.Length == 0)
                         throw new InvalidOperationException("Host not found");
                     addr = addresses[0];
                 }
-                serverConnection = new EventDrivenTCPClient(addr, Program.config.ServerTelnetPort, true);
+                serverConnection = new EventDrivenTCPClient(addr, Program.Config.ServerTelnetPort, true);
                 serverConnection.DataReceived += serverConnection_DataReceived;
                 serverConnection.ConnectionStatusChanged += serverConnection_ConnectionStatusChanged;
                 serverConnection.Connect();
@@ -84,7 +84,7 @@ namespace _7DTDManager
 
             if (bIsFirst) // First Receive, we assume password. This is lazy i know!
             {
-                serverConnection.WriteLine(Program.config.ServerPassword);
+                serverConnection.WriteLine(Program.Config.ServerPassword);
                 bIsFirst = false;
                 serverConnection.WriteLine("lp");
                 PublicMessage("Extended Servercommands V1.2 online. See /help");

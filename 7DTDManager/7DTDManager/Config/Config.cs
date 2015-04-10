@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace _7DTDManager
+namespace _7DTDManager.Config
 {
     [Serializable]
     [XmlRootAttribute("Config", Namespace = "http://fsgs.com/7DTD", IsNullable = false)]
@@ -28,6 +28,8 @@ namespace _7DTDManager
         [XmlArrayItem(ElementName="SteamID")]
         public List<string> Admins { get; set; }
 
+        public CommandConfigurationList Commands { get; set; }
+
         public Configuration()
         {
             ServerHost = "81.169.234.52";
@@ -36,6 +38,7 @@ namespace _7DTDManager
             CoinsPerMinute = 1;
             CoinsPerZombiekill = 5;
             CoinLossPerDeath = 100;
+            Admins = new List<string> { "76561198003534614" };
         }
 
         public static Configuration Load()
@@ -77,17 +80,5 @@ namespace _7DTDManager
         }
     }
 
-    [Serializable]
-    [XmlRoot(ElementName="Command")]
-    public class CommandConfiguration
-    {
-        [XmlAttribute]
-        public string Name { get; set; }
-        [XmlAttribute]
-        public int Cost { get; set; }
-        [XmlAttribute]
-        public int  CoolDown { get; set; }
-        [XmlAttribute]
-        public bool Enabled { get; set; }
-    }
+   
 }
