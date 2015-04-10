@@ -59,10 +59,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Assemblies\NLog.Extended.dll</HintPath>
     </Reference>
-    <Reference Include="PrimS.Telnet.40, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Assemblies\PrimS.Telnet.40.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -91,7 +87,9 @@
     <Compile Include="LineHandlers\linePlayerLogout.cs" />
     <Compile Include="LineHandlers\lineServerCommand.cs" />
     <Compile Include="Manager.cs" />
+    <Compile Include="Network\EventDrivenTCPClient.cs" />
     <Compile Include="Player.cs" />
+    <Compile Include="Players\CoolDownList.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -115,9 +113,6 @@
     <Content Include="Assemblies\PrimS.Telnet.40.dll" />
     <Content Include="Assemblies\PrimS.Telnet.40.xml" />
     <Content Include="Licences\NLog-2.0-Mono2-License.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Licences\Telnet-2.0.5-PrimS.Telnet.40License.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TextFile1.txt" />

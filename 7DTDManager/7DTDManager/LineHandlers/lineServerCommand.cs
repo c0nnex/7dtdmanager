@@ -26,7 +26,7 @@ namespace _7DTDManager.LineHandlers
                 string[] args = groups["msg"].Value.ToLowerInvariant().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 string name = groups["name"].Value;
 
-                IPlayer p = serverConnection.allPlayers.FindPlayerByName(name);
+                IPlayer p = serverConnection.AllPlayers.FindPlayerByName(name);
                 if (p == null)
                 {
                     logger.Info("Servercommand {0} Player {1} NOT FOUND", msg, name);
@@ -56,7 +56,7 @@ namespace _7DTDManager.LineHandlers
                 }
 
                 bool bCoolDown = false;
-                if (cmd.cmdTimelimit > 0)
+                if (cmd.cmdCoolDown > 0)
                 {
                     if (!p.CanExecute(cmd))
                     {

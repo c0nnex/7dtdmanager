@@ -9,7 +9,7 @@ namespace _7DTDManager.Interfaces.Commands
 {
     public abstract class PublicCommandBase : ICommand
     {
-        public int CommandCost=0, CommandTimeLimit=0;
+        public int CommandCost=0, CommandCoolDown = 0;
         public string CommandHelp="No help available",CommandName = "noname";
         public bool CommandIsInfo = false;
 
@@ -18,9 +18,9 @@ namespace _7DTDManager.Interfaces.Commands
             get { return CommandCost; }
         }
 
-        public int cmdTimelimit
+        public int cmdCoolDown
         {
-            get { return CommandTimeLimit; }
+            get { return CommandCoolDown; }
         }
 
         public string cmdHelp

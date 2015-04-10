@@ -25,6 +25,9 @@ namespace _7DTDManager
         public int CoinsPerZombiekill { get; set; }
         public int CoinLossPerDeath { get; set; }
 
+        [XmlArrayItem(ElementName="SteamID")]
+        public List<string> Admins { get; set; }
+
         public Configuration()
         {
             ServerHost = "81.169.234.52";
@@ -44,7 +47,7 @@ namespace _7DTDManager
                 StreamReader reader = new StreamReader("config.xml");
                 Configuration c = (Configuration)serializer.Deserialize(reader);
                 reader.Close();
-
+                c.Save(); // Make sure updated configs are written to the xml
                 return c;
             }
             catch (Exception ex)
@@ -72,5 +75,19 @@ namespace _7DTDManager
                 logger.Info(ex.ToString());                
             }
         }
+    }
+
+    [Serializable]
+    [XmlRoot(ElementName="Command")]
+    public class CommandConfiguration
+    {
+        [XmlAttribute]
+        public string Name { get; set; }
+        [XmlAttribute]
+        public int Cost { get; set; }
+        [XmlAttribute]
+        public int  CoolDown { get; set; }
+        [XmlAttribute]
+        public bool Enabled { get; set; }
     }
 }

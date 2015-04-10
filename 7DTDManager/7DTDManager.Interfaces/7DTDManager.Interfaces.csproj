@@ -51,7 +51,7 @@
     <Compile Include="BaseClasses\InfoCommandBase.cs" />
     <Compile Include="Interfaces\IConfiguration.cs" />
     <Compile Include="Interfaces\IPlayer.cs" />
-    <Compile Include="Interfaces\IPlayers.cs" />
+    <Compile Include="Interfaces\IPlayersManager.cs" />
     <Compile Include="Interfaces\IPosition.cs" />
     <Compile Include="Interfaces\IServerConnection.cs" />
     <Compile Include="Interfaces\IServerLineHandler.cs" />

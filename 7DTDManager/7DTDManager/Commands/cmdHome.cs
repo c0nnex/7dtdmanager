@@ -16,7 +16,7 @@ namespace _7DTDManager.Commands
         public cmdHome()
         {
             CommandCost = 150;
-            CommandTimeLimit = 60;
+            CommandCoolDown = 60;
             CommandHelp = "Teleports you to your home set with /sethome";
             CommandName = "home";
         }

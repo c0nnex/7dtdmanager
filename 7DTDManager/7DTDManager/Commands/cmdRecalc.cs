@@ -18,11 +18,11 @@ namespace _7DTDManager.Commands
 
         public override bool Execute(IServerConnection server, IPlayer p, params string[] args)
         {
-            foreach (IPlayer p1 in server.allPlayers.AllPlayers)
+            foreach (IPlayer p1 in server.AllPlayers.Players)
             {
                 p1.Recalc();             
             }
-            server.allPlayers.Save();
+            server.AllPlayers.Save();
             if (p != null )
                 p.Message("Coins recalcuclated");
             return true;

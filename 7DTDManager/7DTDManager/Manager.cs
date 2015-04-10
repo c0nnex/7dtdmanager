@@ -2,7 +2,6 @@
 using _7DTDManager.LineHandlers;
 using _7DTDManager.Interfaces;
 using NLog;
-using PrimS.Telnet;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,27 +11,32 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using _7DTDManager.Network;
+using System.Net;
 
 namespace _7DTDManager
 {
 
     public delegate void ServerLineHandler(string currentLine);
 
-    public class Manager : IServerConnection
-    {       
+    public class Manager : IServerConnection,IDisposable
+    {
         static Logger logger = LogManager.GetCurrentClassLogger();
-     
-        Client serverConnection = null;
-        public Players allPlayers = new Players();
-             
+
+        EventDrivenTCPClient serverConnection = null;
+        private PlayersManager allPlayers = new PlayersManager();
+
         DateTime lastPayday = DateTime.Now;
         DateTime lastLP = DateTime.Now;
+
+        // Set to true to have nothing send to the server but lp command
+        private bool _Testing = false;
 
         public Manager()
         {
             LineManager.Init();
             CommandManager.Init();
-            allPlayers = Players.Load();
+            allPlayers = PlayersManager.Load();
            
         }
 
@@ -40,8 +44,22 @@ namespace _7DTDManager
         {
             try
             {
+                bIsFirst = true;
                 logger.Info("Trying to connect....");
-                serverConnection = new Client(Program.config.ServerHost, Program.config.ServerTelnetPort, new System.Threading.CancellationToken());
+                IPAddress addr = IPAddress.Loopback;
+                if (!IPAddress.TryParse(Program.config.ServerHost, out addr))
+                {
+                    IPAddress[] addresses = Dns.GetHostAddresses(Program.config.ServerHost);
+                    if (addresses.Length == 0)
+                        throw new InvalidOperationException("Host not found");
+                    addr = addresses[0];
+                }
+                serverConnection = new EventDrivenTCPClient(addr, Program.config.ServerTelnetPort, true);
+                serverConnection.DataReceived += serverConnection_DataReceived;
+                serverConnection.ConnectionStatusChanged += serverConnection_ConnectionStatusChanged;
+                serverConnection.Connect();
+                if (_Testing)
+                    CommandsDisabled = true;
             }
             catch (Exception ex)
             {
@@ -52,31 +70,27 @@ namespace _7DTDManager
             return serverConnection.IsConnected;
         }
 
-        internal void ConnectToServer()
+        void serverConnection_ConnectionStatusChanged(object sender, ConnectionStatusEventArgs status)
         {
-            bIsFirst = true;
-            serverConnection = null;
-            while (!Connect())
-                Thread.Sleep(10000);
-           
-            logger.Info("Connected");
-            
+            logger.Info("ConnectionStatus: {0}", status.ConnectionStatus.ToString());
         }
 
         bool bIsFirst = true;
         string line;
         Queue<string> linesToProcess = new Queue<string>();
-        internal void Process()
+
+        void serverConnection_DataReceived(object sender, DataReceivedEventArgs e)
         {
-            if ( bIsFirst )
+
+            if (bIsFirst) // First Receive, we assume password. This is lazy i know!
             {
-                string prompt = serverConnection.TerminatedRead("password:");
                 serverConnection.WriteLine(Program.config.ServerPassword);
                 bIsFirst = false;
                 serverConnection.WriteLine("lp");
-                PublicMessage("Extended Servercommands V1.1 online. See /help");
+                PublicMessage("Extended Servercommands V1.2 online. See /help");
             }
-            line += serverConnection.Read();
+            line += Convert.ToString(e.Data);
+
             if (!String.IsNullOrEmpty(line))
             {
                 string[] newLines = line.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
@@ -98,8 +112,10 @@ namespace _7DTDManager
             TimedActions();
         }
 
-        private void TimedActions()
+        // No Timer needed here, because Server will trigger us every x seconds with stats, if someone is online
+        private void TimedActions()        
         {
+            
             TimeSpan span = DateTime.Now - lastPayday;
             if (span.Minutes > 1)
             {
@@ -114,20 +130,19 @@ namespace _7DTDManager
                 {
                     serverConnection.WriteLine("lp");
                 }
-                catch 
+                catch
                 {
                     logger.Info("Server Disconnected... Trying to reconnect");
-                    allPlayers.Save();
-                    ConnectToServer();
+                    allPlayers.Save();                   
                 }
                 lastLP = DateTime.Now;
             }
-            
+
         }
-                                                        
+
         private void ProcessLines()
         {
-            while ( linesToProcess.Count > 0 )
+            while (linesToProcess.Count > 0)
             {
                 string currentLine = linesToProcess.Dequeue();
                 LineManager.ProcessLine(this, currentLine);
@@ -135,21 +150,35 @@ namespace _7DTDManager
             allPlayers.Save();
         }
 
-        public void PrivateMessage(IPlayer p,string msg,params object[] args)
+        public void PrivateMessage(IPlayer p, string msg, params object[] args)
         {
+            if (_Testing)
+            {
+                logger.Debug("Would send to {0}: {1}", p.Name, String.Format(msg, args));
+                return;
+            }
             serverConnection.WriteLine(String.Format("pm {0} {1}", p.EntityID, String.Format(msg, args)));
         }
 
         public void PublicMessage(string msg, params object[] args)
         {
-            serverConnection.WriteLine(String.Format("say "+msg,args));
+            if (_Testing)
+            {
+                logger.Debug("Would send: {0}", String.Format(msg, args));
+                return;
+            }
+            serverConnection.WriteLine(String.Format("say " + msg, args));
         }
 
-        public void Execute(string cmd,params object[] args)
+        public void Execute(string cmd, params object[] args)
         {
+            if (_Testing)
+            {
+                logger.Debug("Execute: {0}", String.Format(cmd, args));
+            }
             serverConnection.WriteLine(String.Format(cmd, args));
         }
-       
+
 
         public bool IsConnected
         {
@@ -162,11 +191,25 @@ namespace _7DTDManager
             set { _CommandsDisabled = value; }
         } private bool _CommandsDisabled;
 
-        IPlayers IServerConnection.allPlayers
+        public IPlayersManager AllPlayers
         {
-            get { return allPlayers as IPlayers; }
+            get { return allPlayers as IPlayersManager; }
         }
 
-        
+
+       protected void Dispose(bool bAll)
+        {
+            if (serverConnection != null)
+            {
+                serverConnection.Dispose();
+                serverConnection = null;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
     }
 }

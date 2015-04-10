@@ -9,7 +9,7 @@ namespace _7DTDManager.Interfaces
     public interface ICommand
     {
         int cmdCost { get;}
-        int cmdTimelimit { get; }
+        int cmdCoolDown { get; }
         string cmdHelp { get;  }
         string cmd { get; }
         bool AdminOnly { get; }

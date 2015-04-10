@@ -1,4 +1,5 @@
 ﻿using _7DTDManager.Interfaces;
+using _7DTDManager.Players;
 using NLog;
 using System;
 using System.Collections.Generic;
@@ -11,27 +12,26 @@ using System.Xml.Serialization;
 namespace _7DTDManager
 {
     [Serializable]
-    public class Players : IPlayers 
+    [XmlRoot(ElementName="Players")]
+    public class PlayersManager : IPlayersManager 
     {
         static Logger logger = LogManager.GetCurrentClassLogger();
         public List<Player> players = new List<Player>();
+        private bool IsDirty = false;
 
         public Player FindPlayerByName(string name,bool onlyonline = true)
         {
             // Try exact match
-            foreach (var item in players)
+            var exactMatch = (from item in players where (String.Compare(item.Name, name, true) == 0) && (!onlyonline || (item.IsOnline)) select item).FirstOrDefault();
+            if (exactMatch != null)
+                return exactMatch;
+
+            var laxMatch = from item in players where (String.Compare(item.Name, name, true) == 0) && (!onlyonline || (item.IsOnline)) select item;
+            if (laxMatch != null)
             {
-                if ( (String.Compare(item.Name, name, true) == 0) && ( !onlyonline || (item.IsOnline) ) )
-                    return item;
+                if (laxMatch.Count() == 1)
+                    return laxMatch.First();
             }
-            List<Player> foundPlayers = new List<Player>();
-            foreach (var item in players)
-            {
-                if (item.Name.ToLowerInvariant().Contains(name.ToLowerInvariant()) && (!onlyonline || (item.IsOnline)))
-                    foundPlayers.Add(item);
-            }
-            if (foundPlayers.Count == 1)
-                return foundPlayers[0];
             // more than one match! Don't return any!
             return null;
         }
@@ -46,9 +46,15 @@ namespace _7DTDManager
                     return item;
                 }
             }
-            Player p = new Player { Name = name, SteamID = steamid, EntityID = entityid, FirstLogin = DateTime.Now };
+            Player p = new Player { Name = name, SteamID = steamid, EntityID = entityid, FirstLogin = DateTime.Now };            
             players.Add(p);
+            p.Changed += Player_Changed;
             return p;
+        }
+
+        void Player_Changed(object sender, EventArgs e)
+        {
+            IsDirty = true;
         }
 
         public void Payday()
@@ -62,34 +68,45 @@ namespace _7DTDManager
 
         public static string ProfilePath { get { return Path.Combine(Program.ApplicationDirectory, "save"); } }
 
-        public static Players Load()
+        public static PlayersManager Load()
         {
             try
             {
                 Directory.CreateDirectory(ProfilePath);
-                XmlSerializer serializer = new XmlSerializer(typeof(Players));
+                XmlSerializer serializer = new XmlSerializer(typeof(PlayersManager));
                 StreamReader reader = new StreamReader(Path.Combine(ProfilePath, "players.xml"));
-                Players p = (Players)serializer.Deserialize(reader);
+                PlayersManager p = (PlayersManager)serializer.Deserialize(reader);
                 reader.Close();
-
+                p.RegisterPlayers();
                 return p;
             }
             catch (Exception ex)
             {
                 logger.Info("Problem loading players");
                 logger.Info(ex.ToString());
-                return new Players();
+                return new PlayersManager();
             }
         }
 
-        public void Save()
+        private void RegisterPlayers()
+        {
+            foreach (var item in players)
+            {
+                item.Changed += Player_Changed;
+            }
+        }
+
+        public void Save(bool force=false)
         {
             try
             {
+                if ( (!IsDirty) && (!force))
+                    return;
+                IsDirty = false;
+                logger.Trace("Saving Players.");
                 Directory.CreateDirectory(ProfilePath);
 
-
-                XmlSerializer serializer = new XmlSerializer(typeof(Players));
+                XmlSerializer serializer = new XmlSerializer(typeof(PlayersManager));
 
                 StreamWriter writer = new StreamWriter(Path.Combine(ProfilePath, "players.xml"));
                 serializer.Serialize(writer, this);
@@ -103,22 +120,24 @@ namespace _7DTDManager
 
         }
 
-
-        public IReadOnlyList<IPlayer> AllPlayers
+        [XmlIgnore]
+        public IReadOnlyList<IPlayer> Players
         {
             get { return players as IReadOnlyList<IPlayer>; }
         }
 
-        IPlayer IPlayers.AddPlayer(string name, string steamid, string entityid)
+        IPlayer IPlayersManager.AddPlayer(string name, string steamid, string entityid)
         {
             return AddPlayer(name, steamid, entityid) as IPlayer;
         }
 
-        IPlayer IPlayers.FindPlayerByName(string name, bool onlyonline)
+        IPlayer IPlayersManager.FindPlayerByName(string name, bool onlyonline)
         {
             return FindPlayerByName(name) as IPlayer;
         }
     }
+
+    public delegate void PlayerChanged(object sender, EventArgs e);
 
     [Serializable]
     public class Player : IPlayer
@@ -152,7 +171,17 @@ namespace _7DTDManager
         [XmlIgnore]
         public bool IsOnline { get; set; }
 
-        public SerializableDictionary<string, int> cmdHistory = new SerializableDictionary<string, int>();
+        public event PlayerChanged Changed;
+
+        private void OnChanged()
+        {
+            PlayerChanged handler = Changed;
+            if (handler != null)
+                handler(this, EventArgs.Empty);
+        }
+
+
+        public CoolDownList CommandCoolDowns = new CoolDownList();
 
         public Player()
         {
@@ -175,6 +204,7 @@ namespace _7DTDManager
             if (zCoins < 0)
                 zCoins = 0;
             logger.Info("{0} coins Change [{3}]: {1} (new {2})", Name, howmany, zCoins, why);
+            OnChanged();
             return zCoins;
         }
 
@@ -190,6 +220,7 @@ namespace _7DTDManager
                 LastPlayerKills = PlayerKills;
                 LastZombieKills = ZombieKills;
                 CurrentPosition = Position.InvalidPosition;
+                OnChanged();
             }
         }
 
@@ -198,6 +229,7 @@ namespace _7DTDManager
             Payday();
             logger.Info("{0} is now offline", Name);
             IsOnline = false;
+            OnChanged();
         }
 
 
@@ -220,6 +252,7 @@ namespace _7DTDManager
                     LastPayday = DateTime.Now;
                     AddCoins(span.Minutes * Program.config.CoinsPerMinute, "Payday");
                     Age += span.Minutes;
+                    OnChanged();
                 }
             }
         }
@@ -250,6 +283,7 @@ namespace _7DTDManager
             }
             LastPlayerKills = PlayerKills;
             Ping = ping;
+            OnChanged();
         }
 
         public void UpdatePosition(string pos)
@@ -263,6 +297,7 @@ namespace _7DTDManager
                 Y = Convert.ToDouble(p[1].Trim().ToLowerInvariant()),
                 Z = Convert.ToDouble(p[2].Trim().ToLowerInvariant())
             };
+            OnChanged();
         }
 
         public void UpdateHomePosition(string pos)
@@ -275,13 +310,16 @@ namespace _7DTDManager
                 Y = Convert.ToDouble(p[1].Trim().ToLowerInvariant()),
                 Z = Convert.ToDouble(p[2].Trim().ToLowerInvariant())
             };
+            OnChanged();
         }
 
         public void UpdateHomePosition(IPosition newHome)
         {
-            HomePosition = new Position { X = newHome.X, Y = newHome.Y, Z = newHome.Z };
+            HomePosition = new Position { X = newHome.X, Y = newHome.Y, Z = newHome.Z };            
 
         }
+
+        [XmlIgnore]
         public virtual bool IsAdmin
         {
             get { return SteamID == "76561198003534614"; }
@@ -305,30 +343,31 @@ namespace _7DTDManager
         {
             int timePassed = -1;
 
-            if (cmd.cmdTimelimit <= 0)
+            if (cmd.cmdCoolDown <= 0)
                 return 0;
 
-            if (cmdHistory.ContainsKey(cmd.cmd))
+            if (CommandCoolDowns.ContainsCommand(cmd.cmd))
             {
-                timePassed = Age - cmdHistory[cmd.cmd];
-                return (timePassed > cmd.cmdTimelimit) ? 0 : cmd.cmdTimelimit - timePassed;
+                timePassed = Age - CommandCoolDowns[cmd.cmd];
+                return (timePassed > cmd.cmdCoolDown) ? 0 : cmd.cmdCoolDown - timePassed;
             }
             return 0;
         }
 
         public void SetCoolDown(ICommand cmd)
         {
-            if (cmd.cmdTimelimit <= 0)
+            if (cmd.cmdCoolDown <= 0)
                 return;
-            cmdHistory[cmd.cmd] = Age;
+            CommandCoolDowns[cmd.cmd] = Age;
         }
 
-
+        [XmlIgnore]
         IPosition IPlayer.CurrentPosition
         {
             get { return CurrentPosition as IPosition; }
         }
 
+        [XmlIgnore]
         IPosition IPlayer.HomePosition
         {
             get { return HomePosition as IPosition; }
@@ -337,7 +376,7 @@ namespace _7DTDManager
 
         public void ClearCooldowns()
         {
-            cmdHistory.Clear();
+            CommandCoolDowns.Clear();
         }
     }
 
@@ -358,7 +397,7 @@ namespace _7DTDManager
     }
 
     [Serializable]
-    public class Position : IPosition
+    public sealed class Position : IPosition
     {
         [XmlAttribute]
         public Double X { get; set; }
@@ -398,7 +437,7 @@ namespace _7DTDManager
 
         IPosition IPosition.InvalidPosition
         {
-            get { return InvalidPosition as IPosition; }
+            get { return Position.InvalidPosition as IPosition; }
         }
 
         IPosition IPosition.Clone()
@@ -407,7 +446,9 @@ namespace _7DTDManager
         }
     }
 
-    [XmlRoot("dictionary")]
+    // Pesty Code Analyzer ;)
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2237:MarkISerializableTypesWithSerializable")]
+    [XmlRoot("dictionary")]    
     public class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, IXmlSerializable
     {
 

@@ -19,7 +19,7 @@ namespace _7DTDManager.LineHandlers
                 Match match = rgPlayerJoin.Match(currentLine);
                 GroupCollection groups = match.Groups;
 
-                IPlayer p = serverConnection.allPlayers.AddPlayer(groups["name"].Value, groups["steamid"].Value, groups["entityid"].Value);
+                IPlayer p = serverConnection.AllPlayers.AddPlayer(groups["name"].Value, groups["steamid"].Value, groups["entityid"].Value);
                 p.Login();
                 serverConnection.Execute("lp");
                 return true;

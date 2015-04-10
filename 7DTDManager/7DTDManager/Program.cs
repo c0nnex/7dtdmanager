@@ -42,16 +42,13 @@ namespace _7DTDManager
 
             server = new Manager();
 
-            server.ConnectToServer();
+            server.Connect();
             while (1 == 1)
             {
-                server.Process();
-                if (Console.KeyAvailable)
-                {
                     string cline = Console.ReadLine();
                     if (cline == "exit")
                     {
-                        server.allPlayers.Save();
+                        server.AllPlayers.Save();
                         LogManager.Flush();
                         return;
                     }
@@ -65,8 +62,7 @@ namespace _7DTDManager
                         }
                         ICommand cmd = CommandManager.AllCommands[largs[0]];
                         bool res = cmd.Execute(server, ServerPlayer, largs);
-                    }
-                }
+                    }                
             }
         }
 
@@ -105,10 +101,14 @@ namespace _7DTDManager
 
                 NLogViewerTarget nlogTarget = new NLogViewerTarget();
                 nlogTarget.Address = "udp://127.0.0.1:9999";
-
-                config.LoggingRules.Add(new LoggingRule("*", LogLevel.Debug, fileTarget));
-                config.LoggingRules.Add(new LoggingRule("*", LogLevel.Debug, new ConsoleTarget()));
-               // config.LoggingRules.Add(new LoggingRule("*", LogLevel.Debug, nlogTarget));
+#if DEBUG
+                config.LoggingRules.Add(new LoggingRule("*", LogLevel.Trace, fileTarget));
+                config.LoggingRules.Add(new LoggingRule("*", LogLevel.Trace, new ConsoleTarget()));
+#else
+                config.LoggingRules.Add(new LoggingRule("*", LogLevel.Info, fileTarget));
+                config.LoggingRules.Add(new LoggingRule("*", LogLevel.Info, new ConsoleTarget()));
+#endif
+                // config.LoggingRules.Add(new LoggingRule("*", LogLevel.Debug, nlogTarget));
                 //config.LoggingRules.Add(new LoggingRule("*", LogLevel.Trace, nlogTarget));
                 LogManager.Configuration = config;
                 bBuiltIn = true;

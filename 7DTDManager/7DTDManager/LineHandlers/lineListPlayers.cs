@@ -25,7 +25,7 @@ namespace _7DTDManager.LineHandlers
                     // logger.Warn("LP PARSE ERROR: Zombies = 0 ");
                     // logger.Warn(currentLine);
                 }
-                IPlayer p = serverConnection.allPlayers.AddPlayer(groups["name"].Value, groups["steamid"].Value, groups["enityid"].Value);
+                IPlayer p = serverConnection.AllPlayers.AddPlayer(groups["name"].Value, groups["steamid"].Value, groups["enityid"].Value);
                 p.Login();
                 p.UpdateStats(Convert.ToInt32(groups["deaths"].Value), Convert.ToInt32(groups["zombies"].Value), Convert.ToInt32(groups["players"].Value), Convert.ToInt32(groups["ping"].Value));
                 p.UpdatePosition(groups["pos"].Value);

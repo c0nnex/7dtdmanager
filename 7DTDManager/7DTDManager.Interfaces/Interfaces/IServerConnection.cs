@@ -9,7 +9,7 @@ namespace _7DTDManager.Interfaces
     public interface IServerConnection
     {
 
-        IPlayers allPlayers { get; }
+        IPlayersManager AllPlayers { get; }
         bool IsConnected { get; }
         bool CommandsDisabled { get; set; }
 

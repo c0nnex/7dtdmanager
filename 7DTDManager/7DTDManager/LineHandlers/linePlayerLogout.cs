@@ -18,7 +18,7 @@ namespace _7DTDManager.LineHandlers
                 Match match = rgPlayerLeave.Match(currentLine);
                 GroupCollection groups = match.Groups;
 
-                IPlayer p = serverConnection.allPlayers.AddPlayer(groups["name"].Value, groups["steamid"].Value, groups["entityid"].Value);
+                IPlayer p = serverConnection.AllPlayers.AddPlayer(groups["name"].Value, groups["steamid"].Value, groups["entityid"].Value);
                 if (p.IsOnline)
                 {                    
                     p.Logout();

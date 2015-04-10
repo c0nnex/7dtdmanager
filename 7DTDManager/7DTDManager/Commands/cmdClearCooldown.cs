@@ -22,7 +22,7 @@ namespace _7DTDManager.Commands
             {
                 return false;
             }
-            IPlayer target = server.allPlayers.FindPlayerByName(args[1]);
+            IPlayer target = server.AllPlayers.FindPlayerByName(args[1]);
             if ((target == null) || (!target.IsOnline))
             {
                 p.Message("Targetplayer '{0}' was not found or is not online.", args[1]);
@@ -31,7 +31,7 @@ namespace _7DTDManager.Commands
             target.ClearCooldowns();
             p.Message("You cleared {0}'s cooldowns.",  target.Name);
             target.Message("{0} cleared your cooldowns.", p.Name);
-            server.allPlayers.Save();
+            server.AllPlayers.Save();
             return true;
         }
     }

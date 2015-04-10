@@ -13,7 +13,7 @@ namespace _7DTDManager.Commands
         public cmdSetHome()
         {
             CommandCost = 60;
-            CommandTimeLimit = 30;
+            CommandCoolDown = 30;
             CommandHelp = "Set the position you will teleport to using /home";
             CommandName = "sethome";
         }

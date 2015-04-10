@@ -18,7 +18,7 @@ namespace _7DTDManager.Commands
             CommandName = "transfer";
             CommandHelp = "Transfer coins to another player. usage: /transfer [howmany] coins to [tragetname]";
             CommandCost = 10;
-            CommandTimeLimit = 10;
+            CommandCoolDown = 10;
         }
         public override bool Execute(IServerConnection server, IPlayer p, params string[] args)
         {
@@ -36,7 +36,7 @@ namespace _7DTDManager.Commands
                     p.Message("usage: /transfer [howmany] coins to [tragetname]");
                     return false;
                 }
-                target = server.allPlayers.FindPlayerByName(groups["name"].Value);
+                target = server.AllPlayers.FindPlayerByName(groups["name"].Value);
                 if ( (target == null) || (!target.IsOnline) )
                 {
                     p.Message("Targetplayer '{0}' was not found or is not online.", groups["name"].Value);

@@ -59,8 +59,8 @@ namespace _7DTDManager.Commands
             p.Message(cmd.cmdHelp);
             if (cmd.cmdCost > 0 ) 
                 p.Message("Cost: {0} coins.", cmd.cmdCost);
-            if (cmd.cmdTimelimit > 0)
-                p.Message("Cooldown: {0} minutes.", cmd.cmdTimelimit);
+            if (cmd.cmdCoolDown > 0)
+                p.Message("Cooldown: {0} minutes.", cmd.cmdCoolDown);
             return true;
         }
        
