@@ -96,6 +96,8 @@
     <Compile Include="LineHandlers\lineServerCommand.cs" />
     <Compile Include="Manager.cs" />
     <Compile Include="Network\EventDrivenTCPClient.cs" />
+    <Compile Include="Objects\Callout.cs" />
+    <Compile Include="Objects\CalloutManager.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Players\CoolDownList.cs" />
     <Compile Include="Program.cs" />
@@ -125,9 +127,7 @@
     </Content>
     <Content Include="TextFile1.txt" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Objects\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\7DTDManager.Interfaces\7DTDManager.Interfaces.csproj">
       <Project>{04212d5d-973b-495a-ba06-6e2347e5fd67}</Project>
