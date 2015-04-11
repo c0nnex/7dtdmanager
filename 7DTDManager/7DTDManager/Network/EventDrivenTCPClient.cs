@@ -387,7 +387,7 @@ namespace _7DTDManager.Network
         private byte[] dataBuffer = new byte[5000];
         private bool _AutoReconnect = false;
         private int _Port = 0;
-        private Encoding _encode = Encoding.Default;
+        private Encoding _encode = Encoding.UTF8;
         object _SyncLock = new object();
         /// <summary>
         /// Syncronizing object for asyncronous operations
