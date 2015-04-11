@@ -10,7 +10,7 @@ namespace _7DTDManager.Interfaces
 
         IPosition Clone();
        
-        bool IsValid();
+        bool IsValid {get;}
         string ToCommandString();
         string ToHumanString();
         string ToString();

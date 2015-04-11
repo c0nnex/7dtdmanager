@@ -21,7 +21,7 @@ namespace _7DTDManager.Commands
 
         public override bool Execute(IServerConnection server, IPlayer p, params string[] args)
         {
-            if (!p.CurrentPosition.IsValid())
+            if (!p.CurrentPosition.IsValid)
             {
                 p.Message("No valid position for you recorded. Wait a little please.");
                 return false;

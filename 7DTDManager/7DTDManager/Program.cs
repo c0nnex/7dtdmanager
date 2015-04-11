@@ -19,6 +19,9 @@ namespace _7DTDManager
     class Program
     {
         static Logger logger = LogManager.GetCurrentClassLogger();
+        public static string VERSION = "V1.3";
+        public static string HELLO = String.Format("This Server runs 7DTDManager Version {0}. See /help for available commands.", VERSION);
+
         public static String ApplicationDirectory
         {
             get { return _ApplicationDirectory ?? (_ApplicationDirectory = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)); }

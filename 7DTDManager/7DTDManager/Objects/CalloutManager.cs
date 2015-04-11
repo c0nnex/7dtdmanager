@@ -9,7 +9,7 @@ namespace _7DTDManager.Objects
 {
     public class CalloutManager
     {
-        static List<Callout> AllCallouts;
+        static List<Callout> AllCallouts = new List<Callout>();
         static DateTime nextCallout = DateTime.MaxValue;
         static DateTime lastCallout = DateTime.Now;
 
@@ -62,7 +62,7 @@ namespace _7DTDManager.Objects
         {
             foreach (var item in AllCallouts)
             {
-                if (item.Target == p)
+                if (item.Who == p)
                     item.SetDone();
             }
             UpdateCallouts();

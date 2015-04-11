@@ -13,6 +13,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using _7DTDManager.Network;
 using System.Net;
+using _7DTDManager.Objects;
 
 namespace _7DTDManager
 {
@@ -115,7 +116,8 @@ namespace _7DTDManager
         // No Timer needed here, because Server will trigger us every x seconds with stats, if someone is online
         private void TimedActions()        
         {
-            
+            if ( CalloutManager.NextCallout <= DateTime.Now)
+                CalloutManager.UpdateCallouts();
             TimeSpan span = DateTime.Now - lastPayday;
             if (span.Minutes > 1)
             {

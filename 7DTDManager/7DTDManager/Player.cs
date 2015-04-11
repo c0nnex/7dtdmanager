@@ -1,4 +1,5 @@
 ﻿using _7DTDManager.Interfaces;
+using _7DTDManager.Objects;
 using _7DTDManager.Players;
 using NLog;
 using System;
@@ -176,6 +177,7 @@ namespace _7DTDManager
         public bool IsOnline { get; set; }
 
         public event PlayerChanged Changed;
+        public event PlayerMovedDelegate PlayerMoved;
 
         private void OnChanged()
         {
@@ -184,6 +186,12 @@ namespace _7DTDManager
                 handler(this, EventArgs.Empty);
         }
 
+        private void OnPlayerMoved(IPosition oldPos,IPosition newPos)
+        {
+            PlayerMovedDelegate handler = PlayerMoved;
+            if (handler != null)
+                handler(this, new PlayerMovementEventArgs { OldPosition = oldPos, NewPosition = newPos });
+        }
 
         public CoolDownList CommandCoolDowns = new CoolDownList();
 
@@ -224,6 +232,8 @@ namespace _7DTDManager
                 LastPlayerKills = PlayerKills;
                 LastZombieKills = ZombieKills;
                 CurrentPosition = Position.InvalidPosition;
+                CalloutManager.RegisterCallout(new Callout(this, CalloutType.Error, Program.Config.MOTD));
+                CalloutManager.RegisterCallout(new Callout(this, new TimeSpan(0, 0, 90), CalloutType.Error, Program.HELLO));
                 OnChanged();
             }
         }
@@ -233,6 +243,7 @@ namespace _7DTDManager
             Payday();
             logger.Info("{0} is now offline", Name);
             IsOnline = false;
+            CalloutManager.UnregisterCalloutsForPlayer(this);
             OnChanged();
         }
 
@@ -296,6 +307,7 @@ namespace _7DTDManager
            // logger.Debug("UpdatePosition {0}: {1}", Name, pos);
 
             string[] p = pos.Split(new char[] { ',' });
+            Position oldPos = CurrentPosition;
             CurrentPosition = new Position
             {
                 X = Convert.ToDouble(p[0].Trim().ToLowerInvariant()),
@@ -303,6 +315,8 @@ namespace _7DTDManager
                 Z = Convert.ToDouble(p[2].Trim().ToLowerInvariant())
             };
             OnChanged();
+            if ( (CurrentPosition != oldPos) && (oldPos.IsValid) && (CurrentPosition.IsValid) )
+                OnPlayerMoved(oldPos, CurrentPosition);
         }
 
         public void UpdateHomePosition(string pos)
@@ -425,6 +439,9 @@ namespace _7DTDManager
             Bounty = 0;
             OnChanged();
         }
+
+
+       
     }
 
     public class ServerPlayer : Player
@@ -444,7 +461,7 @@ namespace _7DTDManager
     }
 
     [Serializable]
-    public sealed class Position : IPosition
+    public sealed class Position : IPosition,IEquatable<Position>
     {
         [XmlAttribute]
         public Double X { get; set; }
@@ -453,9 +470,9 @@ namespace _7DTDManager
         [XmlAttribute]
         public Double Z { get; set; }
 
-        public bool IsValid()
+        public bool IsValid
         {
-            return ((X != InvalidPosition.X) && (Y != InvalidPosition.Y) && (Z != InvalidPosition.Z));
+            get { return ((X != InvalidPosition.X) && (Y != InvalidPosition.Y) && (Z != InvalidPosition.Z)); }
         }
 
         public static readonly Position InvalidPosition = new Position { X = Double.MinValue, Y = Double.MinValue, Z = Double.MinValue };
@@ -490,6 +507,11 @@ namespace _7DTDManager
         IPosition IPosition.Clone()
         {
             return Clone() as IPosition;
+        }
+
+        public bool Equals(Position other)
+        {
+            return ((X == other.X) && (Y == other.Y) && (Z == other.Z));
         }
     }
 

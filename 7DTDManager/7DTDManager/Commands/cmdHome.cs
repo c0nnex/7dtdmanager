@@ -24,7 +24,7 @@ namespace _7DTDManager.Commands
 
         public override bool Execute(IServerConnection server, IPlayer p, params string[] args)
         {
-            if (!p.HomePosition.IsValid())
+            if (!p.HomePosition.IsValid)
             {
                 p.Message("No homeposition for you recorded. set it with /sethome");
                 return false;

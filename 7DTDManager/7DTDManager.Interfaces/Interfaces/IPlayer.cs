@@ -1,6 +1,8 @@
 ﻿using System;
 namespace _7DTDManager.Interfaces
 {
+    public delegate void PlayerMovedDelegate(object sender, PlayerMovementEventArgs e);
+
     public interface IPlayer
     {
         string Name { get; }
@@ -24,7 +26,8 @@ namespace _7DTDManager.Interfaces
         int AdminLevel { get; }
         bool IsOnline { get; }
 
-        
+        event PlayerMovedDelegate PlayerMoved;
+
         IPosition CurrentPosition { get; }
         IPosition HomePosition { get; }
         
@@ -47,7 +50,6 @@ namespace _7DTDManager.Interfaces
         int GetCoolDown(ICommand cmd);
         void SetCoolDown(ICommand cmd);
         void ClearCooldowns();
-
        
         void AddBounty(int howmuch, string why);
         void CollectBounty(int howmuch, string why);
@@ -55,5 +57,12 @@ namespace _7DTDManager.Interfaces
 
 
         void ClearBounty();
+    }
+
+    public class PlayerMovementEventArgs : EventArgs
+    {
+        public IPosition OldPosition;
+        public IPosition NewPosition;
+        //TODO: Movement args
     }
 }

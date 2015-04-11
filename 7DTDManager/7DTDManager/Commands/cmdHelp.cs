@@ -38,7 +38,7 @@ namespace _7DTDManager.Commands
                     foreach (var item in cmds.Keys)
                     {
                         cmd = cmds[item];
-                        if ((cmd.cmdLevel <= p.AdminLevel) || (cmd is InfoCommand))
+                        if ((cmd.cmdLevel > p.AdminLevel) || (cmd is InfoCommand))
                             continue;
                         s += " /" + item + ",";
                     }

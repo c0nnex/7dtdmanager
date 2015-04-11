@@ -27,6 +27,8 @@ namespace _7DTDManager.Config
         public double CoinPercentageOnKill { get; set; }
         public double BountyFactor { get; set; }
 
+        public string MOTD { get; set; }
+
         [XmlArrayItem(ElementName="Admin")]
         public AdminList Admins { get; set; }
 
@@ -42,6 +44,7 @@ namespace _7DTDManager.Config
             CoinLossPerDeath = 100;
             CoinPercentageOnKill = 5.0;
             BountyFactor = 2.0;
+            MOTD = "Place your MOTD here";
         }
 
         public void UpdateDefaults()
@@ -55,7 +58,6 @@ namespace _7DTDManager.Config
         {
             try
             {
-
                 XmlSerializer serializer = new XmlSerializer(typeof(Configuration));
                 StreamReader reader = new StreamReader("config.xml");
                 Configuration c = (Configuration)serializer.Deserialize(reader);
