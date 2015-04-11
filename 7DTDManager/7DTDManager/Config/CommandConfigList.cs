@@ -42,6 +42,14 @@ namespace _7DTDManager.Config
         {
             this[c.Command] = c; // Makes sure we have no duplicates
         }
+
+        public bool IsEnabled(string command)
+        {
+            CommandConfiguration c = this[command.ToLowerInvariant()];
+            if (c == null)
+                return true;
+            return c.Enabled;
+        }
     }
 
     [Serializable]
@@ -67,7 +75,7 @@ namespace _7DTDManager.Config
 
         public CommandConfiguration(ICommand cmd) : this()
         {
-            Command = cmd.cmd;
+            Command = cmd.cmd.ToLowerInvariant();
             Cost = cmd.cmdCost;
             CoolDown = cmd.cmdCoolDown;
             Enabled = true;

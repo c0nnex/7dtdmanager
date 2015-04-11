@@ -16,7 +16,7 @@ namespace _7DTDManager.Commands
         public cmdTransfer()
         {
             CommandName = "transfer";
-            CommandHelp = "Transfer coins to another player. usage: /transfer [howmany] coins to [tragetname]";
+            CommandHelp = "Transfer coins to another player. usage: /transfer [howmany] coins to [targetname]";
             CommandCost = 10;
             CommandCoolDown = 10;
         }
@@ -33,7 +33,7 @@ namespace _7DTDManager.Commands
 
                 if ( !Int32.TryParse(groups["coins"].Value, out howmany))
                 {
-                    p.Message("usage: /transfer [howmany] coins to [tragetname]");
+                    p.Message("usage: /transfer [howmany] coins to [targetname]");
                     return false;
                 }
                 target = server.AllPlayers.FindPlayerByName(groups["name"].Value);
@@ -54,6 +54,7 @@ namespace _7DTDManager.Commands
                 target.Message("{0} transferred {1} coins to your wallet.", p.Name, howmany);
                 return true;
             }
+            p.Message("usage: /transfer [howmany] coins to [targetname]");
             return false;
         }
     }

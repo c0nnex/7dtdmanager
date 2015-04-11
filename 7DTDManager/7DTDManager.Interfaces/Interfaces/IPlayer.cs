@@ -11,6 +11,9 @@ namespace _7DTDManager.Interfaces
         
 
         int zCoins { get; }
+        int Bounty { get; }
+        int BloodCoins { get; }
+        int BountyCollected { get; }
         int Spent { get; }
        
         int ZombieKills { get; }
@@ -32,7 +35,7 @@ namespace _7DTDManager.Interfaces
         void Login();
         void Logout();
         void Recalc();
-        int AddCoins(int howmany, string why = "unknown");
+        int AddCoins(int howmuch, string why = "unknown");
         void UpdateStats(int deaths, int zombies, int players, int ping);
         void UpdatePosition(string pos);
         void UpdateHomePosition(string pos);
@@ -45,6 +48,12 @@ namespace _7DTDManager.Interfaces
         void SetCoolDown(ICommand cmd);
         void ClearCooldowns();
 
-        
+       
+        void AddBounty(int howmuch, string why);
+        void CollectBounty(int howmuch, string why);
+        void AddBloodCoins(int howmuch, string why);
+
+
+        void ClearBounty();
     }
 }

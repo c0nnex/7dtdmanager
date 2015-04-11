@@ -156,6 +156,9 @@ namespace _7DTDManager
         public DateTime LastPayday { get; set; }
 
         public Int32 zCoins { get; set; }
+        public Int32 Bounty { get; set; }
+        public Int32 BountyCollected { get; set; }
+        public Int32 BloodCoins { get; set; }
         public Int32 Age { get; set; }
         public Int32 Spent { get; set; }
         public Position CurrentPosition { get; set; }
@@ -260,7 +263,8 @@ namespace _7DTDManager
 
         public virtual void Message(string p, params object[] args)
         {
-            Program.Server.PrivateMessage(this, String.Format(p, args));
+            if ( IsOnline)
+                Program.Server.PrivateMessage(this, String.Format(p, args));
         }
 
         public void UpdateStats(int deaths, int zombies, int players, int ping)
@@ -270,7 +274,7 @@ namespace _7DTDManager
             if (zombies > 0)
             {
                 ZombieKills = zombies;
-                logger.Info("Update {0}: ZK {1} LZK {2} D {3} LD {4} P {5} LP {6} Ping {7}", Name, ZombieKills, LastZombieKills, Deaths, LastDeaths, PlayerKills, LastPlayerKills, Ping);
+                logger.Debug("Update {0}: ZK {1} LZK {2} D {3} LD {4} P {5} LP {6} Ping {7}", Name, ZombieKills, LastZombieKills, Deaths, LastDeaths, PlayerKills, LastPlayerKills, Ping);
                 if (ZombieKills > LastZombieKills)
                 {
                     AddCoins((ZombieKills - LastZombieKills) * Program.Config.CoinsPerZombiekill, "Zombiekills");
@@ -388,10 +392,39 @@ namespace _7DTDManager
 
         public void Error(string msg, params object[] args)
         {
-            Message("[FF0000]"+msg, args); 
+            Message("[FF0000]"+msg+"[FFFFFF]", args); 
         }
 
-        
+        public void AddBounty(int howmuch, string why)
+        {
+            if (howmuch == 0)
+                return;           
+            Bounty += howmuch;
+            if (Bounty < 0)
+                Bounty = 0;
+            logger.Info("{0} Bounty Change [{3}]: {1} (new {2})", Name, howmuch, Bounty, why);
+            Message("A bounty of {0} coins has been set on your head. Total bounty: {1}", howmuch, Bounty);
+            OnChanged();            
+        }
+
+
+        public void CollectBounty(int howmuch, string why)
+        {
+            BountyCollected += howmuch;
+            AddCoins(howmuch, why);
+        }
+
+        public void AddBloodCoins(int howmuch, string why)
+        {
+            BloodCoins += howmuch;
+            AddCoins(howmuch, why);
+        }
+
+        public void ClearBounty()
+        {
+            Bounty = 0;
+            OnChanged();
+        }
     }
 
     public class ServerPlayer : Player

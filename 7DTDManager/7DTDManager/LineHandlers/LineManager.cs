@@ -24,10 +24,10 @@ namespace _7DTDManager.Commands
 
         public static void Init()
         {
-            RegisterCommandHandlers(System.Reflection.Assembly.GetExecutingAssembly());
+            RegisterLineHandlers(System.Reflection.Assembly.GetExecutingAssembly());
         }
 
-        public static void RegisterCommandHandlers(Assembly x)
+        public static void RegisterLineHandlers(Assembly x)
         {
             foreach (var t in x.GetExportedTypes())
             {
@@ -35,7 +35,7 @@ namespace _7DTDManager.Commands
                 {
                     if (t.IsAbstract)
                         continue;
-                    logger.Info("Loading Command {0} from {1}", t.FullName, x.FullName);
+                    logger.Info("Loading LineHandler {0} from {1}", t.FullName, x.FullName);
                     IServerLineHandler ex = Activator.CreateInstance(t) as IServerLineHandler;
 
                     allHandlers.Add(ex);                    

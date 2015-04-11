@@ -23,17 +23,28 @@ namespace _7DTDManager.Commands
 
             if ( args.Length == 1)
             {
-                string s = "Available commands: ";
+                string s = "Available commands:";
                 foreach (var item in cmds.Keys)
                 {
                     cmd = cmds[item];
-                    if ( (cmd.cmdLevel > p.AdminLevel ) || (cmd is InfoCommand))
+                    if ((cmd.cmdLevel > 0) || (cmd is InfoCommand))
                         continue;
                     s += " /" + item + ",";
                 }
                 p.Message(s);
-
-                s = "Available Help-Information: ";
+                if (p.IsAdmin)
+                {
+                    s = "Admin commands:";
+                    foreach (var item in cmds.Keys)
+                    {
+                        cmd = cmds[item];
+                        if ((cmd.cmdLevel <= p.AdminLevel) || (cmd is InfoCommand))
+                            continue;
+                        s += " /" + item + ",";
+                    }
+                    p.Error(s);
+                }
+                s = "Available Help-Information:";
                 foreach (var item in cmds.Keys)
                 {
                     cmd = cmds[item];

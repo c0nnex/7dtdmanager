@@ -69,6 +69,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\AdminCommands\cmdAddCoins.cs" />
+    <Compile Include="Commands\AdminCommands\cmdClearBounty.cs" />
+    <Compile Include="Commands\cmdSell.cs" />
     <Compile Include="Commands\cmdBuy.cs" />
     <Compile Include="Commands\cmdHelp.cs" />
     <Compile Include="Commands\cmdHome.cs" />
@@ -76,8 +78,10 @@
     <Compile Include="Commands\AdminCommands\cmdRecalc.cs" />
     <Compile Include="Commands\cmdSetHome.cs" />
     <Compile Include="Commands\cmdShop.cs" />
+    <Compile Include="Commands\cmdBounty.cs" />
     <Compile Include="Commands\cmdTransfer.cs" />
     <Compile Include="Commands\cmdVersion.cs" />
+    <Compile Include="Commands\cmdStats.cs" />
     <Compile Include="Commands\cmdWallet.cs" />
     <Compile Include="Config\AdminList.cs" />
     <Compile Include="Config\Config.cs" />
@@ -85,6 +89,7 @@
     <Compile Include="LineHandlers\LineManager.cs" />
     <Compile Include="LineHandlers\lineListPlayers.cs" />
     <Compile Include="Commands\CommandManager.cs" />
+    <Compile Include="LineHandlers\linePlayerKilled.cs" />
     <Compile Include="LineHandlers\linePlayerDeath.cs" />
     <Compile Include="LineHandlers\linePlayerLogin.cs" />
     <Compile Include="LineHandlers\linePlayerLogout.cs" />
@@ -120,7 +125,9 @@
     </Content>
     <Content Include="TextFile1.txt" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Objects\" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\7DTDManager.Interfaces\7DTDManager.Interfaces.csproj">
       <Project>{04212d5d-973b-495a-ba06-6e2347e5fd67}</Project>

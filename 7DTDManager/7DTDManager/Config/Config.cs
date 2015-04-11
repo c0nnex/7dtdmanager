@@ -24,6 +24,8 @@ namespace _7DTDManager.Config
         public int CoinsPerMinute { get; set; }
         public int CoinsPerZombiekill { get; set; }
         public int CoinLossPerDeath { get; set; }
+        public double CoinPercentageOnKill { get; set; }
+        public double BountyFactor { get; set; }
 
         [XmlArrayItem(ElementName="Admin")]
         public AdminList Admins { get; set; }
@@ -38,7 +40,8 @@ namespace _7DTDManager.Config
             CoinsPerMinute = 1;
             CoinsPerZombiekill = 5;
             CoinLossPerDeath = 100;
-            
+            CoinPercentageOnKill = 5.0;
+            BountyFactor = 2.0;
         }
 
         public void UpdateDefaults()

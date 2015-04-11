@@ -87,7 +87,7 @@ namespace _7DTDManager
                 serverConnection.WriteLine(Program.Config.ServerPassword);
                 bIsFirst = false;
                 serverConnection.WriteLine("lp");
-                PublicMessage("Extended Servercommands V1.2 online. See /help");
+                PublicMessage("Extended Servercommands {0} online. See /help for commands", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString());
             }
             line += Convert.ToString(e.Data);
 
