@@ -323,9 +323,14 @@ namespace _7DTDManager
         [XmlIgnore]
         public virtual bool IsAdmin
         {
-            get { return SteamID == "76561198003534614"; }
+            get { return Program.Config.Admins.IsAdmin(SteamID); }
         }
 
+        [XmlIgnore]
+        public int AdminLevel
+        {
+            get { return Program.Config.Admins.AdminLevel(SteamID); }
+        }
 
         public void Recalc()
         {
@@ -379,6 +384,14 @@ namespace _7DTDManager
         {
             CommandCoolDowns.Clear();
         }
+
+
+        public void Error(string msg, params object[] args)
+        {
+            Message("[FF0000]"+msg, args); 
+        }
+
+        
     }
 
     public class ServerPlayer : Player

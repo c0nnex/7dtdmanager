@@ -8,7 +8,7 @@ namespace _7DTDManager.Interfaces.Commands
 {
     public abstract class AdminCommandBase : ICommand
     {
-        public int CommandCost = 0, CommandCoolDown = 0;
+        public int CommandCost = 0, CommandCoolDown = 0, CommandLevel = 1;
         public string CommandHelp = "No help available", CommandName = "noname";
         public bool CommandIsInfo = false;
 
@@ -28,9 +28,9 @@ namespace _7DTDManager.Interfaces.Commands
             get { return CommandHelp; }
         }
         
-        public bool AdminOnly
+        public int cmdLevel
         {
-            get { return true; }
+            get { return CommandLevel; }
         }
 
         public string cmd

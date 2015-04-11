@@ -12,7 +12,7 @@ namespace _7DTDManager.Interfaces
         int cmdCoolDown { get; }
         string cmdHelp { get;  }
         string cmd { get; }
-        bool AdminOnly { get; }
+        int cmdLevel { get; }
         bool InfoOnly { get; }
 
         bool Execute(IServerConnection server, IPlayer p, params string[] args);

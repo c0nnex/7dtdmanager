@@ -28,9 +28,9 @@ namespace _7DTDManager.Interfaces.Commands
             get { return CommandHelp; }
         }
         
-        public bool AdminOnly
+        public int cmdLevel
         {
-            get { return false; }
+            get { return 0; }
         }
 
         public string cmd

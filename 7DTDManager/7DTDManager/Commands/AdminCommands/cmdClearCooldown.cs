@@ -14,6 +14,7 @@ namespace _7DTDManager.Commands
         {
             CommandName = "clearcooldown";
             CommandHelp = "Clear cooldowns of a player.";
+            CommandLevel = 1;
         }
 
         public override bool Execute(IServerConnection server, IPlayer p, params string[] args)

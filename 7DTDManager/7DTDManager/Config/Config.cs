@@ -25,8 +25,8 @@ namespace _7DTDManager.Config
         public int CoinsPerZombiekill { get; set; }
         public int CoinLossPerDeath { get; set; }
 
-        [XmlArrayItem(ElementName="SteamID")]
-        public List<string> Admins { get; set; }
+        [XmlArrayItem(ElementName="Admin")]
+        public AdminList Admins { get; set; }
 
         public CommandConfigurationList Commands { get; set; }
 
@@ -43,8 +43,8 @@ namespace _7DTDManager.Config
 
         public void UpdateDefaults()
         {
-            if ( Admins.Count == 0)
-            Admins = new List<string> { "76561198003534614" };
+            if (Admins.Count == 0)
+                Admins.AddAdmin("76561198003534614", 100);
             Save();
         }
 

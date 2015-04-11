@@ -14,6 +14,7 @@ namespace _7DTDManager.Commands
         {
             CommandName = "recalc";
             CommandHelp = "Recalculate coins";
+            CommandLevel = 100;
         }
 
         public override bool Execute(IServerConnection server, IPlayer p, params string[] args)

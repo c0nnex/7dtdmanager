@@ -15,6 +15,7 @@ namespace _7DTDManager.Commands
         {
             CommandHelp = "Add coins to a player";
             CommandName = "addcoins";
+            CommandLevel = 100;
         }
 
         public override bool Execute(IServerConnection server, IPlayer p, params string[] args)

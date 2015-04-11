@@ -44,7 +44,7 @@ namespace _7DTDManager.LineHandlers
                     return true;
                 }
                 ICommand cmd = CommandManager.AllCommands[args[0]];
-                if (cmd.AdminOnly && !p.IsAdmin)
+                if  (cmd.cmdLevel > p.AdminLevel )
                 {
                     p.Message("Unknown Command");
                     return true;

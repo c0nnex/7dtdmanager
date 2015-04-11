@@ -18,8 +18,10 @@ namespace _7DTDManager.Interfaces
         int PlayerKills { get; }
 
         bool IsAdmin { get; }
+        int AdminLevel { get; }
         bool IsOnline { get; }
 
+        
         IPosition CurrentPosition { get; }
         IPosition HomePosition { get; }
         
@@ -36,10 +38,13 @@ namespace _7DTDManager.Interfaces
         void UpdateHomePosition(string pos);
         void UpdateHomePosition(IPosition newHome);
         void Message(string msg, params object[] args);
+        void Error(string msg, params object[] args);
 
         bool CanExecute(ICommand cmd);
         int GetCoolDown(ICommand cmd);
         void SetCoolDown(ICommand cmd);
         void ClearCooldowns();
+
+        
     }
 }

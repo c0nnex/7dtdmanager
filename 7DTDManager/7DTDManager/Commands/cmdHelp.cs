@@ -27,7 +27,7 @@ namespace _7DTDManager.Commands
                 foreach (var item in cmds.Keys)
                 {
                     cmd = cmds[item];
-                    if ( (cmd.AdminOnly && !p.IsAdmin) || (cmd is InfoCommand))
+                    if ( (cmd.cmdLevel > p.AdminLevel ) || (cmd is InfoCommand))
                         continue;
                     s += " /" + item + ",";
                 }
@@ -37,7 +37,7 @@ namespace _7DTDManager.Commands
                 foreach (var item in cmds.Keys)
                 {
                     cmd = cmds[item];
-                    if ((cmd.AdminOnly && !p.IsAdmin) || !(cmd is InfoCommand))
+                    if ((cmd.cmdLevel > p.AdminLevel ) || !(cmd is InfoCommand))
                         continue;
                     s += " " + item + ",";
                 }
@@ -50,7 +50,7 @@ namespace _7DTDManager.Commands
                 return true;
             }
             cmd = cmds[args[1]];
-            if (cmd.AdminOnly && !p.IsAdmin)
+            if (cmd.cmdLevel > p.AdminLevel)
             {
                 p.Message("No such command '{0}'", args[1]);
                 return true;

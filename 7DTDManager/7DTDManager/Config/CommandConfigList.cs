@@ -57,12 +57,12 @@ namespace _7DTDManager.Config
         [XmlAttribute]
         public bool Enabled { get; set; }
         [XmlAttribute]
-        public bool AdminOnly { get; set; }
+        public int Level { get; set; }
 
         public CommandConfiguration()
         {
             Enabled = false;
-            AdminOnly = false;
+            Level = 0;
         }
 
         public CommandConfiguration(ICommand cmd) : this()
@@ -71,7 +71,7 @@ namespace _7DTDManager.Config
             Cost = cmd.cmdCost;
             CoolDown = cmd.cmdCoolDown;
             Enabled = true;
-            AdminOnly = cmd.AdminOnly;
+            Level = cmd.cmdLevel;
         }
     }
 }
