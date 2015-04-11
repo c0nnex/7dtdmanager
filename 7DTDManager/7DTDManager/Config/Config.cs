@@ -38,7 +38,14 @@ namespace _7DTDManager.Config
             CoinsPerMinute = 1;
             CoinsPerZombiekill = 5;
             CoinLossPerDeath = 100;
+            
+        }
+
+        public void UpdateDefaults()
+        {
+            if ( Admins.Count == 0)
             Admins = new List<string> { "76561198003534614" };
+            Save();
         }
 
         public static Configuration Load()
