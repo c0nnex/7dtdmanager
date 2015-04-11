@@ -20,13 +20,13 @@ namespace _7DTDManager
         private bool IsDirty = false;
 
         public Player FindPlayerByName(string name,bool onlyonline = true)
-        {
+        {            
             // Try exact match
-            var exactMatch = (from item in players where (String.Compare(item.Name, name, true) == 0) && (!onlyonline || (item.IsOnline)) select item).FirstOrDefault();
+            var exactMatch = (from item in players where (String.Compare(item.Name.ToLowerInvariant(), name.ToLowerInvariant(), true) == 0) && (!onlyonline || (item.IsOnline)) select item).FirstOrDefault();
             if (exactMatch != null)
                 return exactMatch;
 
-            var laxMatch = from item in players where (String.Compare(item.Name, name, true) == 0) && (!onlyonline || (item.IsOnline)) select item;
+            var laxMatch = from item in players where (item.Name.ToLowerInvariant().Contains(name.ToLowerInvariant()) && (!onlyonline || (item.IsOnline))) select item;
             if (laxMatch != null)
             {
                 if (laxMatch.Count() == 1)
@@ -43,6 +43,7 @@ namespace _7DTDManager
                 if (item.SteamID == steamid)
                 {
                     item.EntityID = entityid;
+                    item.Name = name; // Update name, maybe he changed it?!
                     return item;
                 }
             }
