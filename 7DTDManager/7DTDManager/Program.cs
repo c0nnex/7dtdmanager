@@ -35,6 +35,7 @@ namespace _7DTDManager
 
             ConfigureLogging();
             Config = Configuration.Load();
+            Config.UpdateDefaults();
             if (Config == null)
             {
                 Console.WriteLine("Configuration not found. A default-config has been created for you. Please change to your needs and restart the application.");
