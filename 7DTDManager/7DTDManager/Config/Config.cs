@@ -26,6 +26,7 @@ namespace _7DTDManager.Config
         public int CoinLossPerDeath { get; set; }
         public double CoinPercentageOnKill { get; set; }
         public double BountyFactor { get; set; }
+        public double MinimumDistanceForPayday { get; set; }
 
         public string MOTD { get; set; }
 
@@ -45,6 +46,7 @@ namespace _7DTDManager.Config
             CoinPercentageOnKill = 5.0;
             BountyFactor = 2.0;
             MOTD = "Place your MOTD here";
+            MinimumDistanceForPayday = 10.0;
         }
 
         public void UpdateDefaults()

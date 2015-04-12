@@ -25,7 +25,7 @@ namespace _7DTDManager.Commands
             }
             server.AllPlayers.Save();
             if (p != null )
-                p.Message("Coins recalcuclated");
+                p.Message("Coins recalculated");
             return true;
         }
     }

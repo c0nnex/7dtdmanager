@@ -120,8 +120,6 @@
     <Content Include="Assemblies\NLog.Extended.dll" />
     <Content Include="Assemblies\NLog.Extended.xml" />
     <Content Include="Assemblies\NLog.xml" />
-    <Content Include="Assemblies\PrimS.Telnet.40.dll" />
-    <Content Include="Assemblies\PrimS.Telnet.40.xml" />
     <Content Include="Licences\NLog-2.0-Mono2-License.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

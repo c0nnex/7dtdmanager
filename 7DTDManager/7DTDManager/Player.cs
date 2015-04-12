@@ -162,8 +162,11 @@ namespace _7DTDManager
         public Int32 BloodCoins { get; set; }
         public Int32 Age { get; set; }
         public Int32 Spent { get; set; }
+        public double DistanceTravelled { get; set; }
         public Position CurrentPosition { get; set; }
         public Position HomePosition { get; set; }
+
+        
 
         public int Deaths { get; set; }
         public int PlayerKills { get; set; }
@@ -172,6 +175,7 @@ namespace _7DTDManager
 
         private int LastDeaths = 0, LastPlayerKills = 0, LastZombieKills = 0;
         private DateTime LastUpdate = DateTime.Now;
+        private Position LastPaydayPosition { get; set; }
 
         [XmlIgnore]
         public bool IsOnline { get; set; }
@@ -203,6 +207,7 @@ namespace _7DTDManager
             Ping = 0;
             CurrentPosition = Position.InvalidPosition;
             HomePosition = Position.InvalidPosition;
+            LastPaydayPosition = Position.InvalidPosition;
             IsOnline = false;
         }
 
@@ -232,7 +237,8 @@ namespace _7DTDManager
                 LastPlayerKills = PlayerKills;
                 LastZombieKills = ZombieKills;
                 CurrentPosition = Position.InvalidPosition;
-                CalloutManager.RegisterCallout(new Callout(this, CalloutType.Error, Program.Config.MOTD));
+                if (!String.IsNullOrEmpty(Program.Config.MOTD))
+                    CalloutManager.RegisterCallout(new Callout(this, CalloutType.Error, Program.Config.MOTD));
                 CalloutManager.RegisterCallout(new Callout(this, new TimeSpan(0, 0, 90), CalloutType.Error, Program.HELLO));
                 OnChanged();
             }
@@ -264,8 +270,22 @@ namespace _7DTDManager
 
                 if (span.Minutes > 0)
                 {
+                    double distance = 0.0;
+
+                    if ( (LastPaydayPosition != Position.InvalidPosition) && (CurrentPosition != Position.InvalidPosition) )
+                    {
+                        distance = CurrentPosition.Distance(LastPaydayPosition);
+                        if ( distance < Program.Config.MinimumDistanceForPayday )
+                        {
+                            logger.Info("{0} NO payday Distance: {1} / {2}", Name, distance, Program.Config.MinimumDistanceForPayday);
+                            LastPaydayPosition = CurrentPosition;
+                            LastPayday = DateTime.Now;
+                            return;
+                        }
+                    }
                     LastPayday = DateTime.Now;
-                    AddCoins(span.Minutes * Program.Config.CoinsPerMinute, "Payday");
+                    LastPaydayPosition = CurrentPosition;
+                    AddCoins(span.Minutes * Program.Config.CoinsPerMinute, String.Format("Payday Dst: {0}",distance));
                     Age += span.Minutes;
                     OnChanged();
                 }
@@ -314,9 +334,13 @@ namespace _7DTDManager
                 Y = Convert.ToDouble(p[1].Trim().ToLowerInvariant()),
                 Z = Convert.ToDouble(p[2].Trim().ToLowerInvariant())
             };
+            
             OnChanged();
-            if ( (CurrentPosition != oldPos) && (oldPos.IsValid) && (CurrentPosition.IsValid) )
+            if ((CurrentPosition != oldPos) && (oldPos.IsValid) && (CurrentPosition.IsValid))
+            {
+                DistanceTravelled += CurrentPosition.Distance(oldPos);
                 OnPlayerMoved(oldPos, CurrentPosition);
+            }
         }
 
         public void UpdateHomePosition(string pos)
@@ -512,6 +536,11 @@ namespace _7DTDManager
         public bool Equals(Position other)
         {
             return ((X == other.X) && (Y == other.Y) && (Z == other.Z));
+        }
+
+        public double Distance(IPosition other)
+        {
+            return Math.Sqrt(((X - other.X) * (X - other.X) + (Z - other.Z) * (Z - other.Z)));
         }
     }
 

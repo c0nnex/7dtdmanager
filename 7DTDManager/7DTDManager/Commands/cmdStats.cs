@@ -21,6 +21,8 @@ namespace _7DTDManager.Commands
             TimeSpan t = new TimeSpan(0, p.Age, 0);
             p.Message("Age: {0} Coins: {1}", String.Format("{0} days {1} hours {2} minutes",t.Days,t.Hours,t.Minutes), p.zCoins);
             p.Message("Bounties collected: {0} coins Bloodmoney collected: {1} coins", p.BountyCollected, p.BloodCoins);
+            if (p.DistanceTravelled > 0)
+                p.Message("You travelled {0} km so far.", (int)(p.DistanceTravelled / 1000.0));
             if (p.Bounty > 0)
                 p.Error("Bounty on your head: {0} coins", p.Bounty);
             return true;

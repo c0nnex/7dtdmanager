@@ -43,6 +43,11 @@ namespace _7DTDManager.LineHandlers
                     p.Message("Commands are currently disabled.");
                     return true;
                 }
+                if ( !Program.Config.Commands.IsEnabled(args[0]))
+                {
+                    p.Message("Command '{0}' is currently disabled.",args[0]);
+                    return true;
+                }
                 ICommand cmd = CommandManager.AllCommands[args[0]];
                 if  (cmd.cmdLevel > p.AdminLevel )
                 {

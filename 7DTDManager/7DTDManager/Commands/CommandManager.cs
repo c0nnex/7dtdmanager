@@ -33,7 +33,7 @@ namespace _7DTDManager.Commands
         {            
             allCommands["coins"] = new InfoCommand(String.Format("You will get {0} coin(s) per minute playtime (not idletime!) and {1} coin(s) per zombie slain.",Program.Config.CoinsPerMinute,Program.Config.CoinsPerZombiekill));
             allCommands["death"] = new InfoCommand(String.Format("You will loose {0} coin(s) if you die (not exterminated by another player!)",Program.Config.CoinLossPerDeath));
-
+            allCommands["bounties"] = new InfoCommand(String.Format("When you eliminate another player a bounty will be set on your head"));
 
             RegisterCommandHandlers(System.Reflection.Assembly.GetExecutingAssembly());
             LoadCommands();
