@@ -31,7 +31,11 @@ namespace _7DTDManager
         DateTime lastLP = DateTime.Now;
 
         // Set to true to have nothing send to the server but lp command
+#if DEBUG
         private bool _Testing = true;
+#else
+        private bool _Testing = false;
+#endif
 
         public Manager()
         {

@@ -18,13 +18,27 @@ namespace _7DTDManager.Commands
 
         public override bool Execute(IServerConnection server, IPlayer p, params string[] args)
         {
-            TimeSpan t = new TimeSpan(0, p.Age, 0);
-            p.Message("Age: {0} Coins: {1}", String.Format("{0} days {1} hours {2} minutes",t.Days,t.Hours,t.Minutes), p.zCoins);
-            p.Message("Bounties collected: {0} coins Bloodmoney collected: {1} coins", p.BountyCollected, p.BloodCoins);
-            if (p.DistanceTravelled > 0)
-                p.Message("You travelled {0} km so far.", (int)(p.DistanceTravelled / 1000.0));
-            if (p.Bounty > 0)
-                p.Error("Bounty on your head: {0} coins", p.Bounty);
+            IPlayer targetPlayer = p;
+            if (p.IsAdmin && (args.Length >= 2))
+            {
+                IPlayer target = server.AllPlayers.FindPlayerByName(args[1],false);
+                if ((target == null))
+                {
+                    p.Message("Targetplayer '{0}' was not found.", args[1]);
+                    return false;
+                }
+                targetPlayer = target;
+            }
+            if (targetPlayer != p)
+                p.Message("Stats for {0}:", targetPlayer.Name);
+
+            TimeSpan t = new TimeSpan(0, targetPlayer.Age, 0);
+            p.Message("Age: {0} Coins: {1}", String.Format("{0} days {1} hours {2} minutes",t.Days,t.Hours,t.Minutes), targetPlayer.zCoins);
+            p.Message("Bounties collected: {0} coins Bloodmoney collected: {1} coins", targetPlayer.BountyCollected, targetPlayer.BloodCoins);
+            if (targetPlayer.DistanceTravelled > 0)
+                p.Message("You travelled {0} km so far.", (int)(targetPlayer.DistanceTravelled / 1000.0));
+            if (targetPlayer.Bounty > 0)
+                p.Error("Bounty on your head: {0} coins", targetPlayer.Bounty);
             return true;
         }
         

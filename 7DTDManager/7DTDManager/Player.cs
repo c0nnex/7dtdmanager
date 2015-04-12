@@ -135,7 +135,7 @@ namespace _7DTDManager
 
         IPlayer IPlayersManager.FindPlayerByName(string name, bool onlyonline)
         {
-            return FindPlayerByName(name) as IPlayer;
+            return FindPlayerByName(name,onlyonline) as IPlayer;
         }
     }
 
