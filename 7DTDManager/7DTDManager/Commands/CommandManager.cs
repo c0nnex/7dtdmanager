@@ -85,10 +85,12 @@ namespace _7DTDManager.Commands
                     ICommand ex = Activator.CreateInstance(t) as ICommand;
 
                     allCommands[ex.cmd] = ex;
-                    if ( !Program.Config.Commands.ContainsCommand(ex.cmd))
+                    if (!Program.Config.Commands.ContainsCommand(ex.cmd))
                     {
                         Program.Config.Commands.Add(new Config.CommandConfiguration(ex));
                     }
+                    else
+                        Program.Config.Commands.UpdateCommand(ex);
                     Program.Config.Save();
                 }
             }

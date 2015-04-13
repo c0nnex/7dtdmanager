@@ -50,6 +50,14 @@ namespace _7DTDManager.Config
                 return true;
             return c.Enabled;
         }
+
+        internal void UpdateCommand(ICommand cmd)
+        {
+            CommandConfiguration config = this[cmd.cmd];
+            cmd.cmdCoolDown = config.CoolDown;
+            cmd.cmdCost = config.Cost;
+            cmd.cmdLevel = config.Level;
+        }
     }
 
     [Serializable]
