@@ -6,44 +6,14 @@ using System.Threading.Tasks;
 
 namespace _7DTDManager.Interfaces.Commands
 {
-    public abstract class AdminCommandBase : ICommand
+    public abstract class AdminCommandBase : PublicCommandBase
     {
-        public int CommandCost = 0, CommandCoolDown = 0, CommandLevel = 1;
-        public string CommandHelp = "No help available", CommandName = "noname";
-        public bool CommandIsInfo = false;
-
-        
-        public int cmdCost
+        public AdminCommandBase()
         {
-            get { return CommandCost; }
+            CommandLevel = 1;
         }
 
-        public int cmdCoolDown
-        {
-            get { return CommandCoolDown; }
-        }
-
-        public string cmdHelp
-        {
-            get { return CommandHelp; }
-        }
-        
-        public int cmdLevel
-        {
-            get { return CommandLevel; }
-        }
-
-        public string cmd
-        {
-            get { return CommandName; }
-        }
-
-        public bool InfoOnly
-        {
-            get { return CommandIsInfo; }
-        }
-
-        public virtual bool Execute(IServerConnection server, IPlayer p, params string[] args) { return false;}
+        public override bool Execute(IServerConnection server, IPlayer p, params string[] args) { return false;}
 
     }
 }

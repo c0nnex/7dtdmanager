@@ -37,14 +37,21 @@ namespace _7DTDManager
             Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.InvariantCulture;
 
             ConfigureLogging();
+           
+
             Config = Configuration.Load();
+                        
             Config.UpdateDefaults();
-            if (Config == null)
+
+            LineManager.Init();
+            CommandManager.Init();
+
+            if (Config.IsNewConfiguration)
             {
+                Config.Save();
                 Console.WriteLine("Configuration not found. A default-config has been created for you. Please change to your needs and restart the application.");
                 return;
             }
-
             Server = new Manager();
 
             Server.Connect();

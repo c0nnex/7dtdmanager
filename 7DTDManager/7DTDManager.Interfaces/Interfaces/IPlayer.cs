@@ -17,7 +17,8 @@ namespace _7DTDManager.Interfaces
         int BloodCoins { get; }
         int BountyCollected { get; }
         int Spent { get; }
-       
+        double DistanceTravelled { get; }
+
         int ZombieKills { get; }
         int Deaths { get; }
         int PlayerKills { get; }

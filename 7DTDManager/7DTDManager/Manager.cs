@@ -38,9 +38,7 @@ namespace _7DTDManager
 #endif
 
         public Manager()
-        {
-            LineManager.Init();
-            CommandManager.Init();
+        {            
             allPlayers = PlayersManager.Load();
            
         }

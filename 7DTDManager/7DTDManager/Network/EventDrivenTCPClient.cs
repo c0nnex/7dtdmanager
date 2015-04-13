@@ -264,6 +264,8 @@ namespace _7DTDManager.Network
             r.EndDisconnect(result);
             if (this.AutoReconnect)
             {
+                this._client = new TcpClient(AddressFamily.InterNetwork);
+                this._client.NoDelay = true; //Disable the nagel algorithm for simplicity
                 Action doConnect = new Action(Connect);
                 doConnect.Invoke();
                 return;
@@ -286,21 +288,25 @@ namespace _7DTDManager.Network
             var sock = result.AsyncState as Socket;
             if (result == null)
                 throw new InvalidOperationException("Invalid IAsyncResult - Could not interpret as a socket object");
-
+            try
+            {
+                sock.EndConnect(result);
+            }
+            catch (SocketException ex)
+            {
+                this.ConnectionState = ConnectionStatus.Error;
+            }
             if (!sock.Connected)
             {
                 if (AutoReconnect)
                 {
+                    tmrConnectTimeout.Stop();
                     System.Threading.Thread.Sleep(ReconnectInterval);
                     Action reconnect = new Action(Connect);
                     reconnect.Invoke();
                     return;
-                }
-                else
-                    return;
-            }
-
-            sock.EndConnect(result);
+                }                
+            }            
 
             var callBack = new Action(cbConnectComplete);
             callBack.Invoke();

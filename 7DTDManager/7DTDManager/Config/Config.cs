@@ -35,6 +35,9 @@ namespace _7DTDManager.Config
 
         public CommandConfigurationList Commands { get; set; }
 
+        [XmlIgnore]
+        public bool IsNewConfiguration = false;
+
         public Configuration()
         {
             ServerHost = "81.169.234.52";
@@ -47,6 +50,8 @@ namespace _7DTDManager.Config
             BountyFactor = 2.0;
             MOTD = "Place your MOTD here";
             MinimumDistanceForPayday = 10.0;
+            Admins = new AdminList();
+            Commands = new CommandConfigurationList();
         }
 
         public void UpdateDefaults()
@@ -71,9 +76,10 @@ namespace _7DTDManager.Config
             {
                 logger.Warn(ex.Message);
                 logger.Info("Problem loading configuration, creating default one");               
-                Configuration c = new Configuration();
+                Configuration c = new Configuration();              
                 c.Save();
-                return null;
+                c.IsNewConfiguration = true;
+                return c;
             }
         }
 
