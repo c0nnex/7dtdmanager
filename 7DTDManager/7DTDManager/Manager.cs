@@ -76,6 +76,8 @@ namespace _7DTDManager
         void serverConnection_ConnectionStatusChanged(object sender, ConnectionStatusEventArgs status)
         {
             logger.Info("ConnectionStatus: {0}", status.ConnectionStatus.ToString());
+            if (status.ConnectionStatus == ConnectionStatus.DisconnectedByHost)
+                bIsFirst = true; // Make Sure login again
         }
 
         bool bIsFirst = true;
