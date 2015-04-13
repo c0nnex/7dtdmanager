@@ -1,144 +1,15 @@
 ﻿using _7DTDManager.Interfaces;
 using _7DTDManager.Objects;
-using _7DTDManager.Players;
 using NLog;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace _7DTDManager
+namespace _7DTDManager.Players
 {
-    [Serializable]
-    [XmlRoot(ElementName="Players")]
-    public class PlayersManager : IPlayersManager 
-    {
-        static Logger logger = LogManager.GetCurrentClassLogger();
-        public List<Player> players = new List<Player>();
-        private bool IsDirty = false;
-
-        public Player FindPlayerByName(string name,bool onlyonline = true)
-        {            
-            // Try exact match
-            var exactMatch = (from item in players where (String.Compare(item.Name.ToLowerInvariant(), name.ToLowerInvariant(), true) == 0) && (!onlyonline || (item.IsOnline)) select item).FirstOrDefault();
-            if (exactMatch != null)
-                return exactMatch;
-
-            var laxMatch = from item in players where (item.Name.ToLowerInvariant().Contains(name.ToLowerInvariant()) && (!onlyonline || (item.IsOnline))) select item;
-            if (laxMatch != null)
-            {
-                if (laxMatch.Count() == 1)
-                    return laxMatch.First();
-            }
-            // more than one match! Don't return any!
-            return null;
-        }
-
-        public Player AddPlayer(string name, string steamid, string entityid)
-        {
-            foreach (var item in players)
-            {
-                if (item.SteamID == steamid)
-                {
-                    item.EntityID = entityid;
-                    item.Name = name; // Update name, maybe he changed it?!
-                    return item;
-                }
-            }
-            Player p = new Player { Name = name, SteamID = steamid, EntityID = entityid, FirstLogin = DateTime.Now };            
-            players.Add(p);
-            p.Changed += Player_Changed;
-            return p;
-        }
-
-        void Player_Changed(object sender, EventArgs e)
-        {
-            IsDirty = true;
-        }
-
-        public void Payday()
-        {
-            foreach (var item in players)
-            {
-                if (item.IsOnline)
-                    item.Payday();
-            }
-        }
-
-        public static string ProfilePath { get { return Path.Combine(Program.ApplicationDirectory, "save"); } }
-
-        public static PlayersManager Load()
-        {
-            try
-            {
-                Directory.CreateDirectory(ProfilePath);
-                XmlSerializer serializer = new XmlSerializer(typeof(PlayersManager));
-                StreamReader reader = new StreamReader(Path.Combine(ProfilePath, "players.xml"));
-                PlayersManager p = (PlayersManager)serializer.Deserialize(reader);
-                reader.Close();
-                p.RegisterPlayers();
-                return p;
-            }
-            catch (Exception ex)
-            {
-                logger.Info("Problem loading players");
-                logger.Info(ex.ToString());
-                return new PlayersManager();
-            }
-        }
-
-        private void RegisterPlayers()
-        {
-            foreach (var item in players)
-            {
-                item.Changed += Player_Changed;
-            }
-        }
-
-        public void Save(bool force=false)
-        {
-            try
-            {
-                if ( (!IsDirty) && (!force))
-                    return;
-                IsDirty = false;
-                logger.Trace("Saving Players.");
-                Directory.CreateDirectory(ProfilePath);
-
-                XmlSerializer serializer = new XmlSerializer(typeof(PlayersManager));
-
-                StreamWriter writer = new StreamWriter(Path.Combine(ProfilePath, "players.xml"));
-                serializer.Serialize(writer, this);
-                writer.Close();
-            }
-            catch (Exception ex)
-            {
-                logger.Info("Problem saving players");
-                logger.Info(ex.ToString());
-            }
-
-        }
-
-        [XmlIgnore]
-        public IReadOnlyList<IPlayer> Players
-        {
-            get { return players as IReadOnlyList<IPlayer>; }
-        }
-
-        IPlayer IPlayersManager.AddPlayer(string name, string steamid, string entityid)
-        {
-            return AddPlayer(name, steamid, entityid) as IPlayer;
-        }
-
-        IPlayer IPlayersManager.FindPlayerByName(string name, bool onlyonline)
-        {
-            return FindPlayerByName(name,onlyonline) as IPlayer;
-        }
-    }
-
     public delegate void PlayerChanged(object sender, EventArgs e);
 
     [Serializable]
@@ -166,7 +37,7 @@ namespace _7DTDManager
         public Position CurrentPosition { get; set; }
         public Position HomePosition { get; set; }
 
-        
+
 
         public int Deaths { get; set; }
         public int PlayerKills { get; set; }
@@ -190,7 +61,7 @@ namespace _7DTDManager
                 handler(this, EventArgs.Empty);
         }
 
-        private void OnPlayerMoved(IPosition oldPos,IPosition newPos)
+        private void OnPlayerMoved(IPosition oldPos, IPosition newPos)
         {
             PlayerMovedDelegate handler = PlayerMoved;
             if (handler != null)
@@ -272,10 +143,10 @@ namespace _7DTDManager
                 {
                     double distance = 0.0;
 
-                    if ( (LastPaydayPosition != Position.InvalidPosition) && (CurrentPosition != Position.InvalidPosition) )
+                    if ((LastPaydayPosition != Position.InvalidPosition) && (CurrentPosition != Position.InvalidPosition))
                     {
                         distance = CurrentPosition.Distance(LastPaydayPosition);
-                        if ( distance < Program.Config.MinimumDistanceForPayday )
+                        if (distance < Program.Config.MinimumDistanceForPayday)
                         {
                             logger.Info("{0} NO payday Distance: {1} / {2}", Name, distance, Program.Config.MinimumDistanceForPayday);
                             LastPaydayPosition = CurrentPosition;
@@ -285,7 +156,7 @@ namespace _7DTDManager
                     }
                     LastPayday = DateTime.Now;
                     LastPaydayPosition = CurrentPosition;
-                    AddCoins(span.Minutes * Program.Config.CoinsPerMinute, String.Format("Payday Dst: {0}",distance));
+                    AddCoins(span.Minutes * Program.Config.CoinsPerMinute, String.Format("Payday Dst: {0}", distance));
                     Age += span.Minutes;
                     OnChanged();
                 }
@@ -294,7 +165,7 @@ namespace _7DTDManager
 
         public virtual void Message(string p, params object[] args)
         {
-            if ( IsOnline)
+            if (IsOnline)
                 Program.Server.PrivateMessage(this, String.Format(p, args));
         }
 
@@ -324,7 +195,7 @@ namespace _7DTDManager
 
         public void UpdatePosition(string pos)
         {
-           // logger.Debug("UpdatePosition {0}: {1}", Name, pos);
+            // logger.Debug("UpdatePosition {0}: {1}", Name, pos);
 
             string[] p = pos.Split(new char[] { ',' });
             Position oldPos = CurrentPosition;
@@ -334,7 +205,7 @@ namespace _7DTDManager
                 Y = Convert.ToDouble(p[1].Trim().ToLowerInvariant()),
                 Z = Convert.ToDouble(p[2].Trim().ToLowerInvariant())
             };
-            
+
             OnChanged();
             if ((CurrentPosition != oldPos) && (oldPos.IsValid) && (CurrentPosition.IsValid))
             {
@@ -345,7 +216,7 @@ namespace _7DTDManager
 
         public void UpdateHomePosition(string pos)
         {
-           // logger.Debug("UpdateHomePosition {0}: {1}", Name, pos);
+            // logger.Debug("UpdateHomePosition {0}: {1}", Name, pos);
             string[] p = pos.Split(new char[] { ',' });
             HomePosition = new Position
             {
@@ -358,7 +229,7 @@ namespace _7DTDManager
 
         public void UpdateHomePosition(IPosition newHome)
         {
-            HomePosition = new Position { X = newHome.X, Y = newHome.Y, Z = newHome.Z };            
+            HomePosition = new Position { X = newHome.X, Y = newHome.Y, Z = newHome.Z };
 
         }
 
@@ -430,19 +301,19 @@ namespace _7DTDManager
 
         public void Error(string msg, params object[] args)
         {
-            Message("[FF0000]"+msg+"[FFFFFF]", args); 
+            Message("[FF0000]" + msg + "[FFFFFF]", args);
         }
 
         public void AddBounty(int howmuch, string why)
         {
             if (howmuch == 0)
-                return;           
+                return;
             Bounty += howmuch;
             if (Bounty < 0)
                 Bounty = 0;
             logger.Info("{0} Bounty Change [{3}]: {1} (new {2})", Name, howmuch, Bounty, why);
             Message("A bounty of {0} coins has been set on your head. Total bounty: {1}", howmuch, Bounty);
-            OnChanged();            
+            OnChanged();
         }
 
 
@@ -465,203 +336,6 @@ namespace _7DTDManager
         }
 
 
-       
-    }
-
-    public class ServerPlayer : Player
-    {
-        public override void Message(string p, params object[] args)
-        {
-            Console.WriteLine(String.Format(p, args));
-        }
-
-        public override bool IsAdmin
-        {
-            get
-            {
-                return true;
-            }
-        }
-    }
-
-    [Serializable]
-    public sealed class Position : IPosition,IEquatable<Position>
-    {
-        [XmlAttribute]
-        public Double X { get; set; }
-        [XmlAttribute]
-        public Double Y { get; set; }
-        [XmlAttribute]
-        public Double Z { get; set; }
-
-        public bool IsValid
-        {
-            get { return ((X != InvalidPosition.X) && (Y != InvalidPosition.Y) && (Z != InvalidPosition.Z)); }
-        }
-
-        public static readonly Position InvalidPosition = new Position { X = Double.MinValue, Y = Double.MinValue, Z = Double.MinValue };
-
-        
-
-        public Position Clone()
-        {
-            return new Position { X = this.X, Y = this.Y, Z = this.Z };
-        }
-
-        public override string ToString()
-        {
-            return String.Format("({0}, {1}, {2})", X, Y, Z);
-        }
-        public string ToHumanString()
-        {
-            return String.Format("{0}{1}, {2}{3}", Math.Abs(Z), Z < 0 ? "S" : "N", Math.Abs(X), X < 0 ? "W" : "E");
-        }
-
-        public string ToCommandString()
-        {
-            return String.Format("{0} {1} {2}", X, Y, Z);
-        }
-
-
-        IPosition IPosition.InvalidPosition
-        {
-            get { return Position.InvalidPosition as IPosition; }
-        }
-
-        IPosition IPosition.Clone()
-        {
-            return Clone() as IPosition;
-        }
-
-        public bool Equals(Position other)
-        {
-            return ((X == other.X) && (Y == other.Y) && (Z == other.Z));
-        }
-
-        public double Distance(IPosition other)
-        {
-            return Math.Sqrt(((X - other.X) * (X - other.X) + (Z - other.Z) * (Z - other.Z)));
-        }
-    }
-
-    // Pesty Code Analyzer ;)
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2237:MarkISerializableTypesWithSerializable")]
-    [XmlRoot("dictionary")]    
-    public class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, IXmlSerializable
-    {
-
-        #region IXmlSerializable Members
-
-        public System.Xml.Schema.XmlSchema GetSchema()
-        {
-
-            return null;
-
-        }
-
-
-
-        public void ReadXml(System.Xml.XmlReader reader)
-        {
-
-            XmlSerializer keySerializer = new XmlSerializer(typeof(TKey));
-
-            XmlSerializer valueSerializer = new XmlSerializer(typeof(TValue));
-
-
-
-            bool wasEmpty = reader.IsEmptyElement;
-
-            reader.Read();
-
-
-
-            if (wasEmpty)
-
-                return;
-
-
-
-            while (reader.NodeType != System.Xml.XmlNodeType.EndElement)
-            {
-
-                reader.ReadStartElement("item");
-
-
-
-                reader.ReadStartElement("key");
-
-                TKey key = (TKey)keySerializer.Deserialize(reader);
-
-                reader.ReadEndElement();
-
-
-
-                reader.ReadStartElement("value");
-
-                TValue value = (TValue)valueSerializer.Deserialize(reader);
-
-                reader.ReadEndElement();
-
-
-
-                this.Add(key, value);
-
-
-
-                reader.ReadEndElement();
-
-                reader.MoveToContent();
-
-            }
-
-            reader.ReadEndElement();
-
-        }
-
-
-
-        public void WriteXml(System.Xml.XmlWriter writer)
-        {
-
-            XmlSerializer keySerializer = new XmlSerializer(typeof(TKey));
-
-            XmlSerializer valueSerializer = new XmlSerializer(typeof(TValue));
-
-
-
-            foreach (TKey key in this.Keys)
-            {
-
-                writer.WriteStartElement("item");
-
-
-
-                writer.WriteStartElement("key");
-
-                keySerializer.Serialize(writer, key);
-
-                writer.WriteEndElement();
-
-
-
-                writer.WriteStartElement("value");
-
-                TValue value = this[key];
-
-                valueSerializer.Serialize(writer, value);
-
-                writer.WriteEndElement();
-
-
-
-                writer.WriteEndElement();
-
-            }
-
-        }
-
-        #endregion
 
     }
 }

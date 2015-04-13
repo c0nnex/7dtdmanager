@@ -1,6 +1,7 @@
 ﻿using _7DTDManager.Commands;
 using _7DTDManager.Config;
 using _7DTDManager.Interfaces;
+using _7DTDManager.Players;
 using NLog;
 using NLog.Config;
 using NLog.Targets;
@@ -19,7 +20,7 @@ namespace _7DTDManager
     class Program
     {
         static Logger logger = LogManager.GetCurrentClassLogger();
-        public static string VERSION = "V1.3";
+        public static string VERSION = "V1.4";
         public static string HELLO = String.Format("This Server runs 7DTDManager Version {0}. See /help for available commands.", VERSION);
 
         public static String ApplicationDirectory
@@ -30,7 +31,7 @@ namespace _7DTDManager
         public static Manager Server;
         public static Configuration Config;
 
-        static Player ServerPlayer = new ServerPlayer { Name = "ServerPlayer" };
+        static IPlayer ServerPlayer = new ServerPlayer { Name = "ServerPlayer" };
 
         static void Main(string[] args)
         {

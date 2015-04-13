@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using _7DTDManager.Network;
 using System.Net;
 using _7DTDManager.Objects;
+using _7DTDManager.Players;
 
 namespace _7DTDManager
 {
