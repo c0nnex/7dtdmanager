@@ -99,15 +99,23 @@
     <Compile Include="LineHandlers\lineServerCommand.cs" />
     <Compile Include="Manager.cs" />
     <Compile Include="Network\EventDrivenTCPClient.cs" />
+    <Compile Include="Objects\AreaDefiniton.cs" />
+    <Compile Include="Objects\AreaProtection.cs" />
     <Compile Include="Objects\Callout.cs" />
     <Compile Include="Objects\CalloutManager.cs" />
     <Compile Include="Objects\Position.cs" />
+    <Compile Include="Objects\PositionManager.cs" />
+    <Compile Include="Objects\SkillDefinition.cs" />
     <Compile Include="Players\CoolDownList.cs" />
     <Compile Include="Players\Player.cs" />
     <Compile Include="Players\PlayersManager.cs" />
     <Compile Include="Players\ServerPlayer.cs" />
+    <Compile Include="Players\Skill.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ShopSystem\Shop.cs" />
+    <Compile Include="ShopSystem\ShopHandler.cs" />
+    <Compile Include="ShopSystem\ShopItem.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\..\Changelog.txt">

@@ -37,12 +37,15 @@ namespace _7DTDManager.Players
         public Position CurrentPosition { get; set; }
         public Position HomePosition { get; set; }
 
-
+        public string WebPassword { get; set; }
 
         public int Deaths { get; set; }
         public int PlayerKills { get; set; }
         public int ZombieKills { get; set; }
         public int Ping { get; set; }
+
+        // ShopSystem Stuff
+        public List<AreaProtection> AreaProtections { get; set; }
 
         private int LastDeaths = 0, LastPlayerKills = 0, LastZombieKills = 0;
         private DateTime LastUpdate = DateTime.Now;
