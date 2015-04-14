@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using XSerializer;
 
 namespace _7DTDManager.Players
 {
@@ -15,7 +16,7 @@ namespace _7DTDManager.Players
     public class PlayersManager : IPlayersManager
     {
         static Logger logger = LogManager.GetCurrentClassLogger();
-        public List<Player> players = new List<Player>();
+        public List<Player> players { get; set;}
         private bool IsDirty = false;
 
         public Player FindPlayerByName(string name, bool onlyonline = true)
@@ -73,14 +74,17 @@ namespace _7DTDManager.Players
             try
             {
                 Directory.CreateDirectory(ProfilePath);
-                XmlSerializer serializer = new XmlSerializer(typeof(PlayersManager));
+
+                XmlSerializer<PlayersManager> serializer = new XmlSerializer<PlayersManager>(new XmlSerializationOptions(null, Encoding.UTF8, null, true),null);
                 StreamReader reader = new StreamReader(Path.Combine(ProfilePath, "players.xml"));
                 PlayersManager p = (PlayersManager)serializer.Deserialize(reader);
                 reader.Close();
+                if (p.players == null)
+                    p.players = new List<Player>();
                 p.RegisterPlayers();
                 return p;
             }
-            catch (Exception ex)
+            catch (IOException ex)
             {
                 logger.Info("Problem loading players");
                 logger.Info(ex.ToString());
@@ -106,8 +110,9 @@ namespace _7DTDManager.Players
                 logger.Trace("Saving Players.");
                 Directory.CreateDirectory(ProfilePath);
 
-                XmlSerializer serializer = new XmlSerializer(typeof(PlayersManager));
-
+                XmlSerializer<PlayersManager> serializer = new XmlSerializer<PlayersManager>(
+                    new XmlSerializationOptions(null, Encoding.UTF8, null, true).DisableRedact(), null);
+                
                 StreamWriter writer = new StreamWriter(Path.Combine(ProfilePath, "players.xml"));
                 serializer.Serialize(writer, this);
                 writer.Close();

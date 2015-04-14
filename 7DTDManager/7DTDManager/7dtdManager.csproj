@@ -66,6 +66,9 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="XSerializer">
+      <HintPath>..\packages\XSerializer.0.1.28\lib\net40\XSerializer.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\AdminCommands\cmdAddCoins.cs" />
@@ -121,6 +124,7 @@
     </Content>
     <None Include="7dtdmanager.snk" />
     <None Include="App.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assemblies\NLog.dll" />
@@ -130,6 +134,7 @@
     <Content Include="Licences\NLog-2.0-Mono2-License.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Licences\XSerializer-Lizense.txt" />
     <Content Include="TextFile1.txt" />
   </ItemGroup>
   <ItemGroup />
