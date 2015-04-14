@@ -519,7 +519,7 @@ namespace _7DTDManager
 
         public string ToCommandString()
         {
-            return String.Format("{0} {1} {2}", X, Y, Z);
+            return String.Format("{0} {1} {2}", (int)X+1, (int)Y+1, (int)Z+1);
         }
 
 
