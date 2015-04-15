@@ -101,7 +101,7 @@
     <Compile Include="Network\EventDrivenTCPClient.cs" />
     <Compile Include="Objects\AreaDefiniton.cs" />
     <Compile Include="Objects\AreaProtection.cs" />
-    <Compile Include="Objects\Callout.cs" />
+    <Compile Include="Objects\MessageCallout.cs" />
     <Compile Include="Objects\CalloutManager.cs" />
     <Compile Include="Objects\Position.cs" />
     <Compile Include="Objects\PositionManager.cs" />
@@ -109,6 +109,7 @@
     <Compile Include="Players\CoolDownList.cs" />
     <Compile Include="Players\Player.cs" />
     <Compile Include="Players\PlayersManager.cs" />
+    <Compile Include="Objects\ProtectionExpiryCallout.cs" />
     <Compile Include="Players\ServerPlayer.cs" />
     <Compile Include="Players\Skill.cs" />
     <Compile Include="Program.cs" />

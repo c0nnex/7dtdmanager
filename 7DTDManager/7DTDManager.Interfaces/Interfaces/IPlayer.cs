@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 namespace _7DTDManager.Interfaces
 {
     public delegate void PlayerMovedDelegate(object sender, PlayerMovementEventArgs e);
@@ -27,14 +28,18 @@ namespace _7DTDManager.Interfaces
         int AdminLevel { get; }
         bool IsOnline { get; }
 
-        event PlayerMovedDelegate PlayerMoved;
-
         IPosition CurrentPosition { get; }
         IPosition HomePosition { get; }
         
         DateTime FirstLogin { get; }        
         DateTime LastLogin { get; }
         DateTime LastPayday { get; }
+
+        List<IPlayer> Friends { get; }
+
+        event PlayerMovedDelegate PlayerMoved;
+        event EventHandler PlayerLogin;
+        event EventHandler PlayerLogout;
 
         void Login();
         void Logout();
@@ -55,9 +60,9 @@ namespace _7DTDManager.Interfaces
         void AddBounty(int howmuch, string why);
         void CollectBounty(int howmuch, string why);
         void AddBloodCoins(int howmuch, string why);
-
-
         void ClearBounty();
+
+        bool IsFriendOf(IPlayer other);
     }
 
     public class PlayerMovementEventArgs : EventArgs

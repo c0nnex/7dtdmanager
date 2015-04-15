@@ -9,7 +9,7 @@ namespace _7DTDManager.Objects
 {
     public class CalloutManager
     {
-        static List<Callout> AllCallouts = new List<Callout>();
+        static List<ICallout> AllCallouts = new List<ICallout>();
         static DateTime nextCallout = DateTime.MaxValue;
         static DateTime lastCallout = DateTime.Now;
 
@@ -18,7 +18,7 @@ namespace _7DTDManager.Objects
             get { return nextCallout; }
         }
 
-        public static void RegisterCallout(Callout callout)
+        public static void RegisterCallout(ICallout callout)
         {
             AllCallouts.Add(callout);
             UpdateCallouts();
@@ -49,7 +49,7 @@ namespace _7DTDManager.Objects
 
         public static void Housekeeping()
         {
-            List<Callout> newList = new List<Callout>();
+            List<ICallout> newList = new List<ICallout>();
             foreach (var item in AllCallouts)
             {
                 if (!item.Done)
@@ -62,8 +62,8 @@ namespace _7DTDManager.Objects
         {
             foreach (var item in AllCallouts)
             {
-                if (item.Who == p)
-                    item.SetDone();
+                if ( (item.Who == p) && (!item.Persistent))
+                    item.Done = true;
             }
             UpdateCallouts();
         }

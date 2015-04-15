@@ -1,4 +1,14 @@
-﻿
+﻿TODO:
+Alloc: Hook into GameManger, replace public void GameMessageServer(string _msg, string _playerName)
+        Do not forward :msg if starts with "/" -> DO not show commands to other players
+Alloc: Expose ChunkLoading to Fixes for Teleport fix
+Alloc: OpIn To send Data as XML instead of shitty text ;)
+Alloc: Hook into BlockDestroy to totally protect a block against protection (Set durability to Infinite)
+
+
+
+
+
 2015-04-06T00:30:09 1466.531 INF Player connected, clientid=15, entityid=40127, name=Not your average pineapple, steamid=76561197960840911, ip=
 
 2015-04-06T00:55:01 2958.505 INF Player disconnected: ClientID=10, EntityID=9556, PlayerID='76561198079847611', OwnerID='76561198079847611, PlayerName='hakyn'

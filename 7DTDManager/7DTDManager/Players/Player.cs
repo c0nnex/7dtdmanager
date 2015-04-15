@@ -85,6 +85,25 @@ namespace _7DTDManager.Players
             IsOnline = false;
         }
 
+        /// <summary>
+        /// Housekeeping stuff called when the player is loaded
+        /// Independent from if the player is online or not
+        /// </summary>
+        public void Init()
+        {
+            for (int i = AreaProtections.Count -1; i <= 0; i++)
+            {
+                AreaProtection protection = AreaProtections[i];
+                if ( protection.Expires < DateTime.Now )
+                {
+                    AreaProtections.RemoveAt(i);
+                    continue;
+                }
+                protection.Init(this);
+                CalloutManager.RegisterCallout( new ProtectionExpiryCallout(this,protection,protection.Expires - new TimeSpan(1,0,0) ) );
+            }
+        }
+
         public Int32 AddCoins(int howmany, string why = "unknown")
         {
             if (howmany == 0)
@@ -112,8 +131,8 @@ namespace _7DTDManager.Players
                 LastZombieKills = ZombieKills;
                 CurrentPosition = Position.InvalidPosition;
                 if (!String.IsNullOrEmpty(Program.Config.MOTD))
-                    CalloutManager.RegisterCallout(new Callout(this, CalloutType.Error, Program.Config.MOTD));
-                CalloutManager.RegisterCallout(new Callout(this, new TimeSpan(0, 0, 90), CalloutType.Error, Program.HELLO));
+                    CalloutManager.RegisterCallout(new MessageCallout(this, CalloutType.Error, Program.Config.MOTD));
+                CalloutManager.RegisterCallout(new MessageCallout(this, new TimeSpan(0, 0, 90), CalloutType.Error, Program.HELLO));
                 OnChanged();
             }
         }

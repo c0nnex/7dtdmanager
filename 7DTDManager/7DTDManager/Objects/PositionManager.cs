@@ -10,7 +10,7 @@ namespace _7DTDManager.Objects
     public static class PositionManager
     {
 
-        public void PlayerMoved(IPlayer p, IPosition newPos)
+        public static void PlayerMoved(IPlayer p, IPosition newPos)
         {
             // TODO: Postionscheck for Protections
         }

@@ -19,7 +19,7 @@ namespace _7DTDManager.Objects
         Movement
     }
 
-    public class Callout
+    public class MessageCallout : ICallout
     {
         public IPlayer Who { get; set; }
         public DateTime When { get; set; }
@@ -27,15 +27,17 @@ namespace _7DTDManager.Objects
         public CalloutTriggerType Trigger { get;set;}
         public String Message { get; set; }
         public bool Done { get; set; }
+        public bool Persistent { get; set; }
 
-        public Callout()
+        public MessageCallout()
         {
             Done = false;
+            Persistent = false;
             Trigger = CalloutTriggerType.Time;
             When = DateTime.MaxValue;
         }
 
-        public Callout(IPlayer target,TimeSpan when, CalloutType what, string msg) : this()
+        public MessageCallout(IPlayer target,TimeSpan when, CalloutType what, string msg) : this()
         {
             Who = target;
             When = DateTime.Now + when;
@@ -45,7 +47,8 @@ namespace _7DTDManager.Objects
 
         }
 
-        public Callout(IPlayer target, CalloutType what, string msg) : this()
+        public MessageCallout(IPlayer target, CalloutType what, string msg)
+            : this()
         {
             Who = target;         
             What = what;

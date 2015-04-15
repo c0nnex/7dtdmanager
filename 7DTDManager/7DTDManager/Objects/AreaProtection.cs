@@ -1,4 +1,5 @@
-﻿using System;
+﻿using _7DTDManager.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,13 +7,21 @@ using System.Threading.Tasks;
 
 namespace _7DTDManager.Objects
 {
-    class AreaProtection : AreaDefiniton
+    public class AreaProtection : AreaDefiniton
     {
         public string OwnedBy { get;set; }
-        public List<string> Friends { get; set; }
-
         public DateTime Expires { get; set; }
 
         public List<string> RecordedEvents { get; set; }
+
+        internal void Init(IPlayer player)
+        {
+            player.PlayerLogin += player_PlayerLogin;
+        }
+
+        void player_PlayerLogin(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -8,7 +8,7 @@ namespace _7DTDManager.ShopSystem
 {
     class ShopItem
     {
-        public int ItemID { get; set; }
+        public string ItemID { get; set; }
         public string ItemName { get; set; }
         public int SellPrice { get;set; }
         public int BuyPrice { get; set; }
