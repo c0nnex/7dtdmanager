@@ -23,7 +23,7 @@ namespace _7DTDManager.Objects
             get { return ((X != InvalidPosition.X) && (Y != InvalidPosition.Y) && (Z != InvalidPosition.Z)); }
         }
 
-        public static readonly Position InvalidPosition = new Position { X = Double.MinValue, Y = Double.MinValue, Z = Double.MinValue };
+        public static readonly Position InvalidPosition = new Position { X = Int64.MinValue, Y = Int64.MinValue, Z = Int64.MinValue };
 
 
 

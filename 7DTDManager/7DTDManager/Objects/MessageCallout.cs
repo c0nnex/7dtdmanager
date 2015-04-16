@@ -20,14 +20,10 @@ namespace _7DTDManager.Objects
     }
 
     public class MessageCallout : ICallout
-    {
-        public IPlayer Who { get; set; }
-        public DateTime When { get; set; }
+    {       
         public CalloutType What { get; set; }
         public CalloutTriggerType Trigger { get;set;}
         public String Message { get; set; }
-        public bool Done { get; set; }
-        public bool Persistent { get; set; }
 
         public MessageCallout()
         {
@@ -63,7 +59,7 @@ namespace _7DTDManager.Objects
             Who.PlayerMoved -= target_PlayerMoved;
         }
 
-        public virtual void Execute()
+        public override void Execute()
         {
             if (Done)
                 return;

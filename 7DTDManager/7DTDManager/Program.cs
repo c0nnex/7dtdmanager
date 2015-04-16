@@ -48,6 +48,7 @@ namespace _7DTDManager
 
             LineManager.Init();
             CommandManager.Init();
+           
 
             if (Config.IsNewConfiguration)
             {

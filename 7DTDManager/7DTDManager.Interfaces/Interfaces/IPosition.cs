@@ -14,6 +14,7 @@ namespace _7DTDManager.Interfaces
         string ToCommandString();
         string ToHumanString();
         string ToString();
-        
+
+        double Distance(IPosition other);
     }
 }

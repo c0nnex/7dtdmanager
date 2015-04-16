@@ -1,4 +1,5 @@
 ﻿using _7DTDManager.Interfaces;
+using _7DTDManager.Objects;
 using NLog;
 using System;
 using System.Collections.Generic;
@@ -7,17 +8,26 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
-using XSerializer;
+
 
 namespace _7DTDManager.Players
 {
     [Serializable]
     [XmlRoot(ElementName = "Players")]
-    public class PlayersManager : IPlayersManager
+    public class PlayersManager : Singleton<PlayersManager>,IPlayersManager
     {
         static Logger logger = LogManager.GetCurrentClassLogger();
         public List<Player> players { get; set;}
         private bool IsDirty = false;
+
+        public event PlayerMovedDelegate PlayerMoved;
+        public event EventHandler PlayerLogin;
+        public event EventHandler PlayerLogout;
+
+        public PlayersManager() : base()
+        {
+
+        }
 
         public Player FindPlayerByName(string name, bool onlyonline = true)
         {
@@ -75,13 +85,15 @@ namespace _7DTDManager.Players
             {
                 Directory.CreateDirectory(ProfilePath);
 
-                XmlSerializer<PlayersManager> serializer = new XmlSerializer<PlayersManager>(new XmlSerializationOptions(null, Encoding.UTF8, null, true),null);
+                //XmlSerializer<PlayersManager> serializer = new XmlSerializer<PlayersManager>(new XmlSerializationOptions(null, Encoding.UTF8, null, true).DisableRedact(),null);
+                XmlSerializer serializer = new XmlSerializer(typeof(PlayersManager));
                 StreamReader reader = new StreamReader(Path.Combine(ProfilePath, "players.xml"));
                 PlayersManager p = (PlayersManager)serializer.Deserialize(reader);
                 reader.Close();
                 if (p.players == null)
                     p.players = new List<Player>();
                 p.RegisterPlayers();
+                PlayersManager.Instance = p;
                 return p;
             }
             catch (IOException ex)
@@ -110,9 +122,10 @@ namespace _7DTDManager.Players
                 logger.Trace("Saving Players.");
                 Directory.CreateDirectory(ProfilePath);
 
-                XmlSerializer<PlayersManager> serializer = new XmlSerializer<PlayersManager>(
+               /* XmlSerializer<PlayersManager> serializer = new XmlSerializer<PlayersManager>(
                     new XmlSerializationOptions(null, Encoding.UTF8, null, true).DisableRedact(), null);
-                
+                */
+                XmlSerializer serializer = new XmlSerializer(typeof(PlayersManager));
                 StreamWriter writer = new StreamWriter(Path.Combine(ProfilePath, "players.xml"));
                 serializer.Serialize(writer, this);
                 writer.Close();
@@ -123,6 +136,28 @@ namespace _7DTDManager.Players
                 logger.Info(ex.ToString());
             }
 
+        }
+
+
+        public void OnPlayerLogin(IPlayer p)
+        {
+            EventHandler e = PlayerLogin;
+            if (e != null)
+                e(p, EventArgs.Empty);
+        }
+
+        public void OnPlayerLogout(IPlayer p)
+        {
+            EventHandler e = PlayerLogout;
+            if (e != null)
+                e(p, EventArgs.Empty);
+        }
+
+        public void OnPlayerMoved(IPlayer p, IPosition oldPos, IPosition newPos)
+        {
+            PlayerMovedDelegate handler = PlayerMoved;
+            if (handler != null)
+                handler(p, new PlayerMovementEventArgs { OldPosition = oldPos, NewPosition = newPos });
         }
 
         [XmlIgnore]
@@ -140,5 +175,8 @@ namespace _7DTDManager.Players
         {
             return FindPlayerByName(name, onlyonline) as IPlayer;
         }
+
+
+        
     }
 }

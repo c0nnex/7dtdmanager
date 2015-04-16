@@ -19,7 +19,7 @@ namespace _7DTDManager.Players
         [XmlAttribute]
         public string SteamID { get; set; }
         [XmlAttribute]
-        public string Name { get; set; }
+        public string Name { get { return _name; } set { _name = value; logger.Error(value); } } private string _name;
         [XmlAttribute]
         public string EntityID { get; set; }
 
@@ -46,16 +46,19 @@ namespace _7DTDManager.Players
 
         // ShopSystem Stuff
         public List<AreaProtection> AreaProtections { get; set; }
-
+        public List<string> Friends { get; set; }
         private int LastDeaths = 0, LastPlayerKills = 0, LastZombieKills = 0;
         private DateTime LastUpdate = DateTime.Now;
         private Position LastPaydayPosition { get; set; }
+        private IShop currentShop { get; set; }
 
         [XmlIgnore]
         public bool IsOnline { get; set; }
 
         public event PlayerChanged Changed;
         public event PlayerMovedDelegate PlayerMoved;
+        public event EventHandler PlayerLogout;
+        public event EventHandler PlayerLogin;
 
         private void OnChanged()
         {
@@ -69,6 +72,7 @@ namespace _7DTDManager.Players
             PlayerMovedDelegate handler = PlayerMoved;
             if (handler != null)
                 handler(this, new PlayerMovementEventArgs { OldPosition = oldPos, NewPosition = newPos });
+            PlayersManager.Instance.OnPlayerMoved(this, oldPos, newPos);
         }
 
         public CoolDownList CommandCoolDowns = new CoolDownList();
@@ -83,6 +87,8 @@ namespace _7DTDManager.Players
             HomePosition = Position.InvalidPosition;
             LastPaydayPosition = Position.InvalidPosition;
             IsOnline = false;
+            Friends = new List<string>();
+            AreaProtections = new List<AreaProtection>();
         }
 
         /// <summary>
@@ -98,8 +104,7 @@ namespace _7DTDManager.Players
                 {
                     AreaProtections.RemoveAt(i);
                     continue;
-                }
-                protection.Init(this);
+                }                
                 CalloutManager.RegisterCallout( new ProtectionExpiryCallout(this,protection,protection.Expires - new TimeSpan(1,0,0) ) );
             }
         }
@@ -134,6 +139,7 @@ namespace _7DTDManager.Players
                     CalloutManager.RegisterCallout(new MessageCallout(this, CalloutType.Error, Program.Config.MOTD));
                 CalloutManager.RegisterCallout(new MessageCallout(this, new TimeSpan(0, 0, 90), CalloutType.Error, Program.HELLO));
                 OnChanged();
+                PlayersManager.Instance.OnPlayerLogin(this);
             }
         }
 
@@ -144,6 +150,7 @@ namespace _7DTDManager.Players
             IsOnline = false;
             CalloutManager.UnregisterCalloutsForPlayer(this);
             OnChanged();
+            PlayersManager.Instance.OnPlayerLogout(this);
         }
 
 
@@ -357,7 +364,19 @@ namespace _7DTDManager.Players
             OnChanged();
         }
 
+        public bool IsFriendOf(IPlayer other)
+        {
+            throw new NotImplementedException();
+        }
 
+        public void SetCurrentShop(IShop whichShop)
+        {
+            currentShop = whichShop;
+        }
 
+        public IShop GetCurrentShop()
+        {
+            return currentShop;
+        }
     }
 }

@@ -41,7 +41,7 @@ namespace _7DTDManager
         public Manager()
         {            
             allPlayers = PlayersManager.Load();
-           
+            PositionManager.Init();
         }
 
         internal bool Connect()
@@ -131,7 +131,7 @@ namespace _7DTDManager
                 lastPayday = DateTime.Now;
             }
             span = DateTime.Now - lastLP;
-            if (span.Minutes > 1)
+            if (span.Seconds > 5)
             {
                 try
                 {

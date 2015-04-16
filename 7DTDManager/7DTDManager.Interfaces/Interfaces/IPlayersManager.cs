@@ -6,6 +6,9 @@ namespace _7DTDManager.Interfaces
     {
         IReadOnlyList<IPlayer> Players { get; }
 
+        event EventHandler PlayerLogin;
+        event EventHandler PlayerLogout;
+
         IPlayer AddPlayer(string name, string steamid, string entityid);
         IPlayer FindPlayerByName(string name, bool onlyonline = true);
         void Save(bool force=false);

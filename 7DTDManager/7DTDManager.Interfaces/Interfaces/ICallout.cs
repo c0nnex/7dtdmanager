@@ -12,7 +12,20 @@ namespace _7DTDManager.Interfaces
         public DateTime When { get; set; }
         public bool Done { get; set; }
         public bool Persistent { get; set; }
+        public object Callback { get;set; }
 
         public abstract void Execute();
+
+        public ICallout()
+        {
+
+        }
+
+        public ICallout( IPlayer who, object callback, DateTime when )
+        {
+            Who = who;
+            Callback = callback;
+            When = when;
+        }
     }
 }

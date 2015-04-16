@@ -35,11 +35,10 @@ namespace _7DTDManager.Interfaces
         DateTime LastLogin { get; }
         DateTime LastPayday { get; }
 
-        List<IPlayer> Friends { get; }
+        List<string> Friends { get; }
 
         event PlayerMovedDelegate PlayerMoved;
-        event EventHandler PlayerLogin;
-        event EventHandler PlayerLogout;
+        
 
         void Login();
         void Logout();
@@ -63,6 +62,9 @@ namespace _7DTDManager.Interfaces
         void ClearBounty();
 
         bool IsFriendOf(IPlayer other);
+
+        void SetCurrentShop(IShop whichShop);
+        IShop GetCurrentShop();
     }
 
     public class PlayerMovementEventArgs : EventArgs

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using _7DTDManager.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace _7DTDManager.ShopSystem
 {
-    class ShopItem
+    public class ShopItem : IShopItem
     {
         public string ItemID { get; set; }
         public string ItemName { get; set; }

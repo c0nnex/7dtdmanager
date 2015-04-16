@@ -14,14 +14,6 @@ namespace _7DTDManager.Objects
 
         public List<string> RecordedEvents { get; set; }
 
-        internal void Init(IPlayer player)
-        {
-            player.PlayerLogin += player_PlayerLogin;
-        }
-
-        void player_PlayerLogin(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
-        }
+       
     }
 }

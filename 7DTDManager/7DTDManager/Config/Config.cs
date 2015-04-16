@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
+
 namespace _7DTDManager.Config
 {
     [Serializable]
@@ -34,6 +35,7 @@ namespace _7DTDManager.Config
         public AdminList Admins { get; set; }
 
         public CommandConfigurationList Commands { get; set; }
+        public List<ShopSystem.Shop> Shops { get; set; }
 
         [XmlIgnore]
         public bool IsNewConfiguration = false;
@@ -52,6 +54,7 @@ namespace _7DTDManager.Config
             MinimumDistanceForPayday = 10.0;
             Admins = new AdminList();
             Commands = new CommandConfigurationList();
+            Shops = new List<ShopSystem.Shop>();
         }
 
         public void UpdateDefaults()
@@ -61,15 +64,27 @@ namespace _7DTDManager.Config
             Save();
         }
 
+        public void Init()
+        {
+            foreach (var item in Shops)
+            {
+                item.Init();
+            }
+        }
+
         public static Configuration Load()
         {
             try
             {
+                /*XmlSerializer<Configuration> serializer = new XmlSerializer<Configuration>(
+                   new XmlSerializationOptions(null, Encoding.UTF8, null, true).DisableRedact(), null);
+                 */
                 XmlSerializer serializer = new XmlSerializer(typeof(Configuration));
                 StreamReader reader = new StreamReader("config.xml");
                 Configuration c = (Configuration)serializer.Deserialize(reader);
                 reader.Close();
                 c.Save(); // Make sure updated configs are written to the xml
+                c.Init();
                 return c;
             }
             catch (Exception ex)
@@ -87,7 +102,10 @@ namespace _7DTDManager.Config
         {
             try
             {
-                XmlSerializer serializer = new XmlSerializer(typeof(Configuration));
+                /*XmlSerializer<Configuration> serializer = new XmlSerializer<Configuration>(
+                    new XmlSerializationOptions(null, Encoding.UTF8, null, true).DisableRedact(), null);
+                */
+                XmlSerializer serializer = new XmlSerializer(typeof(Configuration)); 
                 StreamWriter writer = new StreamWriter("config.xml");
                 serializer.Serialize(writer, this);
                 writer.Close();                
