@@ -27,7 +27,7 @@ namespace _7DTDManager.Commands
                 foreach (var item in cmds.Keys)
                 {
                     cmd = cmds[item];
-                    if ((cmd.cmdLevel > 0) || (cmd is InfoCommand))
+                    if ((cmd.CommandLevel > 0) || (cmd is InfoCommand))
                         continue;
                     s += " /" + item + ",";
                 }
@@ -38,7 +38,7 @@ namespace _7DTDManager.Commands
                     foreach (var item in cmds.Keys)
                     {
                         cmd = cmds[item];
-                        if ((cmd.cmdLevel > p.AdminLevel) || (cmd is InfoCommand))
+                        if ((cmd.CommandLevel > p.AdminLevel) || (cmd is InfoCommand) || (cmd.CommandLevel == 0))
                             continue;
                         s += " /" + item + ",";
                     }
@@ -48,7 +48,7 @@ namespace _7DTDManager.Commands
                 foreach (var item in cmds.Keys)
                 {
                     cmd = cmds[item];
-                    if ((cmd.cmdLevel > p.AdminLevel ) || !(cmd is InfoCommand))
+                    if ((cmd.CommandLevel > p.AdminLevel ) || !(cmd is InfoCommand))
                         continue;
                     s += " " + item + ",";
                 }
@@ -61,17 +61,17 @@ namespace _7DTDManager.Commands
                 return true;
             }
             cmd = cmds[args[1]];
-            if (cmd.cmdLevel > p.AdminLevel)
+            if (cmd.CommandLevel > p.AdminLevel)
             {
                 p.Message("No such command '{0}'", args[1]);
                 return true;
             }
 
-            p.Message(cmd.cmdHelp);
-            if (cmd.cmdCost > 0 ) 
-                p.Message("Cost: {0} coins.", cmd.cmdCost);
-            if (cmd.cmdCoolDown > 0)
-                p.Message("Cooldown: {0} minutes.", cmd.cmdCoolDown);
+            p.Message(cmd.CommandHelp);
+            if (cmd.CommandCost > 0 ) 
+                p.Message("Cost: {0} coins.", cmd.CommandCost);
+            if (cmd.CommandCoolDown > 0)
+                p.Message("Cooldown: {0} minutes.", cmd.CommandCoolDown);
             return true;
         }
        

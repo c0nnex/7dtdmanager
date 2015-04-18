@@ -9,50 +9,61 @@ namespace _7DTDManager.Interfaces.Commands
 {
     public abstract class PublicCommandBase : ICommand
     {
-        public int CommandCost=0, CommandCoolDown = 0, CommandLevel = 0;
-        public string CommandHelp="No help available",CommandName = "noname";
-        public bool CommandIsInfo = false;
+        public int _CommandCost = 0, _CommandCoolDown = 0, _CommandLevel = 0, _CommandArgs = 0;
+        public string _CommandHelp = "No help available", _CommandName = "noname", _CommandUsage = "";
+        public bool _CommandIsInfo = false;
 
-        public int cmdCost
+        public int CommandCost
         {
-            get { return CommandCost; }
-            set { CommandCost = value; }
+            get { return _CommandCost; }
+            set { _CommandCost = value; }
         }
 
-        public int cmdCoolDown
+        public int CommandCoolDown
         {
-            get { return CommandCoolDown; }
-            set { CommandCoolDown = value; }
+            get { return _CommandCoolDown; }
+            set { _CommandCoolDown = value; }
         }
 
-        public string cmdHelp
+        public string CommandHelp
         {
-            get { return CommandHelp; }
-            set { CommandHelp = value; }
-        }
-        
-        public int cmdLevel
-        {
-            get { return CommandLevel; }
-            set { CommandLevel = value; }
+            get { return _CommandHelp; }
+            set { _CommandHelp = value; }
         }
 
-        public string cmd
+        public int CommandLevel
         {
-            get { return CommandName; }
-            set { CommandName = value; }
+            get { return _CommandLevel; }
+            set { _CommandLevel = value; }
         }
 
-        public bool InfoOnly
+        public string CommandName
         {
-            get { return CommandIsInfo; }
-            set { CommandIsInfo = value; }
+            get { return _CommandName; }
+            set { _CommandName = value; }
         }
 
-        public virtual bool Execute(IServerConnection server, IPlayer p, params string[] args) { return false;}
+        public bool IsInfoCommand
+        {
+            get { return _CommandIsInfo; }
+            set { _CommandIsInfo = value; }
+        }
+
+        public int CommandArgs
+        {
+            get { return _CommandArgs; }
+            set { _CommandArgs = value; }
+        }
+
+        public string CommandUsage
+        {
+            get { return _CommandUsage; }
+            set { _CommandUsage = value; }
+        }
+       
+
+        public virtual bool Execute(IServerConnection server, IPlayer p, params string[] args) { return false; }
 
 
-
-        
     }
 }

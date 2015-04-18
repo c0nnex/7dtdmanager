@@ -1,4 +1,5 @@
 ﻿using _7DTDManager.Interfaces;
+using _7DTDManager.ShopSystem;
 using NLog;
 using System;
 using System.Collections.Generic;
@@ -39,6 +40,8 @@ namespace _7DTDManager.Config
 
         [XmlIgnore]
         public bool IsNewConfiguration = false;
+        [XmlIgnore]
+        public Dictionary<string, ShopHandler> ShopHandlers = new Dictionary<string, ShopHandler>();
 
         public Configuration()
         {
@@ -55,6 +58,7 @@ namespace _7DTDManager.Config
             Admins = new AdminList();
             Commands = new CommandConfigurationList();
             Shops = new List<ShopSystem.Shop>();
+            ShopHandlers.Add("DefaultShopHandler", new DefaultShopHandler());
         }
 
         public void UpdateDefaults()
@@ -70,6 +74,20 @@ namespace _7DTDManager.Config
             {
                 item.Init();
             }
+        }
+
+
+        public int RegisterShop(ShopSystem.Shop shop)
+        {
+            var findShop = (from s in Shops select s.ShopID);
+            int lastShop = 0;
+            if (findShop != null)
+                lastShop = findShop.Max();
+
+            shop.ShopID = lastShop + 1;
+            Shops.Add(shop);
+            Save();
+            return shop.ShopID;
         }
 
         public static Configuration Load()

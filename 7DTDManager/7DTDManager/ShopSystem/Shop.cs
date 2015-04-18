@@ -19,12 +19,12 @@ namespace _7DTDManager.ShopSystem
         public int TotalDeals { get; set; }
         public int TotalCustomers { get; set; }
         public double EconomyFactor { get; set; }
-        
-        public bool IsOpen { get; set; }
+               
         public bool HasOpeningHours { get; set; }
         public int ShopOpensAt { get; set; }
         public int ShopClosesAt { get; set; }
         public bool ShopRestocks { get;set; }
+        public bool SecretShop { get; set; }
 
         public List<ShopItem> ShopItems { get; set; }
 
@@ -53,6 +53,23 @@ namespace _7DTDManager.ShopSystem
             
         }
 
+        public int RegisterItem(ShopSystem.ShopItem item)
+        {
+            var findItem = (from s in ShopItems select s.ItemID);
+            int lastItem = 0;
+            if ( (findItem != null) && (findItem.Count() > 0))
+                lastItem = findItem.Max();
+
+            item.ItemID = lastItem + 1;
+            ShopItems.Add(item);            
+            return item.ItemID;
+        }
+
+        public bool IsOpen()
+        {
+            //TODO: Opening Hours
+            return true;
+        }
 
         IReadOnlyList<IShopItem> IShop.ShopItems
         {

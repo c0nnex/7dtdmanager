@@ -18,7 +18,7 @@ namespace _7DTDManager.Commands
 
         public override bool Execute(IServerConnection server, IPlayer p, params string[] args)
         {
-            p.Message("The shop is currently closed.");
+            p.Message("The command is currently disabled.");
             return true;
         }
     }

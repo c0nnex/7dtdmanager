@@ -6,7 +6,7 @@ namespace _7DTDManager.Interfaces
     {
         double EconomyFactor { get; }
         bool HasOpeningHours { get; }
-        bool IsOpen { get; }
+        
         int ShopClosesAt { get; }
         IReadOnlyList<IShopItem> ShopItems { get; }
         string ShopName { get; }
@@ -17,6 +17,8 @@ namespace _7DTDManager.Interfaces
         int TotalDeals { get; }
         int TotalRevenue { get; }
         int TotalSales { get; }
+
+        bool IsOpen();
     }
 
     public interface IShopItem

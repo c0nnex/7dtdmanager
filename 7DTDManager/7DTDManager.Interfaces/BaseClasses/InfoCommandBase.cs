@@ -12,7 +12,7 @@ namespace _7DTDManager.Interfaces.Commands
         public InfoCommand(string help)
         {
             CommandHelp = help;
-            CommandIsInfo = true;
+            IsInfoCommand = true;
         }
 
     }

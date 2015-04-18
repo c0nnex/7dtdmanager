@@ -93,7 +93,7 @@ namespace _7DTDManager
                 serverConnection.WriteLine(Program.Config.ServerPassword);
                 bIsFirst = false;
                 serverConnection.WriteLine("lp");
-                PublicMessage("Extended Servercommands {0} online. See /help for commands", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString());
+                PublicMessage("\"7DTDManager Servercommands {0} online. See /help for commands\"", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString());
             }
             line += Convert.ToString(e.Data);
 
@@ -131,7 +131,7 @@ namespace _7DTDManager
                 lastPayday = DateTime.Now;
             }
             span = DateTime.Now - lastLP;
-            if (span.Seconds > 5)
+            if (span.Seconds > 2)
             {
                 try
                 {

@@ -84,8 +84,8 @@ namespace _7DTDManager.Commands
                     logger.Info("Loading Command {0} from {1}", t.FullName, x.GetName().Name);
                     ICommand ex = Activator.CreateInstance(t) as ICommand;
 
-                    allCommands[ex.cmd] = ex;
-                    if (!Program.Config.Commands.ContainsCommand(ex.cmd))
+                    allCommands[ex.CommandName] = ex;
+                    if (!Program.Config.Commands.ContainsCommand(ex.CommandName))
                     {
                         Program.Config.Commands.Add(new Config.CommandConfiguration(ex));
                     }

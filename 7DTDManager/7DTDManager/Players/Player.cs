@@ -19,7 +19,7 @@ namespace _7DTDManager.Players
         [XmlAttribute]
         public string SteamID { get; set; }
         [XmlAttribute]
-        public string Name { get { return _name; } set { _name = value; logger.Error(value); } } private string _name;
+        public string Name { get { return _name; } set { _name = value;} } private string _name;
         [XmlAttribute]
         public string EntityID { get; set; }
 
@@ -291,22 +291,22 @@ namespace _7DTDManager.Players
         {
             int timePassed = -1;
 
-            if (cmd.cmdCoolDown <= 0)
+            if (cmd.CommandCoolDown <= 0)
                 return 0;
 
-            if (CommandCoolDowns.ContainsCommand(cmd.cmd))
+            if (CommandCoolDowns.ContainsCommand(cmd.CommandName))
             {
-                timePassed = Age - CommandCoolDowns[cmd.cmd];
-                return (timePassed > cmd.cmdCoolDown) ? 0 : cmd.cmdCoolDown - timePassed;
+                timePassed = Age - CommandCoolDowns[cmd.CommandName];
+                return (timePassed > cmd.CommandCoolDown) ? 0 : cmd.CommandCoolDown - timePassed;
             }
             return 0;
         }
 
         public void SetCoolDown(ICommand cmd)
         {
-            if (cmd.cmdCoolDown <= 0)
+            if (cmd.CommandCoolDown <= 0)
                 return;
-            CommandCoolDowns[cmd.cmd] = Age;
+            CommandCoolDowns[cmd.CommandName] = Age;
         }
 
         [XmlIgnore]

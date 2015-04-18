@@ -8,13 +8,16 @@ namespace _7DTDManager.Interfaces
 {
     public interface ICommand
     {
-        int cmdCost { get; set; }
-        int cmdCoolDown { get; set; }
-        string cmdHelp { get; set; }
-        string cmd { get; set; }
-        int cmdLevel { get; set; }
-        bool InfoOnly { get; set; }
+        int CommandCost { get; set; }
+        int CommandCoolDown { get; set; }
+        string CommandHelp { get; set; }
+        string CommandName { get; set; }
+        int CommandLevel { get; set; }
+        bool IsInfoCommand { get; set; }
+        int CommandArgs { get; set; }
+        string CommandUsage { get; set; }
 
+        
         bool Execute(IServerConnection server, IPlayer p, params string[] args);
         
     }

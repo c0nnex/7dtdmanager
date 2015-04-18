@@ -53,10 +53,10 @@ namespace _7DTDManager.Config
 
         internal void UpdateCommand(ICommand cmd)
         {
-            CommandConfiguration config = this[cmd.cmd];
-            cmd.cmdCoolDown = config.CoolDown;
-            cmd.cmdCost = config.Cost;
-            cmd.cmdLevel = config.Level;
+            CommandConfiguration config = this[cmd.CommandName];
+            cmd.CommandCoolDown = config.CoolDown;
+            cmd.CommandCost = config.Cost;
+            cmd.CommandLevel = config.Level;
         }
     }
 
@@ -83,11 +83,11 @@ namespace _7DTDManager.Config
 
         public CommandConfiguration(ICommand cmd) : this()
         {
-            Command = cmd.cmd.ToLowerInvariant();
-            Cost = cmd.cmdCost;
-            CoolDown = cmd.cmdCoolDown;
+            Command = cmd.CommandName.ToLowerInvariant();
+            Cost = cmd.CommandCost;
+            CoolDown = cmd.CommandCoolDown;
             Enabled = true;
-            Level = cmd.cmdLevel;
+            Level = cmd.CommandLevel;
         }
     }
 }
