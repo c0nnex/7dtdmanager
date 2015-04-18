@@ -163,7 +163,7 @@ namespace _7DTDManager
                 logger.Debug("Would send to {0}: {1}", p.Name, String.Format(msg, args));
                 return;
             }
-            serverConnection.WriteLine(String.Format("pm {0} {1}", p.EntityID, String.Format(msg, args)));
+            serverConnection.WriteLine(String.Format("pm {0} \"{1}\"", p.EntityID, String.Format(msg, args)));
         }
 
         public void PublicMessage(string msg, params object[] args)
@@ -173,7 +173,7 @@ namespace _7DTDManager
                 logger.Debug("Would send: {0}", String.Format(msg, args));
                 return;
             }
-            serverConnection.WriteLine(String.Format("say " + msg, args));
+            serverConnection.WriteLine(String.Format("say \"" + msg + "\"", args));
         }
 
         public void Execute(string cmd, params object[] args)
