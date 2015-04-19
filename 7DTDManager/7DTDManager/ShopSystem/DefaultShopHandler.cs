@@ -13,13 +13,13 @@ namespace _7DTDManager.ShopSystem
             HandlerName = "DefaultShopHandler";
         }
 
-        public override void ItemBought(Interfaces.IServerConnection server, Interfaces.IPlayer buyer, ShopItem item, int amount)
+        public override bool ItemBought(Interfaces.IServerConnection server, Interfaces.IPlayer buyer, ShopItem item, int amount)
         {
             server.Execute("give {0} {1} {2}", buyer.EntityID, item.ItemName, amount);
-            buyer.Message("Your items have been placed next to you.");
+            return true;
         }
 
-        public override void ItemSold(Interfaces.IServerConnection server, Interfaces.IPlayer seller, ShopItem item, int amount)
+        public override bool ItemSold(Interfaces.IServerConnection server, Interfaces.IPlayer seller, ShopItem item, int amount)
         {
             throw new NotImplementedException();
         }

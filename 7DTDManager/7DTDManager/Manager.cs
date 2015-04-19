@@ -15,6 +15,7 @@ using _7DTDManager.Network;
 using System.Net;
 using _7DTDManager.Objects;
 using _7DTDManager.Players;
+using System.Timers;
 
 namespace _7DTDManager
 {
@@ -27,6 +28,7 @@ namespace _7DTDManager
 
         EventDrivenTCPClient serverConnection = null;
         private PlayersManager allPlayers = new PlayersManager();
+        private System.Timers.Timer pollTimer = null;
 
         DateTime lastPayday = DateTime.Now;
         DateTime lastLP = DateTime.Now;
@@ -42,7 +44,13 @@ namespace _7DTDManager
         {            
             allPlayers = PlayersManager.Load();
             PositionManager.Init();
+            pollTimer = new System.Timers.Timer();
+            pollTimer.Interval = Program.Config.PollInterval;
+            pollTimer.AutoReset = true;
+            pollTimer.Elapsed += pollTimer_Elapsed;
         }
+
+        
 
         internal bool Connect()
         {
@@ -78,7 +86,14 @@ namespace _7DTDManager
         {
             logger.Info("ConnectionStatus: {0}", status.ConnectionStatus.ToString());
             if (status.ConnectionStatus == ConnectionStatus.DisconnectedByHost)
+            {
+                pollTimer.Stop();
                 bIsFirst = true; // Make Sure login again
+            }
+            if (status.ConnectionStatus == ConnectionStatus.Connected)
+            {
+                pollTimer.Start();
+            }
         }
 
         bool bIsFirst = true;
@@ -91,9 +106,10 @@ namespace _7DTDManager
             if (bIsFirst) // First Receive, we assume password. This is lazy i know!
             {
                 serverConnection.WriteLine(Program.Config.ServerPassword);
-                bIsFirst = false;
+                bIsFirst = false;               
+                serverConnection.WriteLine("allitems");
                 serverConnection.WriteLine("lp");
-                PublicMessage("\"7DTDManager Servercommands {0} online. See /help for commands\"", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString());
+                PublicMessage("7DTDManager Servercommands {0} online. See /help for commands", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString());
             }
             line += Convert.ToString(e.Data);
 
@@ -114,37 +130,65 @@ namespace _7DTDManager
                 }
                 //logger.Info("Stack: {0} Rest: {1}", linesToProcess.Count, line);
             }
-            ProcessLines();
-            TimedActions();
+            ProcessLines();            
         }
 
-        // No Timer needed here, because Server will trigger us every x seconds with stats, if someone is online
-        private void TimedActions()        
+        void pollTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
+            pollTimer.Interval = Program.Config.PollInterval;
+
+            // Check if someone is online and near a tracked area (e.g. shop )
+            if (allPlayers.OnlinePlayers > 0)
+            {
+                if (PositionManager.SomeoneNearTrackable())
+                {
+                    pollTimer.Interval = Program.Config.PositionInterval;
+                    logger.Trace("Someone near trackable Area new Poll Intervall {0}", Program.Config.PositionInterval);
+                }
+            }
+            
             if ( CalloutManager.NextCallout <= DateTime.Now)
                 CalloutManager.UpdateCallouts();
-            TimeSpan span = DateTime.Now - lastPayday;
-            if (span.Minutes > 1)
+
+            // Check for Short callouts
+            double nextCalloutIntervall = (CalloutManager.NextCallout - DateTime.Now).TotalMilliseconds;
+            if ((nextCalloutIntervall > 0) && (nextCalloutIntervall < pollTimer.Interval))
             {
-                logger.Info("Payday!");
-                allPlayers.Payday();
-                lastPayday = DateTime.Now;
-            }
-            span = DateTime.Now - lastLP;
-            if (span.Seconds > 2)
-            {
-                try
-                {
-                    serverConnection.WriteLine("lp");
-                }
-                catch
-                {
-                    logger.Info("Server Disconnected... Trying to reconnect");
-                    allPlayers.Save();                   
-                }
-                lastLP = DateTime.Now;
+                logger.Info("short callout. new interval {0}", nextCalloutIntervall);
+                pollTimer.Interval = nextCalloutIntervall;
+
             }
 
+            TimeSpan span = DateTime.Now - lastPayday;
+
+            if (span.Minutes > Program.Config.PaydayInterval)
+            {
+                if (allPlayers.OnlinePlayers > 0)
+                {
+                    logger.Info("Payday!");
+                    allPlayers.Payday();
+                }
+                lastPayday = DateTime.Now;
+            }
+
+            if ( (serverConnection.ConnectionState == ConnectionStatus.Connected) && (allPlayers.OnlinePlayers > 0))
+            {
+                span = DateTime.Now - lastLP;
+                if (span.TotalMilliseconds > Program.Config.PositionInterval)
+                {
+                    try
+                    {
+                        serverConnection.WriteLine("lp");
+                    }
+                    catch
+                    {
+                        logger.Info("Server Disconnected... Trying to reconnect");
+                        allPlayers.Save();
+                    }
+                    lastLP = DateTime.Now;
+                }
+            }
+            Program.Config.Save();
         }
 
         private void ProcessLines()
@@ -179,10 +223,7 @@ namespace _7DTDManager
 
         public void Execute(string cmd, params object[] args)
         {
-            if (_Testing)
-            {
-                logger.Debug("Execute: {0}", String.Format(cmd, args));
-            }
+            logger.Info("Execute: {0}", String.Format(cmd, args));               
             serverConnection.WriteLine(String.Format(cmd, args));
         }
 

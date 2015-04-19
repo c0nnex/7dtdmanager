@@ -30,7 +30,7 @@ namespace _7DTDManager.Interfaces
         int LevelRequired { get; }
         DateTime NextRestock { get; }
         int RestockAmount { get; }
-        int RestockDelay { get; }
+        TimeSpan RestockDelay { get; }
         int SellPrice { get; }
         int StockAmount { get; }
         int TotalSold { get; }

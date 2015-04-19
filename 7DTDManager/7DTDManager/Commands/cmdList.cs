@@ -20,7 +20,7 @@ namespace _7DTDManager.Commands
         }
 
         public override bool Execute(IServerConnection server, IPlayer p, params string[] args)
-        {
+        {       
             Shop shop = (from s in Program.Config.Shops where s.ShopPosition.IsInside(p.CurrentPosition) select s).FirstOrDefault();
             if (shop == null)
             {
@@ -54,6 +54,28 @@ namespace _7DTDManager.Commands
                 }
             }
             p.Message("--- Page {0} of {1} ----", startitem + 1, ((shop.ShopItems.Count+5) / 5));
+            return true;
+        }
+
+        public override bool AdminExecute(IServerConnection server, IPlayer p, params string[] args)
+        {
+            foreach (var shop in Program.Config.Shops)
+            {
+                p.Confirm(shop.ShopName);
+
+                p.Message(String.Format("{0,3} {1,-15} {2,5} {3,5}", "#", "name", "price", "stock").Replace(" ", "_"));
+
+                for (int i = 0; i < shop.ShopItems.Count; i++)
+                {
+                    if (i < shop.ShopItems.Count)
+                    {
+                        ShopItem item = shop.ShopItems[i];
+                        int price = Program.Config.ShopHandlers[item.HandlerName].EvaluateBuy(server, p, item, 1);
+                        p.Message(String.Format("{0,3} {1,-15} {2,5} {3,5}", item.ItemID, item.ItemName, price, item.StockAmount).Replace(" ", "_"));
+                    }
+                }
+                p.Message("");
+            }
             return true;
         }
     }

@@ -19,6 +19,6 @@ namespace _7DTDManager.Interfaces
 
         
         bool Execute(IServerConnection server, IPlayer p, params string[] args);
-        
+        bool AdminExecute(IServerConnection server, IPlayer p, params string[] args);
     }
 }

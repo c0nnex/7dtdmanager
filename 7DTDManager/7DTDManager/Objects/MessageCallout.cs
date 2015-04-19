@@ -20,20 +20,16 @@ namespace _7DTDManager.Objects
     }
 
     public class MessageCallout : ICallout
-    {       
+    {
+        public IPlayer Who {
+            get { return Callback as IPlayer; }
+            set { Callback = value as ICalloutCallback; }
+        }
         public CalloutType What { get; set; }
         public CalloutTriggerType Trigger { get;set;}
         public String Message { get; set; }
-
-        public MessageCallout()
-        {
-            Done = false;
-            Persistent = false;
-            Trigger = CalloutTriggerType.Time;
-            When = DateTime.MaxValue;
-        }
-
-        public MessageCallout(IPlayer target,TimeSpan when, CalloutType what, string msg) : this()
+        
+        public MessageCallout(IPlayer target,TimeSpan when, CalloutType what, string msg) 
         {
             Who = target;
             When = DateTime.Now + when;
@@ -43,8 +39,7 @@ namespace _7DTDManager.Objects
 
         }
 
-        public MessageCallout(IPlayer target, CalloutType what, string msg)
-            : this()
+        public MessageCallout(IPlayer target, CalloutType what, string msg)            
         {
             Who = target;         
             What = what;

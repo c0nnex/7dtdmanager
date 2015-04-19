@@ -9,6 +9,11 @@ namespace _7DTDManager.Interfaces.Commands
 {  
     public class InfoCommand : PublicCommandBase
     {
+        public InfoCommand()
+        {
+
+        }
+
         public InfoCommand(string help)
         {
             CommandHelp = help;

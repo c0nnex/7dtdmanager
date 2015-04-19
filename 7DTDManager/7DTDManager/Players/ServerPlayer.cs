@@ -13,6 +13,14 @@ namespace _7DTDManager.Players
             Console.WriteLine(String.Format(p, args));
         }
 
+        public override int AdminLevel
+        {
+            get
+            {
+                return 100;
+            }
+        }
+
         public override bool IsAdmin
         {
             get

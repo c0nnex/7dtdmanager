@@ -4,16 +4,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace _7DTDManager.Objects
 {
-    public class AreaProtection : AreaDefiniton
+    [Serializable]
+    public class AreaProtection : AreaDefiniton, ICalloutCallback
     {
+        [XmlIgnore]
+        public IPlayer Owner { get; set; }
         public string OwnedBy { get;set; }
         public DateTime Expires { get; set; }
 
         public List<string> RecordedEvents { get; set; }
 
-       
+        public void CalloutCallback(ICallout c)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

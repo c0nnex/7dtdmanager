@@ -91,7 +91,7 @@ namespace _7DTDManager.Commands
                     }
                     else
                         Program.Config.Commands.UpdateCommand(ex);
-                    Program.Config.Save();
+                    Program.Config.Save(true);
                 }
             }
         }

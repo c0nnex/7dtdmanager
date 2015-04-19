@@ -46,11 +46,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BaseClasses\AdminCommandBase.cs" />
     <Compile Include="Interfaces\IAreaDefiniton.cs" />
     <Compile Include="Interfaces\ICallout.cs" />
     <Compile Include="Interfaces\ICommand.cs" />
-    <Compile Include="BaseClasses\InfoCommandBase.cs" />
     <Compile Include="Interfaces\IConfiguration.cs" />
     <Compile Include="Interfaces\IPlayer.cs" />
     <Compile Include="Interfaces\IPlayersManager.cs" />
@@ -60,7 +58,6 @@
     <Compile Include="Interfaces\IServerLineHandler.cs" />
     <Compile Include="Interfaces\IShop.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="BaseClasses\PublicCommandBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="7dtdmanager.snk" />

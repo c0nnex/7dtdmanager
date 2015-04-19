@@ -46,7 +46,7 @@ namespace _7DTDManager.Commands
 
         public static void ProcessLine(IServerConnection serverConnection, string currentLine)
         {
-            logger.Debug("Processing: {0}", currentLine);
+            logger.Trace("Processing: {0}", currentLine);
             foreach (var item in allHandlers)
             {
                 if (item.ProcessLine(serverConnection, currentLine))

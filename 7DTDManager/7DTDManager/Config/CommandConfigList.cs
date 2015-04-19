@@ -1,4 +1,5 @@
 ﻿using _7DTDManager.Interfaces;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,8 @@ namespace _7DTDManager.Config
     [Serializable]
     public class CommandConfigurationList : List<CommandConfiguration>
     {
+        private static Logger logger = LogManager.GetCurrentClassLogger();
+
         public bool ContainsCommand(string command)
         {
             var t = (from cmds in this where cmds.Command.ToLowerInvariant() == command.ToLowerInvariant() select cmds).FirstOrDefault();
@@ -56,6 +59,8 @@ namespace _7DTDManager.Config
             CommandConfiguration config = this[cmd.CommandName];
             cmd.CommandCoolDown = config.CoolDown;
             cmd.CommandCost = config.Cost;
+            if (cmd.CommandLevel != config.Level)
+                logger.Warn("{0} Changing Level from {1} to {2}", cmd.CommandName, cmd.CommandLevel, config.Level);
             cmd.CommandLevel = config.Level;
         }
     }

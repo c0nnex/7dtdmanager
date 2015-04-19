@@ -29,9 +29,18 @@ namespace _7DTDManager
         } private static String _ApplicationDirectory;
 
         public static Manager Server;
-        public static Configuration Config;
+        public static Configuration Config
+        {
+            get { return _Config; }
+            set {
+                if (_Config != null)
+                    _Config.Deinit();
+                _Config = value;
+                _Config.Init();
+            }
+        } private static Configuration _Config;
 
-        static IPlayer ServerPlayer = new ServerPlayer { Name = "ServerPlayer" };
+        public static IPlayer ServerPlayer = new ServerPlayer { Name = "Server" };
 
         static void Main(string[] args)
         {
@@ -76,8 +85,9 @@ namespace _7DTDManager
                             Console.WriteLine("Unknown command");
                             continue;
                         }
-                        ICommand cmd = CommandManager.AllCommands[largs[0]];
-                        bool res = cmd.Execute(Server, ServerPlayer, largs);
+                        _7DTDManager.LineHandlers.lineServerCommand c = new _7DTDManager.LineHandlers.lineServerCommand();
+                        c.ProcessLine(null, "INF GMSG: Server: /" + cline);
+                        //bool res = cmd.Execute(Server, ServerPlayer, largs);
                     }                
             }
         }
@@ -119,9 +129,9 @@ namespace _7DTDManager
                 nlogTarget.Address = "udp://127.0.0.1:9999";
 #if DEBUG
                 config.LoggingRules.Add(new LoggingRule("*", LogLevel.Trace, fileTarget));
-                config.LoggingRules.Add(new LoggingRule("*", LogLevel.Trace, new ConsoleTarget()));
+                config.LoggingRules.Add(new LoggingRule("*", LogLevel.Trace, nlogTarget));
 #else
-                config.LoggingRules.Add(new LoggingRule("*", LogLevel.Info, fileTarget));
+                config.LoggingRules.Add(new LoggingRule("*", LogLevel.Debug, fileTarget));
                 config.LoggingRules.Add(new LoggingRule("*", LogLevel.Info, new ConsoleTarget()));
 #endif
                 // config.LoggingRules.Add(new LoggingRule("*", LogLevel.Debug, nlogTarget));

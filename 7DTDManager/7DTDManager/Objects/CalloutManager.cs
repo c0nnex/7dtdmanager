@@ -1,4 +1,5 @@
 ﻿using _7DTDManager.Interfaces;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,8 @@ namespace _7DTDManager.Objects
 {
     public class CalloutManager
     {
+        static Logger logger = LogManager.GetCurrentClassLogger();
+
         static List<ICallout> AllCallouts = new List<ICallout>();
         static DateTime nextCallout = DateTime.MaxValue;
         static DateTime lastCallout = DateTime.Now;
@@ -45,6 +48,7 @@ namespace _7DTDManager.Objects
                 if (item.When < nextCallout)
                     nextCallout = item.When;
             }
+            logger.Debug("Next callout in {0}", (nextCallout - DateTime.Now));
         }
 
         public static void Housekeeping()
@@ -58,13 +62,14 @@ namespace _7DTDManager.Objects
             AllCallouts = newList;
         }
 
-        public static void UnregisterCalloutsForPlayer(IPlayer p)
+        public static void UnregisterCallouts(ICalloutCallback p)
         {
             foreach (var item in AllCallouts)
             {
-                if ( (item.Who == p) && (!item.Persistent))
+                if ((item.Callback == p) || (item.Owner == p) ) 
                     item.Done = true;
             }
+            Housekeeping();
             UpdateCallouts();
         }
     }

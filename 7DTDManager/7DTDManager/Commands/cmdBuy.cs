@@ -66,14 +66,18 @@ namespace _7DTDManager.Commands
                 return false;
             }
             p.AddCoins((-1) * price, String.Format("{0} {1} shop {2}", amount, shopItem.ItemName, shop.ShopName));
-            Program.Config.ShopHandlers[shopItem.HandlerName].ItemBought(server, p, shopItem, amount);
-            shopItem.StockAmount -= amount;
-            shopItem.TotalSold += amount;
-            shop.TotalDeals++;
-            shop.TotalSales += price;
-            shop.TotalRevenue += price; //TODO: Economy Factor!
-            shop.TotalCustomers++;
-            Program.Config.Save();
+            if (Program.Config.ShopHandlers[shopItem.HandlerName].ItemBought(server, p, shopItem, amount))
+            {
+                p.Confirm("You bought {0} {1} for {2} coins.", amount, shopItem.ItemName, price);
+                p.Message("Your items have been placed next to you.");
+                shopItem.StockAmount -= amount;
+                shopItem.TotalSold += amount;
+                shop.TotalDeals++;
+                shop.TotalSales += price;
+                shop.TotalRevenue += price; //TODO: Economy Factor!
+                shop.TotalCustomers++;
+                Program.Config.Save();
+            }
             return true;
         }
     }

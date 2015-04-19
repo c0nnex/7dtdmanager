@@ -18,7 +18,11 @@ namespace _7DTDManager.Players
     {
         static Logger logger = LogManager.GetCurrentClassLogger();
         public List<Player> players { get; set;}
+        
         private bool IsDirty = false;
+        
+        [XmlIgnore]
+        public int OnlinePlayers = 0;
 
         public event PlayerMovedDelegate PlayerMoved;
         public event EventHandler PlayerLogin;
@@ -27,6 +31,12 @@ namespace _7DTDManager.Players
         public PlayersManager() : base()
         {
 
+        }
+
+        public IPlayer FindPlayerBySteamID(string id)
+        {
+            var exactMatch = (from item in players where item.SteamID == id select item).FirstOrDefault();         
+            return exactMatch;
         }
 
         public Player FindPlayerByName(string name, bool onlyonline = true)
@@ -141,6 +151,7 @@ namespace _7DTDManager.Players
 
         public void OnPlayerLogin(IPlayer p)
         {
+            OnlinePlayers++;
             EventHandler e = PlayerLogin;
             if (e != null)
                 e(p, EventArgs.Empty);
@@ -148,6 +159,7 @@ namespace _7DTDManager.Players
 
         public void OnPlayerLogout(IPlayer p)
         {
+            OnlinePlayers--;
             EventHandler e = PlayerLogout;
             if (e != null)
                 e(p, EventArgs.Empty);

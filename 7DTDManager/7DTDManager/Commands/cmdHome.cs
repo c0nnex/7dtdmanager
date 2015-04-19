@@ -11,8 +11,7 @@ using System.Threading.Tasks;
 namespace _7DTDManager.Commands
 {
     public class cmdHome : PublicCommandBase
-    {
-        static Logger logger = LogManager.GetCurrentClassLogger();
+    {        
         public cmdHome()
         {
             CommandCost = 150;
@@ -31,8 +30,7 @@ namespace _7DTDManager.Commands
             }
             server.Execute("tele {0} {1}", p.EntityID, p.HomePosition.ToCommandString());
             // HACK: Teleport fix?
-            Thread.Sleep(500);
-            logger.Debug("Second try");
+            Thread.Sleep(2000);            
             server.Execute("tele {0} {1}", p.EntityID, p.HomePosition.ToCommandString());
             return true;
         }

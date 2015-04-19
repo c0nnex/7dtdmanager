@@ -13,7 +13,7 @@ namespace _7DTDManager.Players
     public delegate void PlayerChanged(object sender, EventArgs e);
 
     [Serializable]
-    public class Player : IPlayer
+    public class Player : IPlayer , ICalloutCallback
     {
         static Logger logger = LogManager.GetCurrentClassLogger();
         [XmlAttribute]
@@ -26,7 +26,8 @@ namespace _7DTDManager.Players
         public DateTime FirstLogin { get; set; }
         public DateTime LastLogin { get; set; }
         public DateTime LastPayday { get; set; }
-
+        
+        
         public Int32 zCoins { get; set; }
         public Int32 Bounty { get; set; }
         public Int32 BountyCollected { get; set; }
@@ -43,22 +44,26 @@ namespace _7DTDManager.Players
         public int PlayerKills { get; set; }
         public int ZombieKills { get; set; }
         public int Ping { get; set; }
-
+        public int PingKicks { get; set; }
+        
         // ShopSystem Stuff
         public List<AreaProtection> AreaProtections { get; set; }
         public List<string> Friends { get; set; }
+
+        public List<MailMessage> Mail { get; set; }
+
         private int LastDeaths = 0, LastPlayerKills = 0, LastZombieKills = 0;
         private DateTime LastUpdate = DateTime.Now;
         private Position LastPaydayPosition { get; set; }
         private IShop currentShop { get; set; }
-
+        private PingTracker PingTracker = new PingTracker();
+        
         [XmlIgnore]
         public bool IsOnline { get; set; }
-
+        
         public event PlayerChanged Changed;
         public event PlayerMovedDelegate PlayerMoved;
-        public event EventHandler PlayerLogout;
-        public event EventHandler PlayerLogin;
+       
 
         private void OnChanged()
         {
@@ -89,6 +94,7 @@ namespace _7DTDManager.Players
             IsOnline = false;
             Friends = new List<string>();
             AreaProtections = new List<AreaProtection>();
+            Mail = new List<MailMessage>();
         }
 
         /// <summary>
@@ -104,8 +110,13 @@ namespace _7DTDManager.Players
                 {
                     AreaProtections.RemoveAt(i);
                     continue;
-                }                
-                CalloutManager.RegisterCallout( new ProtectionExpiryCallout(this,protection,protection.Expires - new TimeSpan(1,0,0) ) );
+                }
+                protection.Owner = this;
+                CalloutManager.RegisterCallout( new ProtectionExpiryCallout { 
+                    Callback = protection, 
+                    Owner = this, 
+                    When = protection.Expires - new TimeSpan(1,0,0) 
+                });
             }
         }
 
@@ -127,6 +138,7 @@ namespace _7DTDManager.Players
         {
             if (!IsOnline)
             {
+                PingTracker.Clear();
                 logger.Info("{0} is now online (ZK {1}) Coins: {2}", Name, ZombieKills, zCoins);
                 LastLogin = DateTime.Now;
                 LastPayday = DateTime.Now;
@@ -140,6 +152,8 @@ namespace _7DTDManager.Players
                 CalloutManager.RegisterCallout(new MessageCallout(this, new TimeSpan(0, 0, 90), CalloutType.Error, Program.HELLO));
                 OnChanged();
                 PlayersManager.Instance.OnPlayerLogin(this);
+                if (Mail.Count > 0)
+                    Confirm("You have {0} unread mail(s). Use '/mail read' to read them.", Mail.Count);
             }
         }
 
@@ -148,7 +162,7 @@ namespace _7DTDManager.Players
             Payday();
             logger.Info("{0} is now offline", Name);
             IsOnline = false;
-            CalloutManager.UnregisterCalloutsForPlayer(this);
+            CalloutManager.UnregisterCallouts(this);
             OnChanged();
             PlayersManager.Instance.OnPlayerLogout(this);
         }
@@ -192,12 +206,7 @@ namespace _7DTDManager.Players
             }
         }
 
-        public virtual void Message(string p, params object[] args)
-        {
-            if (IsOnline)
-                Program.Server.PrivateMessage(this, String.Format(p, args));
-        }
-
+      
         public void UpdateStats(int deaths, int zombies, int players, int ping)
         {
             LastUpdate = DateTime.Now;
@@ -219,6 +228,25 @@ namespace _7DTDManager.Players
             }
             LastPlayerKills = PlayerKills;
             Ping = ping;
+            if (ping > 0)
+            {
+                PingTracker.AddPing(ping);
+                logger.Info("{0} Avg Ping: {1}", Name, PingTracker.AveragePing);
+                if ((Program.Config.MaxPingAccepted > 0) && (PingTracker.AveragePing > Program.Config.MaxPingAccepted))
+                {
+                    PingKicks++;
+                    if ((Program.Config.BanAfterKicks > 0) && (PingKicks > Program.Config.BanAfterKicks))
+                    {
+                        Program.Server.Execute("ban add {0} {1} \"Pinglimit exceeded\"", SteamID, Program.Config.BanDuration);
+                        logger.Warn("{0} banned: ping limit exceeded (Avg: {1})",Name,PingTracker.AveragePing);
+                        PingKicks = 0;
+                        OnChanged();
+                        return;
+                    }
+                    Program.Server.Execute("kick {0} \"Pinglimit exceeded\"", SteamID);
+                    logger.Warn("{0} kicked: ping limit exceeded (Avg: {1})",Name,PingTracker.AveragePing);
+                }
+            }
             OnChanged();
         }
 
@@ -269,7 +297,7 @@ namespace _7DTDManager.Players
         }
 
         [XmlIgnore]
-        public int AdminLevel
+        public virtual int AdminLevel
         {
             get { return Program.Config.Admins.AdminLevel(SteamID); }
         }
@@ -327,10 +355,20 @@ namespace _7DTDManager.Players
             CommandCoolDowns.Clear();
         }
 
+        public virtual void Message(string p, params object[] args)
+        {
+            if (IsOnline)
+                Program.Server.PrivateMessage(this, String.Format(p, args));
+        }
 
         public void Error(string msg, params object[] args)
         {
             Message("[FF0000]" + msg + "[FFFFFF]", args);
+        }
+
+        public void Confirm(string msg, params object[] args)
+        {
+            Message("[00FF00]" + msg + "[FFFFFF]", args);
         }
 
         public void AddBounty(int howmuch, string why)
@@ -341,7 +379,8 @@ namespace _7DTDManager.Players
             if (Bounty < 0)
                 Bounty = 0;
             logger.Info("{0} Bounty Change [{3}]: {1} (new {2})", Name, howmuch, Bounty, why);
-            Message("A bounty of {0} coins has been set on your head. Total bounty: {1}", howmuch, Bounty);
+            if ( howmuch > 0 )
+                Message("A bounty of {0} coins has been set on your head. Total bounty: {1}", howmuch, Bounty);
             OnChanged();
         }
 
@@ -378,5 +417,58 @@ namespace _7DTDManager.Players
         {
             return currentShop;
         }
+
+        public void CalloutCallback(ICallout c)
+        {
+            
+        }
+
+        public void AddMail(MailMessage newMail)
+        {
+            Mail.Add(newMail);
+            if (IsOnline)
+                Confirm("You have new mail.");
+        }
     }
+
+    public class PingTracker
+    {
+        List<int> Pings;
+
+        public PingTracker()
+        {
+            Pings = new List<int>();
+        }
+
+        public int AveragePing
+        {
+            get
+            {
+                if (Pings.Count <= 3)
+                    return 0;
+
+                int avg = 0;
+
+                for (int i = 0; i < Pings.Count; i++)
+                {
+                    avg += Pings[i];
+                }
+                return (int)(avg / Pings.Count);
+            }
+        }
+
+        public void AddPing(int value)
+        {
+            Pings.Add(value);
+            while (Pings.Count > 10)
+                Pings.RemoveAt(0);
+        }
+
+        public void Clear()
+        {
+            Pings.Clear();
+        }
+    }
+
+    
 }

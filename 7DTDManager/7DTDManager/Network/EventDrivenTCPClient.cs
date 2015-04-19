@@ -292,7 +292,7 @@ namespace _7DTDManager.Network
             {
                 sock.EndConnect(result);
             }
-            catch (SocketException ex)
+            catch (SocketException)
             {
                 this.ConnectionState = ConnectionStatus.Error;
             }

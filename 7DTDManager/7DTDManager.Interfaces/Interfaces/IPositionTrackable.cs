@@ -9,5 +9,6 @@ namespace _7DTDManager.Interfaces
     public interface IPositionTrackable
     {
         void TrackPosition(IPlayer p, IPosition oldPos, IPosition newPos);
+        bool NeedsTracking(IPosition pos);
     }
 }

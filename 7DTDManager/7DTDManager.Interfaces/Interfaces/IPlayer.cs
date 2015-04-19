@@ -27,6 +27,7 @@ namespace _7DTDManager.Interfaces
         bool IsAdmin { get; }
         int AdminLevel { get; }
         bool IsOnline { get; }
+        int PingKicks { get;  }
 
         IPosition CurrentPosition { get; }
         IPosition HomePosition { get; }
@@ -36,6 +37,7 @@ namespace _7DTDManager.Interfaces
         DateTime LastPayday { get; }
 
         List<string> Friends { get; }
+        List<MailMessage> Mail { get; set; }
 
         event PlayerMovedDelegate PlayerMoved;
         
@@ -50,6 +52,7 @@ namespace _7DTDManager.Interfaces
         void UpdateHomePosition(IPosition newHome);
         void Message(string msg, params object[] args);
         void Error(string msg, params object[] args);
+        void Confirm(string msg, params object[] args);
 
         bool CanExecute(ICommand cmd);
         int GetCoolDown(ICommand cmd);
@@ -65,6 +68,8 @@ namespace _7DTDManager.Interfaces
 
         void SetCurrentShop(IShop whichShop);
         IShop GetCurrentShop();
+
+        void AddMail(MailMessage newMail);
     }
 
     public class PlayerMovementEventArgs : EventArgs
@@ -72,5 +77,12 @@ namespace _7DTDManager.Interfaces
         public IPosition OldPosition;
         public IPosition NewPosition;
         //TODO: Movement args
+    }
+
+    public class MailMessage
+    {
+        public string FromSteamID { get; set; }
+        public DateTime When { get; set; }
+        public string Message { get; set; }
     }
 }

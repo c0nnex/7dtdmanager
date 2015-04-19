@@ -70,6 +70,10 @@
   <ItemGroup>
     <Compile Include="Commands\AdminCommands\cmdAddCoins.cs" />
     <Compile Include="Commands\AdminCommands\cmdClearBounty.cs" />
+    <Compile Include="Commands\AdminCommands\cmdReload.cs" />
+    <Compile Include="Commands\Base\AdminCommandBase.cs" />
+    <Compile Include="Commands\Base\InfoCommandBase.cs" />
+    <Compile Include="Commands\Base\PublicCommandBase.cs" />
     <Compile Include="Commands\cmdList.cs" />
     <Compile Include="Commands\cmdSell.cs" />
     <Compile Include="Commands\cmdBuy.cs" />
@@ -81,6 +85,7 @@
     <Compile Include="Commands\AdminCommands\cmdShop.cs" />
     <Compile Include="Commands\cmdBounty.cs" />
     <Compile Include="Commands\cmdShops.cs" />
+    <Compile Include="Commands\cmdMail.cs" />
     <Compile Include="Commands\cmdTransfer.cs" />
     <Compile Include="Commands\cmdVersion.cs" />
     <Compile Include="Commands\cmdStats.cs" />
@@ -93,6 +98,7 @@
     <Compile Include="Commands\CommandManager.cs" />
     <Compile Include="LineHandlers\linePlayerKilled.cs" />
     <Compile Include="LineHandlers\linePlayerDeath.cs" />
+    <Compile Include="LineHandlers\lineInfItem.cs" />
     <Compile Include="LineHandlers\linePlayerLogin.cs" />
     <Compile Include="LineHandlers\linePlayerLogout.cs" />
     <Compile Include="LineHandlers\lineServerCommand.cs" />

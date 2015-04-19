@@ -24,11 +24,19 @@ namespace _7DTDManager.Objects
             SizeX = size;
             SizeZ = size;
         }
+
+
         public bool IsInside(IPosition pos)
         {
             double dist = pos.Distance(Center);
             return ( (dist <= SizeX) && (dist<=SizeZ) ) ;
 
+        }
+
+        public bool IsNear(IPosition pos)
+        {
+            double dist = pos.Distance(Center);
+            return dist <= Math.Min(100.0,Program.Config.PositionTrackingRangeFactor * Math.Max(SizeX,SizeZ));
         }
 
         IPosition IAreaDefiniton.Center

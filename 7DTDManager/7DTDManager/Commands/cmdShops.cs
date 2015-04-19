@@ -41,7 +41,7 @@ namespace _7DTDManager.Commands
                 else
                 {
                     if (shop.ShopPosition.IsInside(p.CurrentPosition))
-                        p.Error("{0} (HERE)", head, (int)dist);
+                        p.Confirm("{0} (HERE)", head, (int)dist);
                     else
                         p.Message("{0} ({1} m)", head, (int)dist);
                 }

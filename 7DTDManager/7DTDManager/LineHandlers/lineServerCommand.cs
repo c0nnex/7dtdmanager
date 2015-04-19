@@ -27,7 +27,12 @@ namespace _7DTDManager.LineHandlers
                 string name = groups["name"].Value;
                 string command = (args.Length > 0) ? args[0] : "unknown";
 
-                IPlayer p = serverConnection.AllPlayers.FindPlayerByName(name);
+                IPlayer p = null;
+                if (name != "Server")
+                    p = serverConnection.AllPlayers.FindPlayerByName(name);
+                else
+                    p = Program.ServerPlayer;
+
                 if (p == null)
                 {
                     logger.Info("Servercommand {0} Player {1} NOT FOUND", msg, name);
@@ -39,7 +44,7 @@ namespace _7DTDManager.LineHandlers
                     p.Message("Unknown Command");
                     return true;
                 }
-                if (serverConnection.CommandsDisabled && !p.IsAdmin)
+                if ((serverConnection != null) && serverConnection.CommandsDisabled && !p.IsAdmin)
                 {
                     p.Message("Commands are currently disabled.");
                     return true;
@@ -82,12 +87,18 @@ namespace _7DTDManager.LineHandlers
                     p.Message("Not enough coins ({0}) for this command.", cmd.CommandCost);
                     return true;
                 }
-
-                if (cmd.Execute(serverConnection, p, args))
+                if (p.IsAdmin)
                 {
-                    p.AddCoins((-1) * cmd.CommandCost, "CommandCost " + command);
-                    if (bCoolDown)
-                        p.SetCoolDown(cmd);
+                    cmd.AdminExecute(serverConnection, p, args);
+                }
+                else
+                {
+                    if (cmd.Execute(serverConnection, p, args))
+                    {
+                        p.AddCoins((-1) * cmd.CommandCost, "CommandCost " + command);
+                        if (bCoolDown)
+                            p.SetCoolDown(cmd);
+                    }
                 }
                 return true;
             }

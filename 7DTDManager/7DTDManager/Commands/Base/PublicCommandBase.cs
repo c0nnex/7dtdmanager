@@ -1,4 +1,5 @@
 ﻿using _7DTDManager.Interfaces;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,8 @@ namespace _7DTDManager.Interfaces.Commands
 {
     public abstract class PublicCommandBase : ICommand
     {
+        protected Logger logger = null;
+
         public int _CommandCost = 0, _CommandCoolDown = 0, _CommandLevel = 0, _CommandArgs = 0;
         public string _CommandHelp = "No help available", _CommandName = "noname", _CommandUsage = "";
         public bool _CommandIsInfo = false;
@@ -60,10 +63,17 @@ namespace _7DTDManager.Interfaces.Commands
             get { return _CommandUsage; }
             set { _CommandUsage = value; }
         }
-       
+
+        public PublicCommandBase()
+        {
+            logger = LogManager.GetLogger(this.GetType().ToString());
+        }
 
         public virtual bool Execute(IServerConnection server, IPlayer p, params string[] args) { return false; }
-
+        public virtual bool AdminExecute(IServerConnection server, IPlayer p, params string[] args)
+        {
+            return Execute(server, p, args);
+        }
 
     }
 }

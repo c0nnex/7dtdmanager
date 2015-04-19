@@ -11,6 +11,7 @@ namespace _7DTDManager.Interfaces
 
         IPlayer AddPlayer(string name, string steamid, string entityid);
         IPlayer FindPlayerByName(string name, bool onlyonline = true);
+        IPlayer FindPlayerBySteamID(string id);
         void Save(bool force=false);
     }
 }

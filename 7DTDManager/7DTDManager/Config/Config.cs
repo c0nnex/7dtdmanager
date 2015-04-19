@@ -32,6 +32,14 @@ namespace _7DTDManager.Config
 
         public string MOTD { get; set; }
 
+        public int PollInterval { get; set; }
+        public int PositionInterval { get; set; }
+        public int PaydayInterval { get; set; }
+        public double PositionTrackingRangeFactor { get; set; }
+        public int MaxPingAccepted { get; set; }
+        public int BanAfterKicks { get; set; }
+        public string BanDuration { get; set; }
+
         [XmlArrayItem(ElementName="Admin")]
         public AdminList Admins { get; set; }
 
@@ -41,7 +49,11 @@ namespace _7DTDManager.Config
         [XmlIgnore]
         public bool IsNewConfiguration = false;
         [XmlIgnore]
+        public bool IsDirty { get { return _IsDirty; } set { _IsDirty = value; } } private bool _IsDirty = false;
+        [XmlIgnore]
         public Dictionary<string, ShopHandler> ShopHandlers = new Dictionary<string, ShopHandler>();
+        [XmlIgnore]
+        public static HashSet<string> AllKnownItems = new HashSet<string>();
 
         public Configuration()
         {
@@ -54,6 +66,13 @@ namespace _7DTDManager.Config
             CoinPercentageOnKill = 5.0;
             BountyFactor = 2.0;
             MOTD = "Place your MOTD here";
+            PollInterval = 30000; // every 30 seconds default polling
+            PositionInterval = 2000; // every 2 seconds if someone is tracked
+            PaydayInterval = 1; // Every minute
+            PositionTrackingRangeFactor = 10.0; // Start tracking 10x away from target-extend 
+            MaxPingAccepted = 250; // Higher ping that this will be kicked
+            BanAfterKicks = 5;
+            BanDuration = "1 year";
             MinimumDistanceForPayday = 10.0;
             Admins = new AdminList();
             Commands = new CommandConfigurationList();
@@ -76,17 +95,25 @@ namespace _7DTDManager.Config
             }
         }
 
+        public void Deinit()
+        {
+            foreach (var item in Shops)
+            {
+                item.Deinit();
+            }
+        }
+
 
         public int RegisterShop(ShopSystem.Shop shop)
         {
             var findShop = (from s in Shops select s.ShopID);
             int lastShop = 0;
-            if (findShop != null)
+            if ( (findShop != null) && (findShop.Count() > 0))
                 lastShop = findShop.Max();
 
             shop.ShopID = lastShop + 1;
             Shops.Add(shop);
-            Save();
+            Save(true);
             return shop.ShopID;
         }
 
@@ -101,8 +128,7 @@ namespace _7DTDManager.Config
                 StreamReader reader = new StreamReader("config.xml");
                 Configuration c = (Configuration)serializer.Deserialize(reader);
                 reader.Close();
-                c.Save(); // Make sure updated configs are written to the xml
-                c.Init();
+                c.Save(true); // Make sure updated configs are written to the xml              
                 return c;
             }
             catch (Exception ex)
@@ -110,14 +136,16 @@ namespace _7DTDManager.Config
                 logger.Warn(ex.Message);
                 logger.Info("Problem loading configuration, creating default one");               
                 Configuration c = new Configuration();              
-                c.Save();
+                c.Save(true);
                 c.IsNewConfiguration = true;
                 return c;
             }
         }
 
-        public void Save()
+        public void Save(bool force = false)
         {
+            if (!IsDirty && !force)
+                return;
             try
             {
                 /*XmlSerializer<Configuration> serializer = new XmlSerializer<Configuration>(
@@ -126,7 +154,8 @@ namespace _7DTDManager.Config
                 XmlSerializer serializer = new XmlSerializer(typeof(Configuration)); 
                 StreamWriter writer = new StreamWriter("config.xml");
                 serializer.Serialize(writer, this);
-                writer.Close();                
+                writer.Close();
+                IsDirty = false;
             }
             catch (Exception ex)
             {

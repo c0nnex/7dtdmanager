@@ -28,9 +28,32 @@ namespace _7DTDManager.ShopSystem
 
         public List<ShopItem> ShopItems { get; set; }
 
+        public Shop()
+        {
+            ShopItems = new List<ShopItem>();
+        }
+
         public void Init()
         {
             PositionManager.AddTrackableObject(this);
+            foreach (var item in ShopItems)
+            {
+                item.Shop = this;
+                if (ShopRestocks)
+                    item.StartRestocking();
+            }
+        }
+
+        public void Deinit()
+        {
+            PositionManager.RemoveTrackableObject(this);
+            if (ShopRestocks)
+            {
+                foreach (var item in ShopItems)
+                {
+                    item.StopRestocking();
+                }
+            }
         }
 
         public void TrackPosition(IPlayer p, IPosition oldPos, IPosition newPos)
@@ -53,6 +76,12 @@ namespace _7DTDManager.ShopSystem
             
         }
 
+        public bool NeedsTracking(IPosition pos)
+        {
+            return ShopPosition.IsNear(pos);
+        }
+
+
         public int RegisterItem(ShopSystem.ShopItem item)
         {
             var findItem = (from s in ShopItems select s.ItemID);
@@ -61,7 +90,9 @@ namespace _7DTDManager.ShopSystem
                 lastItem = findItem.Max();
 
             item.ItemID = lastItem + 1;
-            ShopItems.Add(item);            
+            item.Shop = this;
+            ShopItems.Add(item);
+            Program.Config.IsDirty = true;
             return item.ItemID;
         }
 
