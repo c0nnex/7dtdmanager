@@ -23,21 +23,21 @@ namespace _7DTDManager.Commands
         {
             if (args.Length == 1)
             {
-                if (p.Mail.Count > 0)
-                    p.Confirm("You have {0} unread mail(s). Use '/mail read' to read them.", p.Mail.Count);
+                if (p.Mails.Count > 0)
+                    p.Confirm("You have {0} unread mail(s). Use '/mail read' to read them.", p.Mails.Count);
                 else
                     p.Confirm("You have no unread mail.");
                 return true;
             }
             if (args[1] == "read")
             {
-                if (p.Mail.Count <= 0)
+                if (p.Mails.Count <= 0)
                 {
                     p.Error("No unread mail.");
                     return true;
                 }
-                MailMessage mail = p.Mail[0];
-                p.Mail.RemoveAt(0);
+                IMailMessage mail = p.Mails[0];
+                p.Mails.RemoveAt(0);
                 p.Message("From: {0}", server.AllPlayers.FindPlayerBySteamID(mail.FromSteamID).Name);
                 p.Message("Date: {0} {1}", mail.When.ToShortDateString(), mail.When.ToShortTimeString());
                 p.Message("Text: {0}", mail.Message);
@@ -61,5 +61,13 @@ namespace _7DTDManager.Commands
             return true;
         }
         
+    }
+
+    public class MailMessage : IMailMessage
+    {
+        public string FromSteamID { get; set; }
+        public DateTime When { get; set; }
+        public string Message { get; set; }
+
     }
 }

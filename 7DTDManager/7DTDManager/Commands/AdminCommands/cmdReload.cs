@@ -22,7 +22,7 @@ namespace _7DTDManager.Commands.AdminCommands
         {
             try
             {
-                logger.Info("reloading config");
+                Log.Info("reloading config");
                 Config.Configuration reloadedConfig = Config.Configuration.Load();
                 Program.Config = reloadedConfig;               
                 p.Message("Configuration reloaded.");
@@ -30,8 +30,8 @@ namespace _7DTDManager.Commands.AdminCommands
             catch ( Exception ex)
             {
                 p.Error("Error reloading config: {0}", ex.Message);
-                logger.Error("Error reloading config");
-                logger.Error(ex.ToString());
+                Log.Error("Error reloading config");
+                Log.Error(ex.ToString());
             }
             return true;
         }

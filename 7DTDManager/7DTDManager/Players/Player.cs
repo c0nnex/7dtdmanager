@@ -1,4 +1,5 @@
-﻿using _7DTDManager.Interfaces;
+﻿using _7DTDManager.Commands;
+using _7DTDManager.Interfaces;
 using _7DTDManager.Objects;
 using NLog;
 using System;
@@ -13,7 +14,7 @@ namespace _7DTDManager.Players
     public delegate void PlayerChanged(object sender, EventArgs e);
 
     [Serializable]
-    public class Player : IPlayer , ICalloutCallback
+    public class Player : IPlayer 
     {
         static Logger logger = LogManager.GetCurrentClassLogger();
         [XmlAttribute]
@@ -50,7 +51,7 @@ namespace _7DTDManager.Players
         public List<AreaProtection> AreaProtections { get; set; }
         public List<string> Friends { get; set; }
 
-        public List<MailMessage> Mail { get; set; }
+        public List<MailMessage> Mails { get; set; }
 
         private int LastDeaths = 0, LastPlayerKills = 0, LastZombieKills = 0;
         private DateTime LastUpdate = DateTime.Now;
@@ -63,7 +64,7 @@ namespace _7DTDManager.Players
         
         public event PlayerChanged Changed;
         public event PlayerMovedDelegate PlayerMoved;
-       
+        public event PlayerPositionUpdateDelegate PlayerPositionUpdated;
 
         private void OnChanged()
         {
@@ -80,6 +81,14 @@ namespace _7DTDManager.Players
             PlayersManager.Instance.OnPlayerMoved(this, oldPos, newPos);
         }
 
+        private void OnPlayerPositionUpdated(IPosition newPos)
+        {
+            PlayerPositionUpdateDelegate handler = PlayerPositionUpdated;
+            if (handler != null)
+                handler(this, new PlayerPositionUpdateEventArgs { NewPosition = newPos });
+            this.ClearEventInvocations("PlayerPositionUpdated");
+        }
+
         public CoolDownList CommandCoolDowns = new CoolDownList();
 
         public Player()
@@ -94,7 +103,7 @@ namespace _7DTDManager.Players
             IsOnline = false;
             Friends = new List<string>();
             AreaProtections = new List<AreaProtection>();
-            Mail = new List<MailMessage>();
+            Mails = new List<MailMessage>();
         }
 
         /// <summary>
@@ -112,7 +121,8 @@ namespace _7DTDManager.Players
                     continue;
                 }
                 protection.Owner = this;
-                CalloutManager.RegisterCallout( new ProtectionExpiryCallout { 
+                CalloutManagerImpl.RegisterCallout(new ProtectionExpiryCallout
+                { 
                     Callback = protection, 
                     Owner = this, 
                     When = protection.Expires - new TimeSpan(1,0,0) 
@@ -148,12 +158,12 @@ namespace _7DTDManager.Players
                 LastZombieKills = ZombieKills;
                 CurrentPosition = Position.InvalidPosition;
                 if (!String.IsNullOrEmpty(Program.Config.MOTD))
-                    CalloutManager.RegisterCallout(new MessageCallout(this, CalloutType.Error, Program.Config.MOTD));
-                CalloutManager.RegisterCallout(new MessageCallout(this, new TimeSpan(0, 0, 90), CalloutType.Error, Program.HELLO));
+                    CalloutManagerImpl.RegisterCallout(new MessageCallout(this, CalloutType.Error, Program.Config.MOTD));
+                CalloutManagerImpl.RegisterCallout(new MessageCallout(this, new TimeSpan(0, 0, 90), CalloutType.Error, Program.HELLO));
                 OnChanged();
                 PlayersManager.Instance.OnPlayerLogin(this);
-                if (Mail.Count > 0)
-                    Confirm("You have {0} unread mail(s). Use '/mail read' to read them.", Mail.Count);
+                if (Mails.Count > 0)
+                    Confirm("You have {0} unread mail(s). Use '/mail read' to read them.", Mails.Count);
             }
         }
 
@@ -162,7 +172,7 @@ namespace _7DTDManager.Players
             Payday();
             logger.Info("{0} is now offline", Name);
             IsOnline = false;
-            CalloutManager.UnregisterCallouts(this);
+            CalloutManagerImpl.UnregisterCallouts(this);
             OnChanged();
             PlayersManager.Instance.OnPlayerLogout(this);
         }
@@ -231,7 +241,7 @@ namespace _7DTDManager.Players
             if (ping > 0)
             {
                 PingTracker.AddPing(ping);
-                logger.Info("{0} Avg Ping: {1}", Name, PingTracker.AveragePing);
+                logger.Debug("{0} Avg Ping: {1}", Name, PingTracker.AveragePing);
                 if ((Program.Config.MaxPingAccepted > 0) && (PingTracker.AveragePing > Program.Config.MaxPingAccepted))
                 {
                     PingKicks++;
@@ -253,16 +263,14 @@ namespace _7DTDManager.Players
         public void UpdatePosition(string pos)
         {
             // logger.Debug("UpdatePosition {0}: {1}", Name, pos);
-
-            string[] p = pos.Split(new char[] { ',' });
+            
             Position oldPos = CurrentPosition;
-            CurrentPosition = new Position
-            {
-                X = Convert.ToDouble(p[0].Trim().ToLowerInvariant()),
-                Y = Convert.ToDouble(p[1].Trim().ToLowerInvariant()),
-                Z = Convert.ToDouble(p[2].Trim().ToLowerInvariant())
-            };
+            CurrentPosition = Position.FromString(pos) as Position;
 
+            if ( !CurrentPosition.IsValid )
+            {
+                OnPlayerPositionUpdated(CurrentPosition);
+            }
             OnChanged();
             if ((CurrentPosition != oldPos) && (oldPos.IsValid) && (CurrentPosition.IsValid))
             {
@@ -272,15 +280,8 @@ namespace _7DTDManager.Players
         }
 
         public void UpdateHomePosition(string pos)
-        {
-            // logger.Debug("UpdateHomePosition {0}: {1}", Name, pos);
-            string[] p = pos.Split(new char[] { ',' });
-            HomePosition = new Position
-            {
-                X = Convert.ToDouble(p[0].Trim().ToLowerInvariant()),
-                Y = Convert.ToDouble(p[1].Trim().ToLowerInvariant()),
-                Z = Convert.ToDouble(p[2].Trim().ToLowerInvariant())
-            };
+        {         
+            HomePosition = Position.FromString(pos) as Position;
             OnChanged();
         }
 
@@ -425,9 +426,31 @@ namespace _7DTDManager.Players
 
         public void AddMail(MailMessage newMail)
         {
-            Mail.Add(newMail);
+            Mails.Add(newMail);
             if (IsOnline)
                 Confirm("You have new mail.");
+        }
+
+
+        HashSet<IPlayer> IPlayer.Friends
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        IList<IMailMessage> IPlayer.Mails
+        {
+            get { return Mails as IList<IMailMessage>; }
+        }
+
+        public HashSet<IPosition> LandProtections
+        {
+            get;
+            set;
+        }
+
+        public void AddMail(IMailMessage newMail)
+        {
+            AddMail(newMail as MailMessage);
         }
     }
 

@@ -8,6 +8,8 @@ namespace _7DTDManager.Interfaces
 {
     public interface IServerLineHandler
     {
+        void Init(IServerConnection serverConnection);
+        bool PriorityProcess { get; }
         bool ProcessLine(IServerConnection serverConnection, string currentLine);
     }
 }

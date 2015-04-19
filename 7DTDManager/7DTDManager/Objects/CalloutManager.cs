@@ -8,9 +8,11 @@ using System.Threading.Tasks;
 
 namespace _7DTDManager.Objects
 {
-    public class CalloutManager
+    public class CalloutManagerImpl : ICalloutManager
     {
-        static Logger logger = LogManager.GetCurrentClassLogger();
+        internal static Logger logger = LogManager.GetCurrentClassLogger();
+
+        public static CalloutManagerImpl Instance = new CalloutManagerImpl();
 
         static List<ICallout> AllCallouts = new List<ICallout>();
         static DateTime nextCallout = DateTime.MaxValue;
@@ -36,7 +38,7 @@ namespace _7DTDManager.Objects
             {
                 if (item.When <= now )
                 {
-                    item.Execute();
+                    item.Execute(Program.Server);
                 }
             }
             Housekeeping();
@@ -62,15 +64,70 @@ namespace _7DTDManager.Objects
             AllCallouts = newList;
         }
 
-        public static void UnregisterCallouts(ICalloutCallback p)
+        public static void UnregisterCallouts(object p)
         {
+            List<ICallout> newList = new List<ICallout>();
             foreach (var item in AllCallouts)
             {
-                if ((item.Callback == p) || (item.Owner == p) ) 
-                    item.Done = true;
+                if ((item.Callback != p) && (item.Owner != p))
+                    newList.Add(item);
             }
-            Housekeeping();
+            AllCallouts = newList;
             UpdateCallouts();
         }
+
+        public ICallout AddCallout(ICalloutCallback owner, TimeSpan delay, bool persistant)
+        {
+            BasicCallout c = new BasicCallout();
+            c.When = DateTime.Now + delay;
+            c.Callback = owner;
+            c.Owner = owner;
+            c.Persistent = persistant;
+            c.Delay = delay;
+            CalloutManagerImpl.RegisterCallout(c);
+            return c;
+        }
+
+        public void RemoveCallout(ICallout callout)
+        {
+            CalloutManagerImpl.AllCallouts.Remove(callout);
+            UpdateCallouts();
+        }
+
+        public void RemoveAllCalloutsFor(object owner)
+        {
+            CalloutManagerImpl.UnregisterCallouts(owner);
+        }
+
     }
+
+    public class BasicCallout : ICallout
+    {
+        public DateTime When { get; set; }
+        public TimeSpan Delay { get; set; }
+        public bool Done { get; set; }
+        public bool Persistent { get; set; }
+        public ICalloutCallback Callback { get; set; }
+        public object Owner { get; set; }
+
+        public virtual void Execute(IServerConnection serverConnection)
+        {
+            try
+            {
+                if (Callback != null)
+                {
+                    Callback.CalloutCallback(this, serverConnection);
+                    if (!Persistent)
+                        Done = true;
+                    else
+                        When = DateTime.Now + Delay;
+                }
+            }
+            catch (Exception ex)
+            {
+                CalloutManagerImpl.logger.Error("Error in calloutcallback {0}: {1}", Callback.ToString(), ex.Message);
+            }
+        }
+    }
+    
 }

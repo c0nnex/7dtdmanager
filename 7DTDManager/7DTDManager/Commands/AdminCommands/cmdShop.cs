@@ -86,7 +86,7 @@ namespace _7DTDManager.Commands
                         if (!Config.Configuration.AllKnownItems.Contains(item.ItemName))
                         {
                             p.Error("Warning: Item '{0}' might be unknow to the server. Did you install the ServerMod?", item.ItemName);
-                            logger.Warn("Item '{0}' might be unknown to the server. Did you install the ServerMod?", item.ItemName);
+                            Log.Warn("Item '{0}' might be unknown to the server. Did you install the ServerMod?", item.ItemName);
                         }
                         item.StockAmount = Convert.ToInt32(groups["itemcount"].Value);
                         item.RestockAmount = Convert.ToInt32(groups["restockcount"].Value);

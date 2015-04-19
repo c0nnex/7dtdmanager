@@ -62,7 +62,7 @@ namespace _7DTDManager.ShopSystem
             {
                 if (NextRestock < DateTime.Now )
                 {
-                    CalloutCallback(null);
+                    CalloutCallback(null,null);
                 }
                 
                 if ( ( NextRestock == DateTime.MaxValue) || (NextRestock > (DateTime.Now + RestockDelay)))
@@ -70,17 +70,18 @@ namespace _7DTDManager.ShopSystem
                     NextRestock = DateTime.Now + RestockDelay;
                 }
                 logger.Info("{0}: Start restocking {1}  Delay = {2}", Shop.ShopName,ItemName, RestockDelay.ToString());
-                CalloutManager.RegisterCallout(new RestockCallout { When = NextRestock, Callback = this, Persistent = true });
+                CalloutManagerImpl.Instance.AddCallout(this, RestockDelay, true);
+              
             }
         }
 
         public void StopRestocking()
         {
             logger.Info("{0}: Stop restocking {1} ", Shop.ShopName, ItemName);
-            CalloutManager.UnregisterCallouts(this);
+            CalloutManagerImpl.UnregisterCallouts(this);
         }
 
-        public void CalloutCallback(ICallout c)
+        public void CalloutCallback(ICallout c,IServerConnection serverConnection)
         {
             if (RestockAmount <= 0 )
             {
@@ -89,6 +90,7 @@ namespace _7DTDManager.ShopSystem
             if (StockAmount < MaxStock)
             {
                 StockAmount += RestockAmount;
+                StockAmount = Math.Min(MaxStock, StockAmount);
                 Program.Config.IsDirty = true;
                 logger.Info("{0} restocking {1} new Stock {2}",Shop.ShopName, ItemName, StockAmount);
             }
@@ -96,19 +98,9 @@ namespace _7DTDManager.ShopSystem
             {
                 logger.Debug("{0} restocking {1}: max stock reached", Shop.ShopName, ItemName, StockAmount);
             }
-
-            NextRestock = DateTime.Now + RestockDelay;
-            if ( c != null )
-                c.When = NextRestock; // Update callout
+           
         }
     }
 
-    public class RestockCallout : ICallout
-    {
-        public override void Execute()
-        {
-            if (Callback != null)
-                Callback.CalloutCallback(this);
-        }
-    }
+    
 }

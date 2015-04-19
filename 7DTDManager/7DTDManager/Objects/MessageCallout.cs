@@ -19,7 +19,7 @@ namespace _7DTDManager.Objects
         Movement
     }
 
-    public class MessageCallout : ICallout
+    public class MessageCallout : BasicCallout
     {
         public IPlayer Who {
             get { return Callback as IPlayer; }
@@ -50,11 +50,11 @@ namespace _7DTDManager.Objects
 
         void target_PlayerMoved(object sender, PlayerMovementEventArgs e)
         {
-            Execute();
+            Execute(null);
             Who.PlayerMoved -= target_PlayerMoved;
         }
 
-        public override void Execute()
+        public override void Execute(IServerConnection serverConnection)
         {
             if (Done)
                 return;

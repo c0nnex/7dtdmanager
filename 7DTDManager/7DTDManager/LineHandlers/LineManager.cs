@@ -47,7 +47,13 @@ namespace _7DTDManager.Commands
         public static void ProcessLine(IServerConnection serverConnection, string currentLine)
         {
             logger.Trace("Processing: {0}", currentLine);
-            foreach (var item in allHandlers)
+            // First High prio
+            foreach (var item in (from h in allHandlers where h.PriorityProcess select h))
+            {
+                if (item.ProcessLine(serverConnection, currentLine))
+                    return;
+            }
+            foreach (var item in (from h in allHandlers where !h.PriorityProcess select h))
             {
                 if (item.ProcessLine(serverConnection, currentLine))
                     return;

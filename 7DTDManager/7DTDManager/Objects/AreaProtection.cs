@@ -17,10 +17,10 @@ namespace _7DTDManager.Objects
         public DateTime Expires { get; set; }
 
         public List<string> RecordedEvents { get; set; }
-
-        public void CalloutCallback(ICallout c)
+        
+        public void CalloutCallback(ICallout c, IServerConnection serverConnection)
         {
-            throw new NotImplementedException();
+            
         }
     }
 }

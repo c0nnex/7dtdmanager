@@ -10,11 +10,15 @@ namespace _7DTDManager.Interfaces
     {
 
         IPlayersManager AllPlayers { get; }
+        ICalloutManager CalloutManager { get; }
+
         bool IsConnected { get; }
         bool CommandsDisabled { get; set; }
 
         void PrivateMessage(IPlayer p, string msg, params object[] args);
         void PublicMessage(string msg, params object[] args);
         void Execute(string cmd, params object[] args);
+
+        IPosition CreatePosition(string pos);
     }
 }

@@ -39,8 +39,8 @@ namespace _7DTDManager.Commands
                 p.Message("You travelled {0} km so far.", (int)(targetPlayer.DistanceTravelled / 1000.0));
             if (targetPlayer.Bounty > 0)
                 p.Error("Bounty on your head: {0} coins", targetPlayer.Bounty);
-            if ((targetPlayer == p) && (targetPlayer.Mail.Count > 0))
-                p.Confirm("You have {0} unread mails.", targetPlayer.Mail.Count);
+            if ((targetPlayer == p) && (targetPlayer.Mails.Count > 0))
+                p.Confirm("You have {0} unread mails.", targetPlayer.Mails.Count);
             return true;
         }
         

@@ -1,4 +1,5 @@
 ﻿using _7DTDManager.Interfaces;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,8 @@ namespace _7DTDManager.Objects
     [Serializable]
     public sealed class Position : IPosition, IEquatable<IPosition>
     {
+        static Logger logger = LogManager.GetCurrentClassLogger();
+
         [XmlAttribute]
         public Double X { get; set; }
         [XmlAttribute]
@@ -65,6 +68,26 @@ namespace _7DTDManager.Objects
         public double Distance(IPosition other)
         {
             return Math.Sqrt(((X - other.X) * (X - other.X) + (Z - other.Z) * (Z - other.Z)));
+        }
+
+        public static IPosition FromString(string pos)
+        {
+            try
+            {
+                string[] p = pos.Split(new char[] { ',' });
+                Position CurrentPosition = new Position
+                {
+                    X = Convert.ToDouble(p[0].Trim().ToLowerInvariant()),
+                    Y = Convert.ToDouble(p[1].Trim().ToLowerInvariant()),
+                    Z = Convert.ToDouble(p[2].Trim().ToLowerInvariant())
+                };
+                return CurrentPosition;
+            }
+			catch ( Exception ex )
+            {
+                logger.Error("error parsing position '{0}' : {1}", pos, ex.Message);
+                return null;
+            }
         }
     }
 }

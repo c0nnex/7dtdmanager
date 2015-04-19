@@ -3,6 +3,7 @@ using System.Collections.Generic;
 namespace _7DTDManager.Interfaces
 {
     public delegate void PlayerMovedDelegate(object sender, PlayerMovementEventArgs e);
+    public delegate void PlayerPositionUpdateDelegate(object sender, PlayerPositionUpdateEventArgs e);
 
     public interface IPlayer
     {
@@ -36,11 +37,18 @@ namespace _7DTDManager.Interfaces
         DateTime LastLogin { get; }
         DateTime LastPayday { get; }
 
-        List<string> Friends { get; }
-        List<MailMessage> Mail { get; set; }
+        HashSet<IPlayer> Friends { get; }
+        IList<IMailMessage> Mails { get;  }
 
-        event PlayerMovedDelegate PlayerMoved;
+        HashSet<IPosition> LandProtections { get; }
         
+        event PlayerMovedDelegate PlayerMoved;
+
+        /// <summary>
+        /// Raised when the PlayerPosition was updated. 
+        /// Note: This is a onetime event! After it was raised the Eventdelegate will be removed from the list!
+        /// </summary>
+        event PlayerPositionUpdateDelegate PlayerPositionUpdated;
 
         void Login();
         void Logout();
@@ -69,20 +77,24 @@ namespace _7DTDManager.Interfaces
         void SetCurrentShop(IShop whichShop);
         IShop GetCurrentShop();
 
-        void AddMail(MailMessage newMail);
+        void AddMail(IMailMessage newMail);
     }
 
     public class PlayerMovementEventArgs : EventArgs
     {
         public IPosition OldPosition;
-        public IPosition NewPosition;
-        //TODO: Movement args
+        public IPosition NewPosition;       
     }
 
-    public class MailMessage
+    public class PlayerPositionUpdateEventArgs : EventArgs
     {
-        public string FromSteamID { get; set; }
-        public DateTime When { get; set; }
-        public string Message { get; set; }
+        public IPosition NewPosition;
+    }
+
+    public interface IMailMessage
+    {
+        string FromSteamID { get;  }
+        DateTime When { get;  }
+        string Message { get;  }
     }
 }

@@ -17,7 +17,7 @@ namespace _7DTDManager.Interfaces
         int CommandArgs { get; set; }
         string CommandUsage { get; set; }
 
-        
+        void Init(ILogger logger);
         bool Execute(IServerConnection server, IPlayer p, params string[] args);
         bool AdminExecute(IServerConnection server, IPlayer p, params string[] args);
     }

@@ -46,10 +46,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseClasses\AdminCommandBase.cs" />
+    <Compile Include="BaseClasses\InfoCommandBase.cs" />
+    <Compile Include="BaseClasses\PublicCommandBase.cs" />
     <Compile Include="Interfaces\IAreaDefiniton.cs" />
     <Compile Include="Interfaces\ICallout.cs" />
     <Compile Include="Interfaces\ICommand.cs" />
     <Compile Include="Interfaces\IConfiguration.cs" />
+    <Compile Include="Interfaces\ILogger.cs" />
     <Compile Include="Interfaces\IPlayer.cs" />
     <Compile Include="Interfaces\IPlayersManager.cs" />
     <Compile Include="Interfaces\IPosition.cs" />
@@ -62,6 +66,7 @@
   <ItemGroup>
     <None Include="7dtdmanager.snk" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

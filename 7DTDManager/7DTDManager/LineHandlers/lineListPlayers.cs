@@ -34,6 +34,16 @@ namespace _7DTDManager.LineHandlers
             }
             return false;
         }
+
+        public bool PriorityProcess
+        {
+            get { return false; }
+        }
+        public void Init(IServerConnection serverConnection)
+        {
+
+        }
+
         
     }
 }

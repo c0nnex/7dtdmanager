@@ -6,21 +6,31 @@ using System.Threading.Tasks;
 
 namespace _7DTDManager.Interfaces
 {
-    public abstract class ICallout
+    public interface ICallout
     {
-     
-        public DateTime When { get; set; }
-        public bool Done { get; set; }
-        public bool Persistent { get; set; }
-        public ICalloutCallback Callback { get;set; }
-        public object Owner { get; set; }
 
-        public abstract void Execute();
-       
+        DateTime When { get; }
+        TimeSpan Delay { get; }
+        bool Done { get; }
+        bool Persistent { get; }
+        ICalloutCallback Callback { get; }
+        object Owner { get; }
+
+        void Execute(IServerConnection serverConnection);
+
     }
 
     public interface ICalloutCallback
     {
-        void CalloutCallback(ICallout c);
+        void CalloutCallback(ICallout c, IServerConnection serverConnection);
     }
+
+    public interface ICalloutManager
+    {
+        ICallout AddCallout(ICalloutCallback owner, TimeSpan delay, bool persistant);
+        void RemoveCallout(ICallout callout);
+        void RemoveAllCalloutsFor(object owner);
+    }
+
+   
 }

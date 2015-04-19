@@ -6,9 +6,9 @@ using System.Text;
 
 namespace _7DTDManager.Objects
 {
-    public class ProtectionExpiryCallout : ICallout
+    public class ProtectionExpiryCallout : BasicCallout
     {
-        public override void Execute()
+        public override void Execute(IServerConnection serverConnection)
         {
             throw new NotImplementedException();
         }
