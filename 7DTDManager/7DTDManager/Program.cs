@@ -55,9 +55,9 @@ namespace _7DTDManager
                         
             Config.UpdateDefaults();
 
-            LineManager.Init();
-            CommandManager.Init();
            
+            CommandManager.Init();
+            
 
             if (Config.IsNewConfiguration)
             {
@@ -128,6 +128,7 @@ namespace _7DTDManager
                 NLogViewerTarget nlogTarget = new NLogViewerTarget();
                 nlogTarget.Address = "udp://127.0.0.1:9999";
 #if DEBUG
+                // To nicely view the nlogtarget i prefer Log4View (free) http://www.log4view.de/log4view/
                 config.LoggingRules.Add(new LoggingRule("*", LogLevel.Trace, fileTarget));
                 config.LoggingRules.Add(new LoggingRule("*", LogLevel.Trace, nlogTarget));
 #else

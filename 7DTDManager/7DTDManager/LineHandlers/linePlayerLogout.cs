@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace _7DTDManager.LineHandlers
 {
-    public class linePlayerLogout : IServerLineHandler
+    public class linePlayerLogout : BaseLineHandler
     {
         static Regex rgPlayerLeave = new Regex(".*disconnected:.*, EntityID=(?<entityid>[0-9]+), PlayerID='(?<steamid>[0-9]+)',.*, PlayerName='(?<name>.*)'.*");
-        public bool ProcessLine(IServerConnection serverConnection, string currentLine)
+        public override bool ProcessLine(IServerConnection serverConnection, string currentLine)
         {
             if (rgPlayerLeave.IsMatch(currentLine))
             {
@@ -29,14 +29,7 @@ namespace _7DTDManager.LineHandlers
             return false;
         }
 
-        public bool PriorityProcess
-        {
-            get { return false; }
-        }
-        public void Init(IServerConnection serverConnection)
-        {
-
-        }
+        
 
     }
 }

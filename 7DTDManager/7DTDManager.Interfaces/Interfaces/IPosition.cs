@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 namespace _7DTDManager.Interfaces
 {
     public interface IPosition
@@ -18,4 +19,6 @@ namespace _7DTDManager.Interfaces
         double Distance(IPosition other);
         
     }
+
+    
 }

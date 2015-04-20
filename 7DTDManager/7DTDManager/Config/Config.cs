@@ -54,6 +54,13 @@ namespace _7DTDManager.Config
         public Dictionary<string, ShopHandler> ShopHandlers = new Dictionary<string, ShopHandler>();
         [XmlIgnore]
         public static HashSet<string> AllKnownItems = new HashSet<string>();
+        [XmlIgnore]
+        IReadOnlyList<IShop> IConfiguration.Shops { get { return Shops as IReadOnlyList<IShop>; } }
+        [XmlIgnore]
+        IAdminList IConfiguration.Admins
+        {
+            get { return Admins as IAdminList; }
+        }
 
         public Configuration()
         {
@@ -163,6 +170,8 @@ namespace _7DTDManager.Config
                 logger.Info(ex.ToString());                
             }
         }
+
+        
     }
 
    

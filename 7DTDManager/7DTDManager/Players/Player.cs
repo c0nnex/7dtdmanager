@@ -24,6 +24,7 @@ namespace _7DTDManager.Players
         [XmlAttribute]
         public string EntityID { get; set; }
 
+        public string IPAddress { get; set; }
         public DateTime FirstLogin { get; set; }
         public DateTime LastLogin { get; set; }
         public DateTime LastPayday { get; set; }
@@ -50,8 +51,7 @@ namespace _7DTDManager.Players
         // ShopSystem Stuff
         public List<AreaProtection> AreaProtections { get; set; }
         public List<string> Friends { get; set; }
-
-        public List<MailMessage> Mails { get; set; }
+        public Mailbox Mailbox { get; set; }
 
         private int LastDeaths = 0, LastPlayerKills = 0, LastZombieKills = 0;
         private DateTime LastUpdate = DateTime.Now;
@@ -103,7 +103,8 @@ namespace _7DTDManager.Players
             IsOnline = false;
             Friends = new List<string>();
             AreaProtections = new List<AreaProtection>();
-            Mails = new List<MailMessage>();
+            Mailbox = new Mailbox();
+            LandProtections = new ExposedList<Position, IPosition>();
         }
 
         /// <summary>
@@ -162,8 +163,8 @@ namespace _7DTDManager.Players
                 CalloutManagerImpl.RegisterCallout(new MessageCallout(this, new TimeSpan(0, 0, 90), CalloutType.Error, Program.HELLO));
                 OnChanged();
                 PlayersManager.Instance.OnPlayerLogin(this);
-                if (Mails.Count > 0)
-                    Confirm("You have {0} unread mail(s). Use '/mail read' to read them.", Mails.Count);
+                if (Mailbox.Mails.Count > 0)
+                    Confirm("You have {0} unread mail(s). Use '/mail read' to read them.", Mailbox.Mails.Count);
             }
         }
 
@@ -267,7 +268,7 @@ namespace _7DTDManager.Players
             Position oldPos = CurrentPosition;
             CurrentPosition = Position.FromString(pos) as Position;
 
-            if ( !CurrentPosition.IsValid )
+            if ( CurrentPosition.IsValid )
             {
                 OnPlayerPositionUpdated(CurrentPosition);
             }
@@ -423,35 +424,32 @@ namespace _7DTDManager.Players
         {
             
         }
-
-        public void AddMail(MailMessage newMail)
-        {
-            Mails.Add(newMail);
-            if (IsOnline)
-                Confirm("You have new mail.");
-        }
-
-
-        HashSet<IPlayer> IPlayer.Friends
+        
+        [XmlIgnore]
+        IExposedList<IPlayer> IPlayer.Friends
         {
             get { throw new NotImplementedException(); }
         }
 
-        IList<IMailMessage> IPlayer.Mails
+        [XmlIgnore]
+        IMailbox IPlayer.Mailbox
         {
-            get { return Mails as IList<IMailMessage>; }
+            get { return Mailbox; }
         }
 
-        public HashSet<IPosition> LandProtections
+        public ExposedList<Position,IPosition> LandProtections
         {
             get;
             set;
         }
 
-        public void AddMail(IMailMessage newMail)
+        [XmlIgnore]
+        IExposedList<IPosition> IPlayer.LandProtections
         {
-            AddMail(newMail as MailMessage);
+            get { return LandProtections as IExposedList<IPosition>; }
+          
         }
+               
     }
 
     public class PingTracker

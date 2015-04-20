@@ -42,7 +42,7 @@ namespace _7DTDManager.Commands
         public static void LoadCommands()
         {
             logger.Info("Loading Commands ...");
-            String path = System.IO.Path.Combine(Program.ApplicationDirectory, "cmds");
+            String path = System.IO.Path.Combine(Program.ApplicationDirectory, "ext");
             if (!Directory.Exists(path))
             {
                 Directory.CreateDirectory(path);
@@ -55,13 +55,14 @@ namespace _7DTDManager.Commands
                     if (loadedDLLs.Contains(file))
                         continue;
                     Assembly x = Assembly.LoadFile(file);
-                    if (!x.FullName.Contains("PublicKeyToken"))
+                    /*
+                    if (x.FullName.Contains("PublicKeyToken=null"))
                     {
-                        logger.Warn("Assembly {0} has no string name. Loading skipped....", x.FullName);
+                        logger.Warn("Assembly {0} has no strong name. Loading skipped....", x.FullName);
                         x = null;
                         continue;
-                    }
-                    logger.Info("Loading Commands from {1}", x.FullName);
+                    }*/
+                    logger.Info("Loading Commands from {0}", x.FullName);
                     RegisterCommandHandlers(x);
                     loadedDLLs.Add(file);
                     
@@ -85,6 +86,8 @@ namespace _7DTDManager.Commands
                     ICommand ex = Activator.CreateInstance(t) as ICommand;
 
                     allCommands[ex.CommandName] = ex;
+                    ILogger l = LogManager.GetLogger(t.ToString(),typeof(ExtensionLogger)) as ILogger;
+                    ex.Init(l);
                     if (!Program.Config.Commands.ContainsCommand(ex.CommandName))
                     {
                         Program.Config.Commands.Add(new Config.CommandConfiguration(ex));
@@ -96,5 +99,10 @@ namespace _7DTDManager.Commands
             }
         }
         
+    }
+
+    public class ExtensionLogger : Logger, ILogger
+    {
+
     }
 }

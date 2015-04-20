@@ -10,6 +10,7 @@ namespace _7DTDManager.Interfaces
         string Name { get; }
         string SteamID { get; }
         string EntityID { get; }
+        string IPAddress { get; set; }
         int Age { get; }
         int Ping { get; }
         
@@ -37,10 +38,9 @@ namespace _7DTDManager.Interfaces
         DateTime LastLogin { get; }
         DateTime LastPayday { get; }
 
-        HashSet<IPlayer> Friends { get; }
-        IList<IMailMessage> Mails { get;  }
-
-        HashSet<IPosition> LandProtections { get; }
+        IExposedList<IPlayer> Friends { get; }
+        IMailbox Mailbox { get; }
+        IExposedList<IPosition> LandProtections { get; }
         
         event PlayerMovedDelegate PlayerMoved;
 
@@ -76,8 +76,7 @@ namespace _7DTDManager.Interfaces
 
         void SetCurrentShop(IShop whichShop);
         IShop GetCurrentShop();
-
-        void AddMail(IMailMessage newMail);
+       
     }
 
     public class PlayerMovementEventArgs : EventArgs
@@ -96,5 +95,13 @@ namespace _7DTDManager.Interfaces
         string FromSteamID { get;  }
         DateTime When { get;  }
         string Message { get;  }
+    }
+
+    public interface IMailbox
+    {
+        IReadOnlyList<IMailMessage> Mails { get; }
+        void AddMail(IPlayer from, string message);
+        void RemoveMail(IMailMessage mail);
+        void Clear();
     }
 }

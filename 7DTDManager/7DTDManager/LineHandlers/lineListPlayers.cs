@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 
 namespace _7DTDManager.LineHandlers
 {
-    public class lineListPlayers : IServerLineHandler
+    public class lineListPlayers : BaseLineHandler
     {
         static Logger logger = LogManager.GetCurrentClassLogger();
-        static Regex rgLPLine = new Regex("^[0-9]+. id=(?<enityid>[0-9]+), (?<name>.*), pos=\\((?<pos>.*)\\), rot=.*, deaths=(?<deaths>[0-9]+), zombies=(?<zombies>[0-9]+), players=(?<players>[0-9]+), score=.*, steamid=(?<steamid>[0-9]+), ip=.*, ping=(?<ping>[0-9]+)");
+        static Regex rgLPLine = new Regex("^[0-9]+. id=(?<enityid>[0-9]+), (?<name>.*), pos=\\((?<pos>.*)\\), rot=.*, deaths=(?<deaths>[0-9]+), zombies=(?<zombies>[0-9]+), players=(?<players>[0-9]+), score=.*, steamid=(?<steamid>[0-9]+), ip=(?<ip>.*), ping=(?<ping>[0-9]+)");
 
-        public bool ProcessLine(IServerConnection serverConnection, string currentLine)
+        public override bool ProcessLine(IServerConnection serverConnection, string currentLine)
         {
             if (rgLPLine.IsMatch(currentLine))
             {
@@ -27,23 +27,17 @@ namespace _7DTDManager.LineHandlers
                 }
                 IPlayer p = serverConnection.AllPlayers.AddPlayer(groups["name"].Value, groups["steamid"].Value, groups["enityid"].Value);
                 p.Login();
+                p.IPAddress = groups["ip"].Value;
                 p.UpdateStats(Convert.ToInt32(groups["deaths"].Value), Convert.ToInt32(groups["zombies"].Value), Convert.ToInt32(groups["players"].Value), Convert.ToInt32(groups["ping"].Value));
                 p.UpdatePosition(groups["pos"].Value);
+                
                 //logger.Info("LP line {0} {1}", p.Name,p.EntityID);
                 return true;
             }
             return false;
         }
 
-        public bool PriorityProcess
-        {
-            get { return false; }
-        }
-        public void Init(IServerConnection serverConnection)
-        {
-
-        }
-
+        
         
     }
 }

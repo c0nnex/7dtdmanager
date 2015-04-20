@@ -11,12 +11,12 @@ using System.Threading.Tasks;
 
 namespace _7DTDManager.LineHandlers
 {
-    public class lineServerCommand : IServerLineHandler
+    public class lineServerCommand : BaseLineHandler
     {
         static Logger logger = LogManager.GetCurrentClassLogger();
         static Regex rgGMSG = new Regex(".*INF GMSG: (?<name>.*): /(?<msg>.*)");
 
-        public bool ProcessLine(IServerConnection serverConnection, string currentLine)
+        public override bool ProcessLine(IServerConnection serverConnection, string currentLine)
         {
             if (rgGMSG.IsMatch(currentLine))
             {
@@ -105,14 +105,6 @@ namespace _7DTDManager.LineHandlers
             return false;
         }
 
-        public bool PriorityProcess
-        {
-            get { return false; }
-        }        
-
-        public void Init(IServerConnection serverConnection)
-        {
-            
-        }
+        
     }
 }

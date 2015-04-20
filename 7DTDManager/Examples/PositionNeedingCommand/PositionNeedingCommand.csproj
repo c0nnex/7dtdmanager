@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{04212D5D-973B-495A-BA06-6E2347E5FD67}</ProjectGuid>
+    <ProjectGuid>{74B93D52-0E8E-4153-9329-8CB4FD12DFFA}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>_7DTDManager.Interfaces</RootNamespace>
-    <AssemblyName>7DTDManager.Interfaces</AssemblyName>
+    <RootNamespace>PositionNeedingCommand</RootNamespace>
+    <AssemblyName>PositionNeedingCommand</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -20,7 +20,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <GenerateSerializationAssemblies>On</GenerateSerializationAssemblies>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,12 +28,6 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>7dtdmanager.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -46,29 +39,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BaseClasses\AdminCommandBase.cs" />
-    <Compile Include="BaseClasses\BaseLineHandler.cs" />
-    <Compile Include="BaseClasses\InfoCommandBase.cs" />
-    <Compile Include="BaseClasses\PublicCommandBase.cs" />
-    <Compile Include="Interfaces\IAreaDefiniton.cs" />
-    <Compile Include="Interfaces\ICallout.cs" />
-    <Compile Include="Interfaces\ICommand.cs" />
-    <Compile Include="Interfaces\IConfiguration.cs" />
-    <Compile Include="Interfaces\ILogger.cs" />
-    <Compile Include="Interfaces\IExposedList.cs" />
-    <Compile Include="Interfaces\IPlayer.cs" />
-    <Compile Include="Interfaces\IPlayersManager.cs" />
-    <Compile Include="Interfaces\IPosition.cs" />
-    <Compile Include="Interfaces\IPositionTrackable.cs" />
-    <Compile Include="Interfaces\IServerConnection.cs" />
-    <Compile Include="Interfaces\IServerLineHandler.cs" />
-    <Compile Include="Interfaces\IShop.cs" />
+    <Compile Include="Class1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="7dtdmanager.snk" />
+    <ProjectReference Include="..\..\7DTDManager.Interfaces\7DTDManager.Interfaces.csproj">
+      <Project>{04212d5d-973b-495a-ba06-6e2347e5fd67}</Project>
+      <Name>7DTDManager.Interfaces</Name>
+    </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

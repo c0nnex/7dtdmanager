@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace _7DTDManager.LineHandlers
 {
-    public class lineListLandProtection : IServerLineHandler,ICalloutCallback
+    public class lineListLandProtection : BaseLineHandler,ICalloutCallback
     {
         static Logger logger = LogManager.GetCurrentClassLogger();
         static Regex rgLLPStart = new Regex("Player \"(?<name>.*) \\((?<steamid>[0-9]+)\\)\" owns (?<keystones>[0-9]+) keystones.*");
@@ -18,13 +18,14 @@ namespace _7DTDManager.LineHandlers
 
         private IPlayer currentPlayer = null;
         bool IsFirst = true;
+        
         int countStones = 0;
 
-        public bool ProcessLine(IServerConnection serverConnection, string currentLine)
+        public override bool ProcessLine(IServerConnection serverConnection, string currentLine)
         {
             if (rgLLPStart.IsMatch(currentLine)) // Start of ListLandProtections deteced
             {
-                PriorityProcess = true;
+                PriorityProcess = true;               
 
                 if (IsFirst)
                     countStones = 0;
@@ -35,13 +36,19 @@ namespace _7DTDManager.LineHandlers
                 currentPlayer = p;
                 if (p != null)
                 {
-                    logger.Debug("Parsing LandProtections of {0}", p.Name);                
-                }                
+                    logger.Debug("Parsing LandProtections of {0}", p.Name);
+                    p.LandProtections.Clear();
+                }
+                else
+                {
+                    logger.Debug("Player {0} unknown! {1}", groups["name"].Value,currentLine);
+                }
+                IsFirst = false;
                 return true;
             }
             if (rgLLPLine.IsMatch(currentLine))
             {
-                Match match = rgLLPStart.Match(currentLine);
+                Match match = rgLLPLine.Match(currentLine);
                 GroupCollection groups = match.Groups;
                 IPosition newLP = serverConnection.CreatePosition(groups["pos"].Value);
                 if ( (newLP != null) && (currentPlayer != null))
@@ -53,7 +60,7 @@ namespace _7DTDManager.LineHandlers
             }
             if (rgLLPEnd.IsMatch(currentLine))
             {
-                Match match = rgLLPStart.Match(currentLine);
+                Match match = rgLLPEnd.Match(currentLine);
                 GroupCollection groups = match.Groups;
 
                 PriorityProcess = false;
@@ -61,29 +68,26 @@ namespace _7DTDManager.LineHandlers
                 int targetNum = Int32.Parse(groups["numstones"].Value);
                 if (countStones != targetNum)
                 {
-                    logger.Warn("Number mismatch in ListLandProtection!");
+                    logger.Warn("Number mismatch in ListLandProtection! {0} != {1}",targetNum,countStones);
                 }
                 return true;
             }
             return false;
         }
 
-        public bool PriorityProcess
-        {
-            get;
-            set;
-        }
-
-       
+        
 
         public void CalloutCallback(ICallout c, IServerConnection serverConnection)
         {
             serverConnection.Execute("llp");
         }
 
-        public void Init(IServerConnection serverConnection)
+        public override void Init(IServerConnection serverConnection, ILogger logger) 
         {
-            
+            base.Init(serverConnection, logger);
+            // Update LandProtections every 15 Minutes
+            serverConnection.CalloutManager.AddCallout(this, new TimeSpan(0, 15, 0), true);
+            serverConnection.Execute("llp");
         }
     }
 }

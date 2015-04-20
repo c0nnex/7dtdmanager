@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace _7DTDManager.LineHandlers
 {
-    public class linePlayerLogin : IServerLineHandler
+    public class linePlayerLogin : BaseLineHandler
     {
         static Regex rgPlayerJoin = new Regex(".*Player connected, .*entityid=(?<entityid>[0-9]+), name=(?<name>.*), steamid=(?<steamid>[0-9]+),.*");
 
-        public bool ProcessLine(IServerConnection serverConnection, string currentLine)
+        public override  bool ProcessLine(IServerConnection serverConnection, string currentLine)
         {
             if (rgPlayerJoin.IsMatch(currentLine))
             {
@@ -27,14 +27,7 @@ namespace _7DTDManager.LineHandlers
             return false;
         }
 
-        public bool PriorityProcess
-        {
-            get { return false; }
-        }
-        public void Init(IServerConnection serverConnection)
-        {
-
-        }
+        
 
     }
 }

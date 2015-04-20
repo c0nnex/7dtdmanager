@@ -58,10 +58,15 @@ namespace _7DTDManager
             return Position.FromString(pos);
         }
 
-
         public ICalloutManager CalloutManager
         {
             get { return CalloutManagerImpl.Instance; }
+        }
+
+
+        public IConfiguration Configuration
+        {
+            get { return Program.Config; }
         }
     }
 }

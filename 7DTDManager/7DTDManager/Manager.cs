@@ -48,6 +48,7 @@ namespace _7DTDManager
             pollTimer.Interval = Program.Config.PollInterval;
             pollTimer.AutoReset = true;
             pollTimer.Elapsed += pollTimer_Elapsed;
+            
         }
 
         
@@ -92,6 +93,7 @@ namespace _7DTDManager
             }
             if (status.ConnectionStatus == ConnectionStatus.Connected)
             {
+                LineManager.Init(this);
                 pollTimer.Start();
             }
         }

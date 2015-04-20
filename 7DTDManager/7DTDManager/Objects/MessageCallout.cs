@@ -21,10 +21,7 @@ namespace _7DTDManager.Objects
 
     public class MessageCallout : BasicCallout
     {
-        public IPlayer Who {
-            get { return Callback as IPlayer; }
-            set { Callback = value as ICalloutCallback; }
-        }
+        public IPlayer Who { get; set; }
         public CalloutType What { get; set; }
         public CalloutTriggerType Trigger { get;set;}
         public String Message { get; set; }
@@ -35,6 +32,7 @@ namespace _7DTDManager.Objects
             When = DateTime.Now + when;
             What = what;
             Message = msg;
+            Owner = target;
             Trigger = CalloutTriggerType.Time;            
 
         }
@@ -44,6 +42,7 @@ namespace _7DTDManager.Objects
             Who = target;         
             What = what;
             Message = msg;
+            Owner = target;
             Trigger = CalloutTriggerType.Movement;
             target.PlayerMoved += target_PlayerMoved;
         }

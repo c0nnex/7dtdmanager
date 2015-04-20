@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace _7DTDManager.LineHandlers
 {
-    public class linePlayerKilled : IServerLineHandler
+    public class linePlayerKilled : BaseLineHandler
     {
         static Regex rgDeath = new Regex(".*INF GMSG: Player (?<killer>.*) eliminated Player (?<victim>.*)");
 
-        public bool ProcessLine(IServerConnection serverConnection, string currentLine)
+        public override bool ProcessLine(IServerConnection serverConnection, string currentLine)
         {
             if (rgDeath.IsMatch(currentLine))
             {
@@ -62,14 +62,7 @@ namespace _7DTDManager.LineHandlers
             return false;
         }
 
-        public bool PriorityProcess
-        {
-            get { return false; }
-        }
-        public void Init(IServerConnection serverConnection)
-        {
-
-        }
+        
 
     }
 }

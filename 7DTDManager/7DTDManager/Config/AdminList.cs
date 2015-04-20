@@ -9,7 +9,7 @@ using System.Xml.Serialization;
 namespace _7DTDManager.Config
 {
     [Serializable]
-    public class AdminList : List<AdminEntry>
+    public class AdminList : List<AdminEntry> 
     {
         public bool IsAdmin(string steamid)
         {
@@ -31,7 +31,7 @@ namespace _7DTDManager.Config
 
     [Serializable]
     [XmlRoot(ElementName = "Admin")]
-    public class AdminEntry
+    public class AdminEntry : IAdminEntry
     {
         [XmlAttribute]
         public string SteamID { get; set; }

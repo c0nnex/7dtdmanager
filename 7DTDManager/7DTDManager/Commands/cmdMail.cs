@@ -23,21 +23,21 @@ namespace _7DTDManager.Commands
         {
             if (args.Length == 1)
             {
-                if (p.Mails.Count > 0)
-                    p.Confirm("You have {0} unread mail(s). Use '/mail read' to read them.", p.Mails.Count);
+                if (p.Mailbox.Mails.Count > 0)
+                    p.Confirm("You have {0} unread mail(s). Use '/mail read' to read them.", p.Mailbox.Mails.Count);
                 else
                     p.Confirm("You have no unread mail.");
                 return true;
             }
             if (args[1] == "read")
             {
-                if (p.Mails.Count <= 0)
+                if (p.Mailbox.Mails.Count <= 0)
                 {
                     p.Error("No unread mail.");
                     return true;
                 }
-                IMailMessage mail = p.Mails[0];
-                p.Mails.RemoveAt(0);
+                IMailMessage mail = p.Mailbox.Mails[0];
+                p.Mailbox.RemoveMail(mail);
                 p.Message("From: {0}", server.AllPlayers.FindPlayerBySteamID(mail.FromSteamID).Name);
                 p.Message("Date: {0} {1}", mail.When.ToShortDateString(), mail.When.ToShortTimeString());
                 p.Message("Text: {0}", mail.Message);
@@ -55,19 +55,12 @@ namespace _7DTDManager.Commands
                 return true;
             }
             string restCmd = String.Join(" ", args, 2, args.Length - 2);
-            MailMessage newMail = new MailMessage { FromSteamID = p.SteamID, When = DateTime.Now, Message = restCmd };
-            targetPlayer.AddMail(newMail);
+            targetPlayer.Mailbox.AddMail(p, restCmd);
             p.Confirm("Mail sent to '{0}'.", targetPlayer.Name);
             return true;
         }
         
     }
 
-    public class MailMessage : IMailMessage
-    {
-        public string FromSteamID { get; set; }
-        public DateTime When { get; set; }
-        public string Message { get; set; }
-
-    }
+    
 }

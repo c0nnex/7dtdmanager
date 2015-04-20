@@ -11,6 +11,7 @@ namespace _7DTDManager.Interfaces
 
         IPlayersManager AllPlayers { get; }
         ICalloutManager CalloutManager { get; }
+        IConfiguration Configuration { get; }
 
         bool IsConnected { get; }
         bool CommandsDisabled { get; set; }
