@@ -72,6 +72,8 @@ namespace _7DTDManager.Commands
                 p.Message("Cost: {0} coins.", cmd.CommandCost);
             if (cmd.CommandCoolDown > 0)
                 p.Message("Cooldown: {0} minutes.", cmd.CommandCoolDown);
+            if (cmd.CommandAliases.Length > 0)
+                p.Message("Aliases: {0}", String.Join(", ", cmd.CommandAliases));
             return true;
         }
        

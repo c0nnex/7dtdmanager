@@ -14,6 +14,7 @@ namespace _7DTDManager.Interfaces.Commands
         public int _CommandCost = 0, _CommandCoolDown = 0, _CommandLevel = 0, _CommandArgs = 0;
         public string _CommandHelp = "No help available", _CommandName = "noname", _CommandUsage = "";
         public bool _CommandIsInfo = false;
+        public string[] _CommandAliases = new string[] { };
 
         public int CommandCost
         {
@@ -61,6 +62,12 @@ namespace _7DTDManager.Interfaces.Commands
         {
             get { return _CommandUsage; }
             set { _CommandUsage = value; }
+        }
+
+        public string[] CommandAliases
+        {
+            get { return _CommandAliases; }
+            set { _CommandAliases = value; }
         }
 
         public PublicCommandBase()

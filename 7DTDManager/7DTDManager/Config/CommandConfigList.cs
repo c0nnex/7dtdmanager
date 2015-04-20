@@ -62,6 +62,7 @@ namespace _7DTDManager.Config
             if (cmd.CommandLevel != config.Level)
                 logger.Warn("{0} Changing Level from {1} to {2}", cmd.CommandName, cmd.CommandLevel, config.Level);
             cmd.CommandLevel = config.Level;
+            cmd.CommandAliases = config.Alias;
         }
     }
 
@@ -79,6 +80,26 @@ namespace _7DTDManager.Config
         public bool Enabled { get; set; }
         [XmlAttribute]
         public int Level { get; set; }
+        [XmlAttribute]
+        public string Aliases
+        {
+            get
+            {
+                if (Alias.Length > 0)
+                    return String.Join(",", Alias);
+                return String.Empty;
+            }
+            set
+            {
+                if (String.IsNullOrEmpty(value))
+                    Alias = new string[] { };
+                else
+                    Alias = value.ToLowerInvariant().Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            }
+        }
+
+        [XmlIgnore]
+        public string[] Alias = new string[] { };
 
         public CommandConfiguration()
         {

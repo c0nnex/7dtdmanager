@@ -94,6 +94,11 @@ namespace _7DTDManager.Commands
                     }
                     else
                         Program.Config.Commands.UpdateCommand(ex);
+                    foreach (var item in ex.CommandAliases)
+                    {
+                        if (!String.IsNullOrEmpty(item))
+                            allCommands[item.ToLowerInvariant()] = ex;
+                    }
                     Program.Config.Save(true);
                 }
             }
