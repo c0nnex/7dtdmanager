@@ -29,6 +29,8 @@ namespace _7DTDManager.Commands
                     cmd = cmds[item];
                     if ((cmd.CommandLevel > 0) || (cmd is InfoCommand))
                         continue;
+                    if (cmd.CommandName != item) // hide aliases
+                        continue;
                     s += " /" + item + ",";
                 }
                 p.Message(s);
@@ -40,6 +42,8 @@ namespace _7DTDManager.Commands
                         cmd = cmds[item];
                         if ((cmd.CommandLevel > p.AdminLevel) || (cmd is InfoCommand) || (cmd.CommandLevel == 0))
                             continue;
+                        if (cmd.CommandName != item) // hide aliases
+                            continue;
                         s += " /" + item + ",";
                     }
                     p.Error(s);
@@ -49,6 +53,8 @@ namespace _7DTDManager.Commands
                 {
                     cmd = cmds[item];
                     if ((cmd.CommandLevel > p.AdminLevel ) || !(cmd is InfoCommand))
+                        continue;
+                    if (cmd.CommandName != item) // hide aliases
                         continue;
                     s += " " + item + ",";
                 }
@@ -66,7 +72,7 @@ namespace _7DTDManager.Commands
                 p.Message("No such command '{0}'", args[1]);
                 return true;
             }
-
+            p.Message("Command '{0}':", cmd.CommandName);
             p.Message(cmd.CommandHelp);
             if (cmd.CommandCost > 0 ) 
                 p.Message("Cost: {0} coins.", cmd.CommandCost);

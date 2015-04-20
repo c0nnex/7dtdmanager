@@ -62,7 +62,14 @@ namespace _7DTDManager.Config
             if (cmd.CommandLevel != config.Level)
                 logger.Warn("{0} Changing Level from {1} to {2}", cmd.CommandName, cmd.CommandLevel, config.Level);
             cmd.CommandLevel = config.Level;
-            cmd.CommandAliases = config.Alias;
+            if (config.Alias.Length > 0)
+                cmd.CommandAliases = config.Alias;
+            else
+            {
+                config.Alias = cmd.CommandAliases;
+                Program.Config.IsDirty = true;
+            }
+            Program.Config.Save();
         }
     }
 
