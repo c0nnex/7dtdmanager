@@ -36,7 +36,7 @@ namespace _7DTDManager.Commands
             int startitem = 0;
             if ( args.Length > 1)
             {
-                if ( Int32.TryParse(args[1],out startitem))
+                if ( !Int32.TryParse(args[1],out startitem))
                 {
                     p.Error(CommandUsage);
                     return false;
