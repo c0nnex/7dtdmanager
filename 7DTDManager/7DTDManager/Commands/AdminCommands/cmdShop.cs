@@ -23,6 +23,7 @@ namespace _7DTDManager.Commands
         }
 
         Regex rgAddItem = new Regex("(?<shopid>[0-9]+) (?<itemname>[a-z0-9]+) (?<itemcount>[0-9]+) (?<restockcount>[0-9]+) (?<restockdelay>[0-9]+) (?<maxstock>[0-9]+) (?<minlevel>[0-9]+) (?<cost>[0-9]+)");
+        Regex rgRemoveShop = new Regex("(?<shopid>[0-9]+)");
 
         public override bool Execute(IServerConnection server, IPlayer p, params string[] args)
         {
@@ -53,8 +54,25 @@ namespace _7DTDManager.Commands
                             p.Message("All shops deleted.");
                             return true;
                         }
-                    }
-                    break;
+                        if (!rgRemoveShop.IsMatch(restCmd))
+                        {
+                            p.Error("Usage: /shop removeshop <shopid>|all");
+                            return true;
+                        }
+                        Match match = rgAddItem.Match(restCmd);
+                        GroupCollection groups = match.Groups;
+
+                        int shopID = Convert.ToInt32(groups["shopid"].Value);
+                        Shop shop = (from s in Program.Config.Shops where s.ShopID == shopID select s).FirstOrDefault();
+                        if (shop == null)
+                        {
+                            p.Error("Shop with ID {0} not found.", shopID);
+                            return true;
+                        }
+                        Program.Config.Shops.Remove(shop);
+                        p.Confirm("Shop '{0}' removed.",shop.ShopName);
+                        return true;
+                    }                   
                 case "additem":
                     {
                         if (!rgAddItem.IsMatch(restCmd))
