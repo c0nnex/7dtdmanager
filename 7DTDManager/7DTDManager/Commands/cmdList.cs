@@ -41,6 +41,7 @@ namespace _7DTDManager.Commands
                     p.Error(CommandUsage);
                     return false;
                 }
+                startitem--;
             }
             p.Message(String.Format("{0,3} {1,-15} {2,5} {3,5}", "#", "name", "price", "stock").Replace(" ","_"));
 
