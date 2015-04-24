@@ -23,21 +23,18 @@ namespace _7DTDManager.Objects
             return false;
         }
 
-
+        [XmlIgnore]
         public bool IsExpired
         {
-            get { throw new NotImplementedException(); }
+            get { return false; }
         }
 
-        public int AreaProtectionID
-        {
-            get { throw new NotImplementedException(); }
-            set {  }
-        }
+        public int AreaProtectionID { get; set;}
 
+        [XmlIgnore]
         IExposedList<IAreaProtectionEvent> IAreaProtection.RecordedEvents
         {
-            get { throw new NotImplementedException(); }
+            get { return null; }
         }
 
         public void RecordEvent(AreaProtectionEventType eventType)
