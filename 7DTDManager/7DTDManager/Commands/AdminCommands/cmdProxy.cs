@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace _7DTDManager.Commands
+namespace _7DTDManager.AdminCommands
 {
     public class cmdProxy : AdminCommandBase
     {
@@ -30,7 +30,8 @@ namespace _7DTDManager.Commands
                 foreach (var p1 in server.AllPlayers.Players)
                 {
                     p1.ProxyPlayer = p;
-                }                
+                }
+                p.ExecuteAs = null;
                 p.Confirm("All Players proxyed");
                 return true;
             }
@@ -40,6 +41,7 @@ namespace _7DTDManager.Commands
                 {
                     p1.ProxyPlayer = null;
                 }
+                p.ExecuteAs = null;
                 p.Confirm("All Players unproxyed");
                 return true;
             }
@@ -51,7 +53,7 @@ namespace _7DTDManager.Commands
             }
             target.ProxyPlayer = p;
             p.ExecuteAs = target;
-            p.Message("Proxying {0}",  target.Name);
+            p.Message("You will now act as {0}",  target.Name);
             return true;
         }
     }

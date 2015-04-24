@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace _7DTDManager.Commands.AdminCommands
+namespace _7DTDManager.AdminCommands
 {
     public class cmdReload : AdminCommandBase
     {        

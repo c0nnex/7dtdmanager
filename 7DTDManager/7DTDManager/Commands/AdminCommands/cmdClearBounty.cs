@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace _7DTDManager.Commands
+namespace _7DTDManager.AdminCommands
 {
     public class cmdClearBounty : AdminCommandBase
     {

@@ -9,7 +9,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace _7DTDManager.Commands
+namespace _7DTDManager.AdminCommands
 {
     public class cmdShop : AdminCommandBase
     {
@@ -129,6 +129,7 @@ namespace _7DTDManager.Commands
                 default:
                     break;
             }
+            p.Error("Not implemented");
             return true;
         }
     }
