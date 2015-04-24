@@ -8,9 +8,11 @@ namespace _7DTDManager.Objects
 {
     public class ProtectionExpiryCallout : BasicCallout
     {
-        public override void Execute(IServerConnection serverConnection)
+        public ProtectionExpiryCallout()
         {
-            throw new NotImplementedException();
+            Delay = new TimeSpan(1, 0, 0);
+            Persistent = true;
         }
+      
     }
 }

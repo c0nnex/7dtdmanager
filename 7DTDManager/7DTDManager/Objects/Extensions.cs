@@ -34,5 +34,30 @@ namespace _7DTDManager.Objects
             }
             return field;
         }
+
+        public static string ToHoursMinutesString(this TimeSpan t)
+        {
+            return String.Format("{1} hours {2} minutes", t.Hours + t.Days*24, t.Minutes);
+        }
+        public static string ToDaysHoursMinutesString(this TimeSpan t)
+        {
+            return String.Format("{0} days {1} hours {2} minutes", t.Days, t.Hours, t.Minutes);
+        }
+        public static string ToDaysHoursMinutesStringShort(this TimeSpan t)
+        {
+            return String.Format("{0}d {1}h {2}m", t.Days, t.Hours, t.Minutes);
+        }
+        public static string ToDistanceString(this double dist,string head,bool inside)
+        {
+            if (dist >= 1000.0)
+                return String.Format("{0} ({1} km)", head, (int)(dist / 1000.0));
+            else
+            {
+                if (inside)
+                    return String.Format("[00FF00]{0} (HERE)[FFFFFF]", head, (int)dist);
+                else
+                    return String.Format("{0} ({1} m)", head, (int)dist);
+            }
+        }
     }
 }

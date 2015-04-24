@@ -19,6 +19,19 @@ namespace _7DTDManager.Objects
             get { return Items as IReadOnlyList<ExposedType>; }
         }
 
+        public void Add(BaseType value)
+        {
+            Items.Add(value);
+        }
+        public void Remove(BaseType value)
+        {
+            Items.Remove(value);
+        }
+        public void Clear()
+        {
+            Items.Clear();
+        }
+
         void IExposedList<ExposedType>.Add(ExposedType value)
         {
             Items.Add((BaseType)value);
@@ -32,6 +45,12 @@ namespace _7DTDManager.Objects
         void IExposedList<ExposedType>.Clear()
         {
             Items.Clear();
+        }
+
+
+        public void RemoveAt(int index)
+        {
+            Items.RemoveAt(index);
         }
     }
 }

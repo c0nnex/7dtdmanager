@@ -17,6 +17,7 @@ namespace _7DTDManager.LineHandlers
         static Regex rgLLPEnd = new Regex("Total of (?<numstones>[0-9]+) keystones in the game");
 
         private IPlayer currentPlayer = null;
+        private List<IAreaProtection> found = null;
         bool IsFirst = true;
         
         int countStones = 0;
@@ -29,15 +30,19 @@ namespace _7DTDManager.LineHandlers
 
                 if (IsFirst)
                     countStones = 0;
+
+                if (currentPlayer != null) // Switch to Next Player
+                    CleanupProtections();
+
                 Match match = rgLLPStart.Match(currentLine);
                 GroupCollection groups = match.Groups;
 
                 IPlayer p = serverConnection.AllPlayers.FindPlayerBySteamID(groups["steamid"].Value);
                 currentPlayer = p;
+                found = new List<IAreaProtection>();  
                 if (p != null)
                 {
-                    logger.Debug("Parsing LandProtections of {0}", p.Name);
-                    p.LandProtections.Clear();
+                    logger.Debug("Parsing LandProtections of {0}", p.Name);                                      
                 }
                 else
                 {
@@ -53,7 +58,14 @@ namespace _7DTDManager.LineHandlers
                 IPosition newLP = serverConnection.CreatePosition(groups["pos"].Value);
                 if ( (newLP != null) && (currentPlayer != null))
                 {
-                    currentPlayer.LandProtections.Add(newLP);
+                    
+                    IAreaProtection protection = (from p in currentPlayer.LandProtections.Items where p.Center.Equals(newLP) select p).FirstOrDefault();
+                    if (protection == null)
+                    {
+                        protection = serverConnection.CreateProtection(newLP,currentPlayer);
+                        currentPlayer.LandProtections.Add(protection);                        
+                    }
+                    found.Add(protection);
                     countStones++;
                 }
                 return true;
@@ -70,23 +82,37 @@ namespace _7DTDManager.LineHandlers
                 {
                     logger.Warn("Number mismatch in ListLandProtection! {0} != {1}",targetNum,countStones);
                 }
+                if (currentPlayer != null) // Switch to Next Player
+                    CleanupProtections();
                 return true;
             }
             return false;
         }
 
-        
+        private void CleanupProtections()
+        {
+            foreach (var item in currentPlayer.LandProtections.Items)
+            {
+                IAreaProtection protection = (from p in found where p.Center == item.Center select p).FirstOrDefault();
+                if (protection == null)
+                {
+                    item.RecordEvent(AreaProtectionEventType.Destroyed);
+                }
+            }
+        }
+       
 
-        public void CalloutCallback(ICallout c, IServerConnection serverConnection)
+        public bool CalloutCallback(ICallout c, IServerConnection serverConnection)
         {
             serverConnection.Execute("llp");
+            return true;
         }
 
         public override void Init(IServerConnection serverConnection, ILogger logger) 
         {
             base.Init(serverConnection, logger);
             // Update LandProtections every 15 Minutes
-            serverConnection.CalloutManager.AddCallout(this, new TimeSpan(0, 15, 0), true);
+            serverConnection.CalloutManager.AddCallout(this, new TimeSpan(0, 5, 0), true);
             serverConnection.Execute("llp");
         }
     }

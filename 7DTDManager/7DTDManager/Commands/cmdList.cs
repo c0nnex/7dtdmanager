@@ -20,8 +20,8 @@ namespace _7DTDManager.Commands
         }
 
         public override bool Execute(IServerConnection server, IPlayer p, params string[] args)
-        {       
-            Shop shop = (from s in Program.Config.Shops where s.ShopPosition.IsInside(p.CurrentPosition) select s).FirstOrDefault();
+        {
+            Shop shop = p.GetCurrentShop() as Shop;
             if (shop == null)
             {
                 p.Error("You are not inside a shop area. see /shops for a list of shops.");
@@ -43,7 +43,7 @@ namespace _7DTDManager.Commands
                 }
                 startitem--;
             }
-            p.Message(String.Format("{0,3} {1,-15} {2,5} {3,5}", "#", "name", "price", "stock").Replace(" ","_"));
+            p.Message(String.Format("{0,3} {1,-15} {2,5} {3,5}", "#", "name", "price", "stock").Replace(' ', (Char)160));
 
             for (int i = startitem*5; i < (startitem+1)*5; i++)
             {
@@ -51,7 +51,7 @@ namespace _7DTDManager.Commands
                 {
                     ShopItem item = shop.ShopItems[i];
                     int price = Program.Config.ShopHandlers[item.HandlerName].EvaluateBuy(server, p, item, 1);
-                    p.Message(String.Format("{0,3} {1,-15} {2,5} {3,5}", item.ItemID, item.ItemName, price, item.StockAmount).Replace(" ", "_"));
+                    p.Message(String.Format("{0,3} {1,-15} {2,5} {3,5}", item.ItemID, item.ItemName, price, item.StockAmount).Replace(' ', (Char)160));
                 }
             }
             p.Message("--- Page {0} of {1} ----", startitem + 1, ((shop.ShopItems.Count+5) / 5));
@@ -64,7 +64,7 @@ namespace _7DTDManager.Commands
             {
                 p.Confirm(shop.ShopName);
 
-                p.Message(String.Format("{0,3} {1,-15} {2,5} {3,5}", "#", "name", "price", "stock").Replace(" ", "_"));
+                p.Message(String.Format("{0,3} {1,-15} {2,5} {3,5}", "#", "name", "price", "stock").Replace(' ', (Char)160));
 
                 for (int i = 0; i < shop.ShopItems.Count; i++)
                 {
@@ -72,7 +72,7 @@ namespace _7DTDManager.Commands
                     {
                         ShopItem item = shop.ShopItems[i];
                         int price = Program.Config.ShopHandlers[item.HandlerName].EvaluateBuy(server, p, item, 1);
-                        p.Message(String.Format("{0,3} {1,-15} {2,5} {3,5}", item.ItemID, item.ItemName, price, item.StockAmount).Replace(" ", "_"));
+                        p.Message(String.Format("{0,3} {1,-15} {2,5} {3,5}", item.ItemID, item.ItemName, price, item.StockAmount).Replace(' ',(Char)160));
                     }
                 }
                 p.Message("");

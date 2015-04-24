@@ -47,8 +47,7 @@ namespace _7DTDManager
             pollTimer = new System.Timers.Timer();
             pollTimer.Interval = Program.Config.PollInterval;
             pollTimer.AutoReset = true;
-            pollTimer.Elapsed += pollTimer_Elapsed;
-            
+            pollTimer.Elapsed += pollTimer_Elapsed;            
         }
 
         

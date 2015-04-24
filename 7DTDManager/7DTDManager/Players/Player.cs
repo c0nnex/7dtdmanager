@@ -48,10 +48,10 @@ namespace _7DTDManager.Players
         public int Ping { get; set; }
         public int PingKicks { get; set; }
         
-        // ShopSystem Stuff
-        public List<AreaProtection> AreaProtections { get; set; }
+        // ShopSystem Stuff       
         public List<string> Friends { get; set; }
         public Mailbox Mailbox { get; set; }
+        public ExposedList<AreaProtection, IAreaProtection> LandProtections {get;set;}
 
         private int LastDeaths = 0, LastPlayerKills = 0, LastZombieKills = 0;
         private DateTime LastUpdate = DateTime.Now;
@@ -61,7 +61,11 @@ namespace _7DTDManager.Players
         
         [XmlIgnore]
         public bool IsOnline { get; set; }
-        
+        [XmlIgnore]
+        public IPlayer ProxyPlayer { get; set; }
+        [XmlIgnore]
+        public IPlayer ExecuteAs { get; set; }
+
         public event PlayerChanged Changed;
         public event PlayerMovedDelegate PlayerMoved;
         public event PlayerPositionUpdateDelegate PlayerPositionUpdated;
@@ -101,10 +105,10 @@ namespace _7DTDManager.Players
             HomePosition = Position.InvalidPosition;
             LastPaydayPosition = Position.InvalidPosition;
             IsOnline = false;
-            Friends = new List<string>();
-            AreaProtections = new List<AreaProtection>();
+            Friends = new List<string>();          
             Mailbox = new Mailbox();
-            LandProtections = new ExposedList<Position, IPosition>();
+            LandProtections = new ExposedList<AreaProtection, IAreaProtection>();
+            ProxyPlayer = null;
         }
 
         /// <summary>
@@ -113,21 +117,15 @@ namespace _7DTDManager.Players
         /// </summary>
         public void Init()
         {
-            for (int i = AreaProtections.Count -1; i <= 0; i++)
+            foreach (var protection in LandProtections.Items)
             {
-                AreaProtection protection = AreaProtections[i];
+                
                 if ( protection.Expires < DateTime.Now )
-                {
-                    AreaProtections.RemoveAt(i);
+                {                    
                     continue;
                 }
-                protection.Owner = this;
-                CalloutManagerImpl.RegisterCallout(new ProtectionExpiryCallout
-                { 
-                    Callback = protection, 
-                    Owner = this, 
-                    When = protection.Expires - new TimeSpan(1,0,0) 
-                });
+
+                protection.Update(TimeSpan.Zero);
             }
         }
 
@@ -242,8 +240,8 @@ namespace _7DTDManager.Players
             if (ping > 0)
             {
                 PingTracker.AddPing(ping);
-                logger.Debug("{0} Avg Ping: {1}", Name, PingTracker.AveragePing);
-                if ((Program.Config.MaxPingAccepted > 0) && (PingTracker.AveragePing > Program.Config.MaxPingAccepted))
+                logger.Trace("{0} Avg Ping: {1}", Name, PingTracker.AveragePing);
+                if (!IsAdmin && (Program.Config.MaxPingAccepted > 0) && (PingTracker.AveragePing > Program.Config.MaxPingAccepted))
                 {
                     PingKicks++;
                     if ((Program.Config.BanAfterKicks > 0) && (PingKicks > Program.Config.BanAfterKicks))
@@ -359,6 +357,8 @@ namespace _7DTDManager.Players
 
         public virtual void Message(string p, params object[] args)
         {
+            if ( (ProxyPlayer != null) && ( (ProxyPlayer.IsOnline) || (ProxyPlayer == Program.ServerPlayer)) && (ProxyPlayer != this))
+                ProxyPlayer.Message(p, args);
             if (IsOnline)
                 Program.Server.PrivateMessage(this, String.Format(p, args));
         }
@@ -407,7 +407,7 @@ namespace _7DTDManager.Players
 
         public bool IsFriendOf(IPlayer other)
         {
-            throw new NotImplementedException();
+            return false;
         }
 
         public void SetCurrentShop(IShop whichShop)
@@ -437,19 +437,30 @@ namespace _7DTDManager.Players
             get { return Mailbox; }
         }
 
-        public ExposedList<Position,IPosition> LandProtections
-        {
-            get;
-            set;
-        }
+       
 
         [XmlIgnore]
-        IExposedList<IPosition> IPlayer.LandProtections
+        IExposedList<IAreaProtection> IPlayer.LandProtections
         {
-            get { return LandProtections as IExposedList<IPosition>; }
+            get { return LandProtections as IExposedList<IAreaProtection>; }
           
         }
-               
+
+
+
+        public void ClearPingKicks()
+        {
+            if (PingKicks > 0)
+            {
+                logger.Info("{0}: PingKicks ({1}) cleared", Name, PingKicks);
+                PingKicks = 0;
+            }
+        }
+
+        public void Dirty()
+        {
+            Program.Config.IsDirty = true;
+        }
     }
 
     public class PingTracker

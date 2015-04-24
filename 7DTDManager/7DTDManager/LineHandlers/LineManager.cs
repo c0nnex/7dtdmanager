@@ -17,6 +17,7 @@ namespace _7DTDManager.Commands
         static List<IServerLineHandler> allHandlers = new List<IServerLineHandler>();
         static List<string> loadedDLLs = new List<string>();
 
+        public static object lockObject = new Object();
 
         static LineManager()
         {
@@ -25,7 +26,10 @@ namespace _7DTDManager.Commands
 
         public static void Init(IServerConnection serverConnection)
         {
-            RegisterLineHandlers(System.Reflection.Assembly.GetExecutingAssembly(), serverConnection);
+            lock (lockObject)
+            {
+                RegisterLineHandlers(System.Reflection.Assembly.GetExecutingAssembly(), serverConnection);
+            }
         }
 
         public static void LoadLineHandlers(IServerConnection serverConnection)
@@ -82,17 +86,20 @@ namespace _7DTDManager.Commands
 
         public static void ProcessLine(IServerConnection serverConnection, string currentLine)
         {
-            logger.Trace("Processing: {0}", currentLine);
-            // First High prio
-            foreach (var item in (from h in allHandlers where h.PriorityProcess==true select h).ToArray())
+            lock (lockObject)
             {
-                if (item.ProcessLine(serverConnection, currentLine) && item.Exclusive)
-                    return;
-            }
-            foreach (var item in (from h in allHandlers where h.PriorityProcess==false select h).ToArray())
-            {
-                if (item.ProcessLine(serverConnection, currentLine) && item.Exclusive)
-                    return;
+                logger.Trace("Processing: {0}", currentLine);
+                // First High prio
+                foreach (var item in (from h in allHandlers where h.PriorityProcess == true select h).ToArray())
+                {
+                    if (item.ProcessLine(serverConnection, currentLine) && item.Exclusive)
+                        return;
+                }
+                foreach (var item in (from h in allHandlers where h.PriorityProcess == false select h).ToArray())
+                {
+                    if (item.ProcessLine(serverConnection, currentLine) && item.Exclusive)
+                        return;
+                }
             }
         }
     }

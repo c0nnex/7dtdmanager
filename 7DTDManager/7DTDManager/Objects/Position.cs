@@ -41,6 +41,8 @@ namespace _7DTDManager.Objects
         }
         public string ToHumanString()
         {
+            if (!IsValid)
+                return "Somewhere";
             return String.Format("{0}{1}, {2}{3}", Math.Abs(Z), Z < 0 ? "S" : "N", Math.Abs(X), X < 0 ? "W" : "E");
         }
 
@@ -66,7 +68,7 @@ namespace _7DTDManager.Objects
         }
 
         public double Distance(IPosition other)
-        {
+        {             
             return Math.Sqrt(((X - other.X) * (X - other.X) + (Z - other.Z) * (Z - other.Z)));
         }
 
@@ -88,6 +90,12 @@ namespace _7DTDManager.Objects
                 logger.Error("error parsing position '{0}' : {1}", pos, ex.Message);
                 return null;
             }
+        }
+
+
+        public bool IsNear(IPosition pos, double maxDistance)
+        {
+            return pos.Distance(this) <= maxDistance;
         }
     }
 

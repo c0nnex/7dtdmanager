@@ -40,6 +40,12 @@ namespace _7DTDManager.Config
         public int BanAfterKicks { get; set; }
         public string BanDuration { get; set; }
 
+        public bool EnableProtection { get; set; }
+        public int nextAreaProtectionID { get; set;}
+        public int ProtectionPriceOneDay { get; set; }
+        public int ProtectionPriceOneWeek { get; set; }
+        public int ProtectionPriceOneMonth { get; set; }
+
         [XmlArrayItem(ElementName="Admin")]
         public AdminList Admins { get; set; }
 
@@ -61,6 +67,8 @@ namespace _7DTDManager.Config
         {
             get { return Admins as IAdminList; }
         }
+        [XmlIgnore]
+        public Shop GlobalShop = null;
 
         public Configuration()
         {
@@ -81,21 +89,82 @@ namespace _7DTDManager.Config
             BanAfterKicks = 5;
             BanDuration = "1 year";
             MinimumDistanceForPayday = 10.0;
+            ProtectionPriceOneDay = 50;
+            ProtectionPriceOneWeek = 300;
+            ProtectionPriceOneMonth = 1000;
+            EnableProtection = true;
             Admins = new AdminList();
             Commands = new CommandConfigurationList();
             Shops = new List<ShopSystem.Shop>();
             ShopHandlers.Add("DefaultShopHandler", new DefaultShopHandler());
+            ShopHandlers.Add("ProtectionShopHandler", new ProtectionShopHandler());
         }
 
         public void UpdateDefaults()
         {
+            bool needSave = false;
             if (Admins.Count == 0)
+            {
+                logger.Info("Adding default admin");    
                 Admins.AddAdmin("76561198003534614", 100);
-            Save();
+                needSave = true;
+            }
+            GlobalShop = (from s in Shops where s.ShopID == 0 select s).FirstOrDefault();
+            if ( (GlobalShop != null) && !EnableProtection)
+            {
+                logger.Info("Removing global shop (EnableProtection = false)");
+                Shops.Remove(GlobalShop);
+                GlobalShop = null;
+                needSave = true;
+            }
+            else
+                if ((GlobalShop == null) && EnableProtection)
+                {
+                    logger.Info("Adding global shop");
+                    GlobalShop = new Shop
+                    {
+                        ShopName = "Serverwide Shop",
+                        ShopRestocks = false,
+                        ShopID = 0,
+                    };
+                    GlobalShop.RegisterItem(new ShopItem
+                        {
+                            ItemName = "One RL Day Protection",
+                            SellPrice = ProtectionPriceOneDay,
+                            StockAmount = 100,
+                            RestockAmount = -1,
+                            BuyPrice = 1,
+                            HandlerName = "ProtectionShopHandler"
+                        });
+                    GlobalShop.RegisterItem(new ShopItem
+                    {
+                        ItemName = "One RL week Protection",
+                        SellPrice = ProtectionPriceOneWeek,
+                        StockAmount = 100,
+                        RestockAmount = -1,
+                        BuyPrice = 7, 
+                        HandlerName = "ProtectionShopHandler"
+                    });
+                    GlobalShop.RegisterItem(new ShopItem
+                    {
+                        ItemName = "One RL Month Protection",
+                        SellPrice = ProtectionPriceOneMonth,
+                        StockAmount = 100,
+                        RestockAmount = -1,
+                        BuyPrice = 30,
+                        HandlerName = "ProtectionShopHandler"
+                    });
+                    Shops.Add(GlobalShop);
+                    needSave = true;
+                }
+            if (GlobalShop != null)
+                GlobalShop.GlobalShop = true;
+            if (needSave)
+                Save(true);
         }
 
         public void Init()
-        {
+        {            
             foreach (var item in Shops)
             {
                 item.Init();
@@ -122,6 +191,12 @@ namespace _7DTDManager.Config
             Shops.Add(shop);
             Save(true);
             return shop.ShopID;
+        }
+
+        public int NewAreaProtectionID()
+        {
+            IsDirty = true;
+            return ++nextAreaProtectionID;
         }
 
         public static Configuration Load()

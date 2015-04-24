@@ -34,6 +34,11 @@ namespace _7DTDManager.Objects
             }
         }
 
+        public static bool IsTracked(IPositionTrackable trackable)
+        {
+            return trackedObjects.Contains(trackable);
+        }
+
         static void Instance_PlayerMoved(object sender, PlayerMovementEventArgs e)
         {
             lock (lockObject)

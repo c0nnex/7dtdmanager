@@ -30,7 +30,6 @@ namespace _7DTDManager.Objects
         {
             double dist = pos.Distance(Center);
             return ( (dist <= SizeX) && (dist<=SizeZ) ) ;
-
         }
 
         public bool IsNear(IPosition pos)

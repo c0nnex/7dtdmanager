@@ -66,7 +66,7 @@ namespace _7DTDManager
                 return;
             }
             Server = new Manager();
-
+            PlayersManager.Instance.RegisterPlayers();
             Server.Connect();
             while (1 == 1)
             {
@@ -82,11 +82,11 @@ namespace _7DTDManager
                         string[] largs = cline.ToLowerInvariant().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                         if (!CommandManager.AllCommands.ContainsKey(largs[0]))
                         {
-                            Console.WriteLine("Unknown command");
+                            Program.Server.Execute(cline);
                             continue;
                         }
                         _7DTDManager.LineHandlers.lineServerCommand c = new _7DTDManager.LineHandlers.lineServerCommand();
-                        c.ProcessLine(null, "INF GMSG: Server: /" + cline);
+                        c.ProcessLine(Program.Server, "INF GMSG: Server: /" + cline);
                         //bool res = cmd.Execute(Server, ServerPlayer, largs);
                     }                
             }

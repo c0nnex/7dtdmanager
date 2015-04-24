@@ -1,5 +1,6 @@
 ﻿using _7DTDManager.Interfaces;
 using _7DTDManager.Interfaces.Commands;
+using _7DTDManager.Objects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,7 +34,7 @@ namespace _7DTDManager.Commands
                 p.Message("Stats for {0}:", targetPlayer.Name);
 
             TimeSpan t = new TimeSpan(0, targetPlayer.Age, 0);
-            p.Message("Age: {0} Coins: {1}", String.Format("{0} days {1} hours {2} minutes",t.Days,t.Hours,t.Minutes), targetPlayer.zCoins);
+            p.Message("Age: {0} Coins: {1}",t.ToHoursMinutesString(), targetPlayer.zCoins);
             p.Message("Bounties collected: {0} coins Bloodmoney collected: {1} coins", targetPlayer.BountyCollected, targetPlayer.BloodCoins);
             if (targetPlayer.DistanceTravelled > 0)
                 p.Message("You travelled {0} km so far.", (int)(targetPlayer.DistanceTravelled / 1000.0));

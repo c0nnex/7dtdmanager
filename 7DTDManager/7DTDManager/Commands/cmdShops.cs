@@ -26,7 +26,8 @@ namespace _7DTDManager.Commands
             p.Message("Known shops:");
             foreach (var shop in Program.Config.Shops)
             {
-                
+                if (shop.GlobalShop)
+                    continue;
                 double dist = p.CurrentPosition.Distance(shop.ShopPosition.Center);
                 string head = String.Format("#{0} '{1}' {2} ",shop.ShopID,shop.ShopName,shop.ShopPosition.Center.ToHumanString());
 

@@ -68,5 +68,11 @@ namespace _7DTDManager
         {
             get { return Program.Config; }
         }
+
+
+        public IAreaProtection CreateProtection(IPosition pos, IPlayer owner)
+        {
+            return new AreaProtection { Center = pos as Position, SizeX = 10.0, SizeZ = 10.0, OwnedBy = owner.SteamID,  AreaProtectionID = Program.Config.NewAreaProtectionID() };
+        }
     }
 }

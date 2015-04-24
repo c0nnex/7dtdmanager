@@ -29,7 +29,7 @@ namespace _7DTDManager.LineHandlers
 
                 IPlayer p = null;
                 if (name != "Server")
-                    p = serverConnection.AllPlayers.FindPlayerByName(name);
+                    p = serverConnection.AllPlayers.FindPlayerByNameOrID(name);
                 else
                     p = Program.ServerPlayer;
 
@@ -87,6 +87,8 @@ namespace _7DTDManager.LineHandlers
                     p.Message("Not enough coins ({0}) for this command.", cmd.CommandCost);
                     return true;
                 }
+                if (p.ExecuteAs != null)
+                    p = p.ExecuteAs;
                 if (p.IsAdmin)
                 {
                     cmd.AdminExecute(serverConnection, p, args);

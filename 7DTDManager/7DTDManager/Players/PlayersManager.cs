@@ -39,7 +39,7 @@ namespace _7DTDManager.Players
             return exactMatch;
         }
 
-        public Player FindPlayerByName(string name, bool onlyonline = true)
+        public Player FindPlayerByNameOrID(string name, bool onlyonline = true)
         {
             // Try exact match
             var exactMatch = (from item in players where (String.Compare(item.Name.ToLowerInvariant(), name.ToLowerInvariant(), true) == 0) && (!onlyonline || (item.IsOnline)) select item).FirstOrDefault();
@@ -52,6 +52,9 @@ namespace _7DTDManager.Players
                 if (laxMatch.Count() == 1)
                     return laxMatch.First();
             }
+            var entityMatch = (from item in players where ((item.EntityID == name) && (!onlyonline || (item.IsOnline))) select item).FirstOrDefault();
+            if (entityMatch != null)
+                return entityMatch;
             // more than one match! Don't return any!
             return null;
         }
@@ -69,6 +72,7 @@ namespace _7DTDManager.Players
             }
             Player p = new Player { Name = name, SteamID = steamid, EntityID = entityid, FirstLogin = DateTime.Now };
             players.Add(p);
+            p.Init();
             p.Changed += Player_Changed;
             return p;
         }
@@ -101,8 +105,7 @@ namespace _7DTDManager.Players
                 PlayersManager p = (PlayersManager)serializer.Deserialize(reader);
                 reader.Close();
                 if (p.players == null)
-                    p.players = new List<Player>();
-                p.RegisterPlayers();
+                    p.players = new List<Player>();                
                 PlayersManager.Instance = p;
                 return p;
             }
@@ -114,10 +117,11 @@ namespace _7DTDManager.Players
             }
         }
 
-        private void RegisterPlayers()
+        public void RegisterPlayers()
         {
             foreach (var item in players)
             {
+                item.Init();
                 item.Changed += Player_Changed;
             }
         }
@@ -183,9 +187,9 @@ namespace _7DTDManager.Players
             return AddPlayer(name, steamid, entityid) as IPlayer;
         }
 
-        IPlayer IPlayersManager.FindPlayerByName(string name, bool onlyonline)
+        IPlayer IPlayersManager.FindPlayerByNameOrID(string name, bool onlyonline)
         {
-            return FindPlayerByName(name, onlyonline) as IPlayer;
+            return FindPlayerByNameOrID(name, onlyonline) as IPlayer;
         }
 
 

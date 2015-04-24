@@ -23,7 +23,8 @@ namespace _7DTDManager.Commands
 
             if ( args.Length == 1)
             {
-                string s = "Available commands:";
+                string s = "Available commands: {0}";
+                SortedSet<string> set = new SortedSet<string>();
                 foreach (var item in cmds.Keys)
                 {
                     cmd = cmds[item];
@@ -31,12 +32,14 @@ namespace _7DTDManager.Commands
                         continue;
                     if (cmd.CommandName != item) // hide aliases
                         continue;
-                    s += " /" + item + ",";
+                    set.Add(item  );
                 }
-                p.Message(s);
+                if ( set.Count > 0 )
+                    p.Message(s,String.Join(", ",set.ToArray()));
                 if (p.IsAdmin)
                 {
-                    s = "Admin commands:";
+                    s = "Admin commands: {0}";
+                    set = new SortedSet<string>();
                     foreach (var item in cmds.Keys)
                     {
                         cmd = cmds[item];
@@ -44,11 +47,13 @@ namespace _7DTDManager.Commands
                             continue;
                         if (cmd.CommandName != item) // hide aliases
                             continue;
-                        s += " /" + item + ",";
+                        set.Add(item);
                     }
-                    p.Error(s);
+                    if (set.Count > 0)
+                        p.Error(s, String.Join(", ", set.ToArray()));
                 }
-                s = "Available Help-Information:";
+                s = "Available Information: {0}";
+                set = new SortedSet<string>();
                 foreach (var item in cmds.Keys)
                 {
                     cmd = cmds[item];
@@ -56,9 +61,10 @@ namespace _7DTDManager.Commands
                         continue;
                     if (cmd.CommandName != item) // hide aliases
                         continue;
-                    s += " " + item + ",";
+                    set.Add( item);
                 }
-                p.Message(s);
+                if (set.Count > 0)
+                    p.Message(s, String.Join(", ", set.ToArray()));
                 return true;
             }
             if (!cmds.ContainsKey(args[1]))

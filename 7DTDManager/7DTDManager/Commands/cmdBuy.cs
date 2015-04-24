@@ -17,7 +17,7 @@ namespace _7DTDManager.Commands
             CommandHelp = "Lets you buy an item from the shop.";
             CommandName = "buy";
             CommandArgs = 2;
-            CommandUsage = "/buy <amount> #<itemid>. (/buy 5 #1) See /list for itemids";
+            CommandUsage = "/buy <amount> <itemid#>. (/buy 5 1) See /list for itemids";
         }
 
         Regex rgBuy = new Regex("(?<amount>[0-9]+) #(?<itemid>[0-9]+)");
