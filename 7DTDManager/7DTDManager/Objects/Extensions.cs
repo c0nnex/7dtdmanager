@@ -37,7 +37,7 @@ namespace _7DTDManager.Objects
 
         public static string ToHoursMinutesString(this TimeSpan t)
         {
-            return String.Format("{1} hours {2} minutes", t.Hours + t.Days*24, t.Minutes);
+            return String.Format("{0} hours {1} minutes", t.Hours + t.Days*24, t.Minutes);
         }
         public static string ToDaysHoursMinutesString(this TimeSpan t)
         {

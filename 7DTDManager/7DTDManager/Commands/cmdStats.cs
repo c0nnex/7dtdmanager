@@ -34,7 +34,7 @@ namespace _7DTDManager.Commands
                 p.Message("Stats for {0}:", targetPlayer.Name);
 
             TimeSpan t = new TimeSpan(0, targetPlayer.Age, 0);
-            p.Message("Age: {0} Coins: {1}",t.ToHoursMinutesString(), targetPlayer.zCoins);
+            p.Message("Age: {0} Coins: {1}", t.ToDaysHoursMinutesString(), targetPlayer.zCoins);
             p.Message("Bounties collected: {0} coins Bloodmoney collected: {1} coins", targetPlayer.BountyCollected, targetPlayer.BloodCoins);
             if (targetPlayer.DistanceTravelled > 0)
                 p.Message("You travelled {0} km so far.", (int)(targetPlayer.DistanceTravelled / 1000.0));
