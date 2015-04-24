@@ -74,7 +74,7 @@ namespace _7DTDManager.Commands
             }
             p.Message("Command '{0}':", cmd.CommandName);
             p.Message(cmd.CommandHelp);
-            if (!String.IsNullOrEmpty(CommandUsage))
+            if (!String.IsNullOrEmpty(cmd.CommandUsage))
                 p.Message("Usage: {0}",cmd.CommandUsage);
             if (cmd.CommandCost > 0 ) 
                 p.Message("Cost: {0} coins.", cmd.CommandCost);
