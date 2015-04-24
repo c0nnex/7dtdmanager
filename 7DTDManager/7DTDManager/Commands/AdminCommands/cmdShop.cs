@@ -56,10 +56,10 @@ namespace _7DTDManager.AdminCommands
                         }
                         if (!rgRemoveShop.IsMatch(restCmd))
                         {
-                            p.Error("Usage: /shop removeshop <shopid>|all");
+                            p.Error("Usage: /shop remove <shopid>|all");
                             return true;
                         }
-                        Match match = rgAddItem.Match(restCmd);
+                        Match match = rgRemoveShop.Match(restCmd);
                         GroupCollection groups = match.Groups;
 
                         int shopID = Convert.ToInt32(groups["shopid"].Value);
