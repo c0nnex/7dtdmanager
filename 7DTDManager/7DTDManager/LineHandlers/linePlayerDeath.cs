@@ -19,7 +19,7 @@ namespace _7DTDManager.LineHandlers
                 Match match = rgDeath.Match(currentLine);
                 GroupCollection groups = match.Groups;
 
-                IPlayer p = serverConnection.AllPlayers.FindPlayerByName(groups["name"].Value);
+                IPlayer p = serverConnection.AllPlayers.FindPlayerByNameOrID(groups["name"].Value);
                 if (p != null) 
                 {
                     p.AddCoins(-100, "Death");

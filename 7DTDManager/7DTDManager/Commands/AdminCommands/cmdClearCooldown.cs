@@ -24,7 +24,7 @@ namespace _7DTDManager.Commands
             {
                 return false;
             }
-            IPlayer target = server.AllPlayers.FindPlayerByName(args[1]);
+            IPlayer target = server.AllPlayers.FindPlayerByNameOrID(args[1]);
             if ((target == null) || (!target.IsOnline))
             {
                 p.Message("Targetplayer '{0}' was not found or is not online.", args[1]);

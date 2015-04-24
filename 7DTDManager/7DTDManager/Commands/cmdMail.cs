@@ -43,7 +43,7 @@ namespace _7DTDManager.Commands
                 p.Message("Text: {0}", mail.Message);
                 return true;
             }
-            IPlayer targetPlayer = server.AllPlayers.FindPlayerByName(args[1],false);
+            IPlayer targetPlayer = server.AllPlayers.FindPlayerByNameOrID(args[1],false);
             if ((targetPlayer == null))
             {
                 p.Message("Targetplayer '{0}' was not found.", args[1]);

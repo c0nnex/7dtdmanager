@@ -36,7 +36,7 @@ namespace _7DTDManager.Commands
                     p.Message("usage: /bounty [howmany] coins on [targetname]");
                     return false;
                 }
-                target = server.AllPlayers.FindPlayerByName(groups["name"].Value,false);
+                target = server.AllPlayers.FindPlayerByNameOrID(groups["name"].Value,false);
                 if ( (target == null)  )
                 {
                     p.Message("Targetplayer '{0}' was not found.", groups["name"].Value);

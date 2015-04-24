@@ -22,7 +22,7 @@ namespace _7DTDManager.Commands
             IPlayer targetPlayer = p;
             if (p.IsAdmin && (args.Length >= 2))
             {
-                IPlayer target = server.AllPlayers.FindPlayerByName(args[1],false);
+                IPlayer target = server.AllPlayers.FindPlayerByNameOrID(args[1],false);
                 if ((target == null))
                 {
                     p.Message("Targetplayer '{0}' was not found.", args[1]);

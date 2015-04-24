@@ -19,8 +19,8 @@ namespace _7DTDManager.LineHandlers
                 Match match = rgDeath.Match(currentLine);
                 GroupCollection groups = match.Groups;
 
-                IPlayer killer = serverConnection.AllPlayers.FindPlayerByName(groups["killer"].Value);
-                IPlayer victim = serverConnection.AllPlayers.FindPlayerByName(groups["victim"].Value);
+                IPlayer killer = serverConnection.AllPlayers.FindPlayerByNameOrID(groups["killer"].Value);
+                IPlayer victim = serverConnection.AllPlayers.FindPlayerByNameOrID(groups["victim"].Value);
                 if ((killer == null) || (victim == null))
                     return false;
                 if (killer == victim) 

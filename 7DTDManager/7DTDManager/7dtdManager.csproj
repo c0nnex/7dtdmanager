@@ -70,6 +70,9 @@
   <ItemGroup>
     <Compile Include="Commands\AdminCommands\cmdAddCoins.cs" />
     <Compile Include="Commands\AdminCommands\cmdClearBounty.cs" />
+    <Compile Include="Commands\AdminCommands\cmdClearLLP.cs" />
+    <Compile Include="Commands\AdminCommands\cmdClearPings.cs" />
+    <Compile Include="Commands\AdminCommands\cmdProxy.cs" />
     <Compile Include="Commands\AdminCommands\cmdReload.cs" />
     <Compile Include="Commands\cmdList.cs" />
     <Compile Include="Commands\cmdSell.cs" />
@@ -88,8 +91,8 @@
     <Compile Include="Commands\cmdStats.cs" />
     <Compile Include="Commands\cmdWallet.cs" />
     <Compile Include="Config\AdminList.cs" />
-    <Compile Include="Config\Config.cs" />
     <Compile Include="Config\CommandConfigList.cs" />
+    <Compile Include="Config\Configuration.cs" />
     <Compile Include="LineHandlers\LineManager.cs" />
     <Compile Include="LineHandlers\lineListPlayers.cs" />
     <Compile Include="Commands\CommandManager.cs" />
@@ -122,6 +125,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ShopSystem\DefaultShopHandler.cs" />
+    <Compile Include="ShopSystem\ProtectionShopHandler.cs" />
     <Compile Include="ShopSystem\Shop.cs" />
     <Compile Include="ShopSystem\ShopHandler.cs" />
     <Compile Include="ShopSystem\ShopItem.cs" />

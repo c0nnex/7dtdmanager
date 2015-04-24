@@ -30,7 +30,7 @@ namespace _7DTDManager.Players
 
         public PlayersManager() : base()
         {
-
+            players = new List<Player>();
         }
 
         public IPlayer FindPlayerBySteamID(string id)
@@ -119,10 +119,13 @@ namespace _7DTDManager.Players
 
         public void RegisterPlayers()
         {
-            foreach (var item in players)
+            if (players != null)
             {
-                item.Init();
-                item.Changed += Player_Changed;
+                foreach (var item in players)
+                {
+                    item.Init();
+                    item.Changed += Player_Changed;
+                }
             }
         }
 
