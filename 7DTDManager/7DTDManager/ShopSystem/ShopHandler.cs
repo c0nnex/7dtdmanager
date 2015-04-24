@@ -10,9 +10,9 @@ namespace _7DTDManager.ShopSystem
     public abstract class ShopHandler
     {
         public string HandlerName { get; set; }
-
-        public abstract bool ItemBought(IServerConnection server, IPlayer buyer,ShopItem item, int amount);
-        public abstract bool ItemSold(IServerConnection server, IPlayer seller, ShopItem item, int amount);
+        public string Error { get; set; }
+        public abstract bool ItemBought(Interfaces.IServerConnection server, Interfaces.IPlayer buyer, ShopItem shopItem, int amount, int price);
+        public abstract bool ItemSold(Interfaces.IServerConnection server, Interfaces.IPlayer buyer, ShopItem shopItem, int amount, int price);
         public abstract int EvaluateBuy(IServerConnection server, IPlayer buyer, ShopItem item, int amount);
         public abstract int EvaluateSell(IServerConnection server, IPlayer seller, ShopItem item, int amount);
 

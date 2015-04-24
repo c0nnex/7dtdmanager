@@ -81,11 +81,11 @@ namespace _7DTDManager.ShopSystem
             CalloutManagerImpl.UnregisterCallouts(this);
         }
 
-        public void CalloutCallback(ICallout c,IServerConnection serverConnection)
+        public bool CalloutCallback(ICallout c,IServerConnection serverConnection)
         {
             if (RestockAmount <= 0 )
             {
-                return;
+                return false;
             }
             if (StockAmount < MaxStock)
             {
@@ -98,7 +98,7 @@ namespace _7DTDManager.ShopSystem
             {
                 logger.Debug("{0} restocking {1}: max stock reached", Shop.ShopName, ItemName, StockAmount);
             }
-           
+            return true;
         }
     }
 

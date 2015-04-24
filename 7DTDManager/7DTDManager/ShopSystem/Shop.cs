@@ -25,6 +25,7 @@ namespace _7DTDManager.ShopSystem
         public int ShopClosesAt { get; set; }
         public bool ShopRestocks { get;set; }
         public bool SecretShop { get; set; }
+        public bool GlobalShop { get; set; }
 
         public List<ShopItem> ShopItems { get; set; }
 
@@ -35,7 +36,8 @@ namespace _7DTDManager.ShopSystem
 
         public void Init()
         {
-            PositionManager.AddTrackableObject(this);
+            if (!GlobalShop)
+                PositionManager.AddTrackableObject(this);
             foreach (var item in ShopItems)
             {
                 item.Shop = this;
@@ -46,14 +48,16 @@ namespace _7DTDManager.ShopSystem
 
         public void Deinit()
         {
-            PositionManager.RemoveTrackableObject(this);
-            if (ShopRestocks)
+            if (!GlobalShop)
+                PositionManager.RemoveTrackableObject(this);
+
+            foreach (var item in ShopItems)
             {
-                foreach (var item in ShopItems)
-                {
+                item.Shop = null;
+                if (ShopRestocks)
                     item.StopRestocking();
-                }
             }
+
         }
 
         public void TrackPosition(IPlayer p, IPosition oldPos, IPosition newPos)
@@ -72,12 +76,13 @@ namespace _7DTDManager.ShopSystem
                 p.Message("You left the '{0}'-Shop.",ShopName);
                 p.SetCurrentShop(null);
                 return;
-            }
-            
+            }            
         }
 
         public bool NeedsTracking(IPosition pos)
         {
+            if (GlobalShop)
+                return false;
             return ShopPosition.IsNear(pos);
         }
 
