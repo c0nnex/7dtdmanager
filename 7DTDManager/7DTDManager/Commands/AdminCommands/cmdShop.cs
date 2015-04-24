@@ -50,7 +50,7 @@ namespace _7DTDManager.Commands
                         if (restCmd == "all")
                         {
                             Program.Config.Shops.Clear();
-                            Program.Config.Save();
+                            Program.Config.Save(true);
                             p.Message("All shops deleted.");
                             return true;
                         }
