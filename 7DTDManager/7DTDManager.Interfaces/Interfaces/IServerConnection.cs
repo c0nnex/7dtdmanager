@@ -21,5 +21,6 @@ namespace _7DTDManager.Interfaces
         void Execute(string cmd, params object[] args);
 
         IPosition CreatePosition(string pos);
+        IAreaProtection CreateProtection(IPosition pos, IPlayer owner);
     }
 }

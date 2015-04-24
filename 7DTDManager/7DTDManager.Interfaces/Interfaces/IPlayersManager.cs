@@ -10,7 +10,7 @@ namespace _7DTDManager.Interfaces
         event EventHandler PlayerLogout;
 
         IPlayer AddPlayer(string name, string steamid, string entityid);
-        IPlayer FindPlayerByName(string name, bool onlyonline = true);
+        IPlayer FindPlayerByNameOrID(string name, bool onlyonline = true);
         IPlayer FindPlayerBySteamID(string id);
         void Save(bool force=false);
     }

@@ -11,6 +11,7 @@ namespace _7DTDManager.Interfaces
         IReadOnlyList<ExposedType> Items { get; }
         void Add(ExposedType value);
         void Remove(ExposedType value);
+        void RemoveAt(int index);
         void Clear();
     }
 }

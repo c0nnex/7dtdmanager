@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 namespace _7DTDManager.Interfaces
 {
-    public interface IPosition
+    public interface IPosition : IEquatable<IPosition>
     {
         double X { get; }
         double Y { get;  }
@@ -17,7 +17,7 @@ namespace _7DTDManager.Interfaces
         string ToString();
 
         double Distance(IPosition other);
-        
+        bool IsNear(IPosition pos, double maxDistance);
     }
 
     

@@ -11,10 +11,10 @@ namespace _7DTDManager.Interfaces.Commands
     {
         protected ILogger Log = null;
 
-        public int _CommandCost = 0, _CommandCoolDown = 0, _CommandLevel = 0, _CommandArgs = 0;
-        public string _CommandHelp = "No help available", _CommandName = "noname", _CommandUsage = "";
-        public bool _CommandIsInfo = false;
-        public string[] _CommandAliases = new string[] { };
+        private int _CommandCost = 0, _CommandCoolDown = 0, _CommandLevel = 0, _CommandArgs = 0;
+        private string _CommandHelp = "No help available", _CommandName = "noname", _CommandUsage = "";
+        private bool _CommandIsInfo = false;
+        private string[] _CommandAliases = new string[] { };
 
         public int CommandCost
         {

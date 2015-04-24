@@ -22,7 +22,7 @@ namespace _7DTDManager.Interfaces
 
     public interface ICalloutCallback
     {
-        void CalloutCallback(ICallout c, IServerConnection serverConnection);
+        bool CalloutCallback(ICallout c, IServerConnection serverConnection);
     }
 
     public interface ICalloutManager

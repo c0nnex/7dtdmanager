@@ -40,8 +40,10 @@ namespace _7DTDManager.Interfaces
 
         IExposedList<IPlayer> Friends { get; }
         IMailbox Mailbox { get; }
-        IExposedList<IPosition> LandProtections { get; }
-        
+        IExposedList<IAreaProtection> LandProtections { get; }
+        IPlayer ProxyPlayer { get; set; }
+        IPlayer ExecuteAs { get; set; }
+
         event PlayerMovedDelegate PlayerMoved;
 
         /// <summary>
@@ -76,7 +78,9 @@ namespace _7DTDManager.Interfaces
 
         void SetCurrentShop(IShop whichShop);
         IShop GetCurrentShop();
-       
+
+        void ClearPingKicks();
+        void Dirty();
     }
 
     public class PlayerMovementEventArgs : EventArgs
