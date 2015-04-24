@@ -17,7 +17,7 @@ namespace _7DTDManager.Commands
             CommandHelp = "Lets you buy an item from the shop.";
             CommandName = "buy";
             CommandArgs = 2;
-            CommandUsage = "/buy <amount> #<itemid>. See /list";
+            CommandUsage = "/buy <amount> #<itemid>. (/buy 5 #1) See /list for itemids";
         }
 
         Regex rgBuy = new Regex("(?<amount>[0-9]+) #(?<itemid>[0-9]+)");
@@ -28,8 +28,8 @@ namespace _7DTDManager.Commands
             Shop shop = (from s in Program.Config.Shops where s.ShopPosition.IsInside(p.CurrentPosition) select s).FirstOrDefault();
             if ( shop == null )
             {
-                p.Error("You are not inside a shop area. see /shops for a list of shops.");
-                return false;
+               p.Error("You are not inside a shop area. see /shops for a list of shops.");
+               return false;
             }
             if (!shop.IsOpen())
             {
@@ -41,7 +41,11 @@ namespace _7DTDManager.Commands
                 p.Error(CommandUsage);
                 return false;
             }
+            return ExecuteBuy(server, p, cmd, shop,false);
+        }
 
+        public bool ExecuteBuy(IServerConnection server, IPlayer p,string cmd,Shop shop,bool silent)
+        {
             Match match = rgBuy.Match(cmd);
             GroupCollection groups = match.Groups;
 
@@ -60,25 +64,12 @@ namespace _7DTDManager.Commands
                 return false;
             }
             int price = Program.Config.ShopHandlers[shopItem.HandlerName].EvaluateBuy(server, p, shopItem, amount);
-            if ( price > p.zCoins)
+            if (price > p.zCoins)
             {
                 p.Error("You do not have enough coins ({0}) for this transaction.", price);
                 return false;
             }
-            p.AddCoins((-1) * price, String.Format("{0} {1} shop {2}", amount, shopItem.ItemName, shop.ShopName));
-            if (Program.Config.ShopHandlers[shopItem.HandlerName].ItemBought(server, p, shopItem, amount))
-            {
-                p.Confirm("You bought {0} {1} for {2} coins.", amount, shopItem.ItemName, price);
-                p.Message("Your items have been placed next to you.");
-                shopItem.StockAmount -= amount;
-                shopItem.TotalSold += amount;
-                shop.TotalDeals++;
-                shop.TotalSales += price;
-                shop.TotalRevenue += price; //TODO: Economy Factor!
-                shop.TotalCustomers++;
-                Program.Config.Save();
-            }
-            return true;
+            return Program.Config.ShopHandlers[shopItem.HandlerName].ItemBought(server, p, shopItem, amount, price);           
         }
     }
 }
