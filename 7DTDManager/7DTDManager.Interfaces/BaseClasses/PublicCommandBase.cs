@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace _7DTDManager.Interfaces.Commands
@@ -10,12 +11,21 @@ namespace _7DTDManager.Interfaces.Commands
     public abstract class PublicCommandBase : ICommand
     {
         protected ILogger Log = null;
+        protected IMessageLocalizer Localizer = null;
 
         private int _CommandCost = 0, _CommandCoolDown = 0, _CommandLevel = 0, _CommandArgs = 0;
         private string _CommandHelp = "No help available", _CommandName = "noname", _CommandUsage = "";
+        private string _ComandRegex;
         private bool _CommandIsInfo = false;
         private string[] _CommandAliases = new string[] { };
+        private Regex _CommandExpression = null;
+        private IReadOnlyList<string> _CommandNames = null;
 
+        public string CommandRegex
+        {
+            get { return _ComandRegex;  }
+            set { _ComandRegex = value;  }
+        }
         public int CommandCost
         {
             get { return _CommandCost; }
@@ -81,9 +91,31 @@ namespace _7DTDManager.Interfaces.Commands
             return Execute(server, p, args);
         }
 
-        public void Init(ILogger logger)
+        public void Init(ILogger logger,IMessageLocalizer localizer)
         {
+            Localizer = localizer;
             Log = logger;
+            if (!String.IsNullOrEmpty(CommandRegex))
+                _CommandExpression = new Regex(CommandRegex, RegexOptions.CultureInvariant);
+            if ( Localizer != null)
+             _CommandNames = Localizer.CreateLocalizedCommandNames(CommandName);
+        }
+
+        public bool Handles(string command)
+        {
+            command = command.ToLowerInvariant();
+            if (_CommandNames == null)
+                return command == CommandName;
+            if ((CommandAliases != null) && (CommandAliases.Contains(command)))
+                return true;
+            return _CommandNames.Contains(command);
+        }
+
+        public GroupCollection CommandMatch(IPlayer p, string cmdLine)
+        {
+            if (!_CommandExpression.IsMatch(cmdLine))
+                return null;
+            return _CommandExpression.Match(cmdLine).Groups;
         }
     }
 }

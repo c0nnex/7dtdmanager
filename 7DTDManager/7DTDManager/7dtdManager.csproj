@@ -75,12 +75,12 @@
     <Compile Include="Commands\AdminCommands\cmdProxy.cs" />
     <Compile Include="Commands\AdminCommands\cmdReload.cs" />
     <Compile Include="Commands\cmdList.cs" />
-    <Compile Include="Commands\cmdSell.cs" />
     <Compile Include="Commands\cmdBuy.cs" />
     <Compile Include="Commands\cmdHelp.cs" />
     <Compile Include="Commands\cmdHome.cs" />
     <Compile Include="Commands\AdminCommands\cmdClearCooldown.cs" />
     <Compile Include="Commands\AdminCommands\cmdRecalc.cs" />
+    <Compile Include="Commands\cmdLanguage.cs" />
     <Compile Include="Commands\cmdSetHome.cs" />
     <Compile Include="Commands\AdminCommands\cmdShop.cs" />
     <Compile Include="Commands\cmdBounty.cs" />
@@ -93,6 +93,8 @@
     <Compile Include="Config\AdminList.cs" />
     <Compile Include="Config\CommandConfigList.cs" />
     <Compile Include="Config\Configuration.cs" />
+    <Compile Include="Config\Translation.cs" />
+    <Compile Include="Constants.cs" />
     <Compile Include="LineHandlers\LineManager.cs" />
     <Compile Include="LineHandlers\lineListPlayers.cs" />
     <Compile Include="Commands\CommandManager.cs" />
@@ -153,6 +155,12 @@
     <Content Include="Assemblies\NLog.Extended.dll" />
     <Content Include="Assemblies\NLog.Extended.xml" />
     <Content Include="Assemblies\NLog.xml" />
+    <Content Include="lang\deutsch.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="lang\english.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Licences\NLog-2.0-Mono2-License.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

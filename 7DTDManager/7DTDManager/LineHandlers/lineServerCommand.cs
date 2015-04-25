@@ -39,35 +39,38 @@ namespace _7DTDManager.LineHandlers
                     return true;
                 }
                 logger.Info("Servercommand {0} Player {1}", msg, name);
-                if (!CommandManager.AllCommands.ContainsKey(command))
+
+                ICommand cmd = CommandManager.FindCommand(command);
+
+                if (cmd == null)
                 {
-                    p.Message("Unknown Command");
+                    p.Message(MESSAGES.ERR_NOSUCHCOMAND,command);
                     return true;
                 }
                 if ((serverConnection != null) && serverConnection.CommandsDisabled && !p.IsAdmin)
                 {
-                    p.Message("Commands are currently disabled.");
+                    p.Message(MESSAGES.ERR_ALLCOMMANDSDISABLED);
                     return true;
                 }
                 if (!Program.Config.Commands.IsEnabled(command))
                 {
-                    p.Message("Command '{0}' is currently disabled.", command);
+                    p.Message(MESSAGES.ERR_COMMANDDISABLED, command);
                     return true;
                 }
-                ICommand cmd = CommandManager.AllCommands[command];
+                
                 if (cmd.CommandLevel > p.AdminLevel)
                 {
-                    p.Message("Unknown Command");
+                    p.Message(MESSAGES.ERR_NOSUCHCOMAND, command);
                     return true;
                 }
                 if (cmd is InfoCommand)
                 {
-                    p.Message("Unknown Command");
+                    p.Message(MESSAGES.ERR_NOSUCHCOMAND, command);
                     return true;
                 }
                 if (args.Length < cmd.CommandArgs + 1)
                 {
-                    p.Error("Usage: " + cmd.CommandUsage);
+                    p.Error(cmd.CommandUsage);
                     return true;
                 }
                 bool bCoolDown = false;
@@ -76,7 +79,7 @@ namespace _7DTDManager.LineHandlers
                     if (!p.CanExecute(cmd))
                     {
 
-                        p.Message("You will need to wait another {0} Minutes before you can use this command again.", p.GetCoolDown(cmd));
+                        p.Message(MESSAGES.ERR_COOLDOWN, p.GetCoolDown(cmd));
                         return true;
                     }
                     bCoolDown = true;
@@ -84,7 +87,7 @@ namespace _7DTDManager.LineHandlers
 
                 if (((cmd.CommandCost > 0) && (p.zCoins < cmd.CommandCost)) && (!p.IsAdmin))
                 {
-                    p.Message("Not enough coins ({0}) for this command.", cmd.CommandCost);
+                    p.Message(MESSAGES.ERR_NOTENOUGHCOINS);
                     return true;
                 }
                 if (p.ExecuteAs != null)

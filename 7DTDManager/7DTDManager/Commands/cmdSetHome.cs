@@ -14,8 +14,8 @@ namespace _7DTDManager.Commands
         {
             CommandCost = 60;
             CommandCoolDown = 30;
-            CommandHelp = "Set the position you will teleport to using /home";
-            CommandName = "sethome";
+            CommandHelp = "R:Cmd.SetHome.Help";
+            CommandName = "R:Cmd.SetHome.Command";
         }
 
 
@@ -23,11 +23,11 @@ namespace _7DTDManager.Commands
         {
             if (!p.CurrentPosition.IsValid)
             {
-                p.Message("No valid position for you recorded. Wait a little please.");
+                p.Error("R:Error.NoPosition");
                 return false;
             }
             p.UpdateHomePosition(p.CurrentPosition);
-            p.Message("Homeposition set to {0}", p.HomePosition.ToHumanString());
+            p.Message("R:Cmd.SetHome.NewHome", p.HomePosition.ToHumanString());
             return true;
         }
 

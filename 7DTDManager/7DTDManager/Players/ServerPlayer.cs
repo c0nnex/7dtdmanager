@@ -1,4 +1,5 @@
-﻿using System;
+﻿using _7DTDManager.Localize;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,8 @@ namespace _7DTDManager.Players
     {
         public override void Message(string p, params object[] args)
         {
-            Console.WriteLine(String.Format(p, args));
+            string msg = MessageLocalizer.Localize(this, p, args);
+            Console.WriteLine(msg);
         }
 
         public override int AdminLevel

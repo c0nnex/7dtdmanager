@@ -16,8 +16,8 @@ namespace _7DTDManager.Commands
         {
             CommandCost = 150;
             CommandCoolDown = 60;
-            CommandHelp = "Teleports you to your home set with /sethome";
-            CommandName = "home";
+            CommandHelp = "R:Cmd.Home.Help";
+            CommandName = "R:Cmd.Home.Command";
         }
          
 
@@ -25,7 +25,7 @@ namespace _7DTDManager.Commands
         {
             if (!p.HomePosition.IsValid)
             {
-                p.Message("No homeposition for you recorded. set it with /sethome");
+                p.Message("R:Cmd.Home.NoHome");
                 return false;
             }
             server.Execute("tele {0} {1}", p.EntityID, p.HomePosition.ToCommandString());

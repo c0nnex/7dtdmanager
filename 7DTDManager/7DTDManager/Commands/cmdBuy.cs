@@ -14,59 +14,52 @@ namespace _7DTDManager.Commands
     {
         public cmdBuy()
         {
-            CommandHelp = "Lets you buy an item from the shop.";
-            CommandName = "buy";
+            CommandHelp = "R:Cmd.Buy.Help";
+            CommandName = "R:Cmd.Buy.Command";
             CommandArgs = 2;
-            CommandUsage = "/buy <amount> <itemid#>. (/buy 5 1) See /list for itemids";
+            CommandUsage = "R:Cmd.Buy.Usage";
+            CommandRegex = "(?<amount>[0-9]+) #(?<itemid>[0-9]+)";
         }
-
-        Regex rgBuy = new Regex("(?<amount>[0-9]+) #(?<itemid>[0-9]+)");
-
+        
         public override bool Execute(IServerConnection server, IPlayer p, params string[] args)
         {
             string cmd = String.Join(" ", args, 1, args.Length - 1);
-            Shop shop = (from s in Program.Config.Shops where s.ShopPosition.IsInside(p.CurrentPosition) select s).FirstOrDefault();
+            IShop shop = p.GetCurrentShop();
             if ( shop == null )
             {
-               p.Error("You are not inside a shop area. see /shops for a list of shops.");
+               p.Error("R:Shop.NotInside");
                return false;
             }
             if (!shop.IsOpen())
             {
-                p.Error("The shop is currently closed.");
+                p.Error("R:Shop.Closed",shop.ShopOpensAt,shop.ShopClosesAt);
                 return false;
             }
-            if ( !rgBuy.IsMatch(cmd))
+
+            GroupCollection groups = CommandMatch(p, cmd);
+            if (groups == null)
             {
                 p.Error(CommandUsage);
                 return false;
             }
-            return ExecuteBuy(server, p, cmd, shop,false);
-        }
-
-        public bool ExecuteBuy(IServerConnection server, IPlayer p,string cmd,Shop shop,bool silent)
-        {
-            Match match = rgBuy.Match(cmd);
-            GroupCollection groups = match.Groups;
-
             int amount = Convert.ToInt32(groups["amount"].Value);
             int itemid = Convert.ToInt32(groups["itemid"].Value);
 
-            ShopItem shopItem = (from item in shop.ShopItems where item.ItemID == itemid select item).FirstOrDefault();
+            IShopItem shopItem = (from item in shop.ShopItems where item.ItemID == itemid select item).FirstOrDefault();
             if (shopItem == null)
             {
-                p.Error("No such item in stock. Sorry.");
+                p.Error("R:Shop.OutOfStock");
                 return false;
             }
             if (shopItem.StockAmount < amount)
             {
-                p.Error("There are only {0} {1} in stock.", shopItem.StockAmount, shopItem.ItemName);
+                p.Error("R:Shop.ShortStock", shopItem.StockAmount, shopItem.ItemName);
                 return false;
             }
             int price = Program.Config.ShopHandlers[shopItem.HandlerName].EvaluateBuy(server, p, shopItem, amount);
             if (price > p.zCoins)
             {
-                p.Error("You do not have enough coins ({0}) for this transaction.", price);
+                p.Error("R:Shop.OutOfCoins", price);
                 return false;
             }
             return Program.Config.ShopHandlers[shopItem.HandlerName].ItemBought(server, p, shopItem, amount, price);           

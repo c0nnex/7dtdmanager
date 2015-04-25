@@ -27,7 +27,7 @@ namespace _7DTDManager.LineHandlers
                 }
                 IPlayer p = serverConnection.AllPlayers.AddPlayer(groups["name"].Value, groups["steamid"].Value, groups["enityid"].Value);
                 p.Login();
-                p.IPAddress = groups["ip"].Value;
+                p.SetIPAddress(groups["ip"].Value);
                 p.UpdateStats(Convert.ToInt32(groups["deaths"].Value), Convert.ToInt32(groups["zombies"].Value), Convert.ToInt32(groups["players"].Value), Convert.ToInt32(groups["ping"].Value));
                 p.UpdatePosition(groups["pos"].Value);
                 

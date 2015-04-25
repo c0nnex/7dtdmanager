@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using _7DTDManager.Objects;
 
 namespace _7DTDManager.Commands
 {
@@ -12,41 +13,40 @@ namespace _7DTDManager.Commands
     {
         public cmdShops()
         {
-            CommandHelp = "Show known shops";
-            CommandName = "shops";
+            CommandHelp = "R:Cmd.Shops.Help";
+            CommandName = "R:Cmd.Shops.Command";
         }
 
         public override bool Execute(IServerConnection server, IPlayer p, params string[] args)
         {
-            if ( Program.Config.Shops.Count == 0)
+            if ( (Program.Config.Shops.Count == 0) || ( (Program.Config.EnableProtection) && (Program.Config.Shops.Count == 1)))
             {
-                p.Error("No shops registered.");
+                p.Error("R:Cmd.Shops.NoShops");
                 return true;
             }
-            p.Message("Known shops:");
+            bool bFirst = true;
             foreach (var shop in Program.Config.Shops)
             {
                 if (shop.GlobalShop)
                     continue;
-                double dist = p.CurrentPosition.Distance(shop.ShopPosition.Center);
-                string head = String.Format("#{0} '{1}' {2} ",shop.ShopID,shop.ShopName,shop.ShopPosition.Center.ToHumanString());
-
+                
                 if (shop.SecretShop)
                 {
                     if (!shop.ShopPosition.IsInside(p.CurrentPosition))
-                    continue;
+                        continue;
                 }
 
-                if (dist >= 1000.0)
-                    p.Message("{0} ({1} km)", head, (int)(dist / 1000.0));
-                else
+                double dist = p.CurrentPosition.Distance(shop.ShopPosition.Center);
+                string head = String.Format("#{0} '{1}' {2} ", shop.ShopID, shop.ShopName, shop.ShopPosition.Center.ToHumanString());
+                if (bFirst)
                 {
-                    if (shop.ShopPosition.IsInside(p.CurrentPosition))
-                        p.Confirm("{0} (HERE)", head, (int)dist);
-                    else
-                        p.Message("{0} ({1} m)", head, (int)dist);
+                    bFirst = false;
+                    p.Message("R:Cmd.Shops.KnownShops");
                 }
+                p.Message(dist.ToDistanceString(p,head,shop.ShopPosition.IsInside(p.CurrentPosition)));
             }
+            if (bFirst)
+                p.Error("R:Cmd.Shops.NoShops");
             return true;
         }
     }

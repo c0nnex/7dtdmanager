@@ -1,4 +1,5 @@
-﻿using System;
+﻿using _7DTDManager.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,7 +14,7 @@ namespace _7DTDManager.ShopSystem
             HandlerName = "DefaultShopHandler";
         }
 
-        public override bool ItemBought(Interfaces.IServerConnection server, Interfaces.IPlayer buyer, ShopItem shopItem, int amount, int price)
+        public override bool ItemBought(Interfaces.IServerConnection server, Interfaces.IPlayer buyer, IShopItem shopItem, int amount, int price)
         {
             server.Execute("give {0} {1} {2}", buyer.EntityID, shopItem.ItemName, amount);
             buyer.AddCoins((-1) * price, String.Format("{0} {1} shop {2}", amount, shopItem.ItemName, shopItem.Shop.ShopName));
@@ -31,18 +32,18 @@ namespace _7DTDManager.ShopSystem
             return true;
         }
 
-        public override bool ItemSold(Interfaces.IServerConnection server, Interfaces.IPlayer seller, ShopItem item, int amount, int price)
+        public override bool ItemSold(Interfaces.IServerConnection server, Interfaces.IPlayer seller, IShopItem item, int amount, int price)
         {
             throw new NotImplementedException();
         }
 
-        public override int EvaluateBuy(Interfaces.IServerConnection server, Interfaces.IPlayer buyer, ShopItem item, int amount)
+        public override int EvaluateBuy(Interfaces.IServerConnection server, Interfaces.IPlayer buyer, IShopItem item, int amount)
         {
             //TODO: SKillcheck
             return item.SellPrice * amount;
         }
 
-        public override int EvaluateSell(Interfaces.IServerConnection server, Interfaces.IPlayer seller, ShopItem item, int amount)
+        public override int EvaluateSell(Interfaces.IServerConnection server, Interfaces.IPlayer seller, IShopItem item, int amount)
         {
             throw new NotImplementedException();
         }

@@ -11,51 +11,52 @@ namespace _7DTDManager.Commands
 {
     public class cmdTransfer : PublicCommandBase
     {
-        static Regex rgTransfer = new Regex("transfer (?<coins>[0-9]+) (?<name>.*)");
-
+       
         public cmdTransfer()
         {
-            CommandName = "transfer";
-            CommandHelp = "Transfer coins to another player. usage: /transfer [howmany] [targetname]";
+            CommandName = "R:Cmd.Transfer.Command";
+            CommandHelp = "R:Cmd.Transfer.Help";
+            CommandUsage = "R:Cmd.Transfer.Usage";
             CommandCost = 10;
             CommandCoolDown = 10;
+            CommandRegex = "(?<coins>[0-9]+) (?<name>.*)";
         }
         public override bool Execute(IServerConnection server, IPlayer p, params string[] args)
         {
-            string currentLine = String.Join(" ", args);
-            if (rgTransfer.IsMatch(currentLine))
+            string currentLine = String.Join(" ", args, 1, args.Length - 1);
+            GroupCollection groups = CommandMatch(p, currentLine);
+
+            if (groups == null)
             {
-                Match match = rgTransfer.Match(currentLine);
-                GroupCollection groups = match.Groups;
-
-                int howmany = 0;
-                IPlayer target = null;
-
-                if ( !Int32.TryParse(groups["coins"].Value, out howmany))
-                {
-                    p.Message("usage: /transfer [howmany] [targetname]");
-                    return false;
-                }
-                target = server.AllPlayers.FindPlayerByNameOrID(groups["name"].Value);
-                if ( (target == null) || (!target.IsOnline) )
-                {
-                    p.Message("Targetplayer '{0}' was not found or is not online.", groups["name"].Value);
-                    return false;
-                }
-                if ( p.zCoins < (howmany + CommandCost) )
-                {
-                    p.Message("You don't have enough coins in your wallet.");
-                    return false;
-                }
-
-                p.AddCoins((-1) * howmany, "transfer to " + target.Name);
-                p.Message("You transferred {0} coins to {1}.", howmany, target.Name);
-                target.AddCoins(howmany, "transfer from " + p.Name);
-                target.Message("{0} transferred {1} coins to your wallet.", p.Name, howmany);
-                return true;
+                p.Error(CommandUsage);
+                return false;
             }
-            p.Message("usage: /transfer [howmany] [targetname]");
-            return false;
+            int howmany = 0;
+            IPlayer target = null;
+
+            if (!Int32.TryParse(groups["coins"].Value, out howmany))
+            {
+                p.Message(CommandUsage);
+                return false;
+            }
+            target = server.AllPlayers.FindPlayerByNameOrID(groups["name"].Value);
+            if ((target == null) || (!target.IsOnline))
+            {
+                p.Message(MESSAGES.ERR_TARGETNOTFOUND, groups["name"].Value);
+                return false;
+            }
+            if (p.zCoins < (howmany + CommandCost))
+            {
+                p.Message(MESSAGES.ERR_NOTENOUGHCOINS);
+                return false;
+            }
+
+            p.AddCoins((-1) * howmany, "transfer to " + target.Name);
+            p.Confirm("R:Cmd.Transfer.SenderMsg", howmany, target.Name);
+            target.AddCoins(howmany, "transfer from " + p.Name);
+            target.Confirm("R:Cmd.Transfer.ReceiverMsg", p.Name, howmany);
+            return true;
+
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using _7DTDManager.Interfaces;
+using _7DTDManager.Localize;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -35,26 +37,37 @@ namespace _7DTDManager.Objects
             return field;
         }
 
-        public static string ToHoursMinutesString(this TimeSpan t)
+        public static string ToString(this TimeSpan t,IPlayer p)
         {
-            return String.Format("{0} hours {1} minutes", t.Hours + t.Days*24, t.Minutes);
+            StringBuilder sb = new StringBuilder();
+            if (t.Days > 0)
+                sb.Append( MessageLocalizer.Localize(p,"R:TimeSpan.Days",t.Days)+" ");
+            if (t.Hours > 0)
+                sb.Append(MessageLocalizer.Localize(p, "R:TimeSpan.Hours", t.Hours) + " ");
+            sb.Append(MessageLocalizer.Localize(p, "R:TimeSpan.Minutes", t.Minutes));
+
+            return sb.ToString();
         }
-        public static string ToDaysHoursMinutesString(this TimeSpan t)
+       
+        public static string ToStringShort(this TimeSpan t,IPlayer p)
         {
-            return String.Format("{0} days {1} hours {2} minutes", t.Days, t.Hours, t.Minutes);
+            StringBuilder sb = new StringBuilder();
+            if (t.Days > 0)
+                sb.Append(MessageLocalizer.Localize(p, "R:TimeSpan.ShortDays", t.Days) + " ");
+            if (t.Hours > 0)
+                sb.Append(MessageLocalizer.Localize(p, "R:TimeSpan.ShortHours", t.Hours) + " ");
+            sb.Append(MessageLocalizer.Localize(p, "R:TimeSpan.ShortMinutes", t.Minutes));
+            return sb.ToString();
         }
-        public static string ToDaysHoursMinutesStringShort(this TimeSpan t)
-        {
-            return String.Format("{0}d {1}h {2}m", t.Days, t.Hours, t.Minutes);
-        }
-        public static string ToDistanceString(this double dist,string head,bool inside)
+
+        public static string ToDistanceString(this double dist,IPlayer p, string head,bool inside)
         {
             if (dist >= 1000.0)
                 return String.Format("{0} ({1} km)", head, (int)(dist / 1000.0));
             else
             {
                 if (inside)
-                    return String.Format("[00FF00]{0} (HERE)[FFFFFF]", head, (int)dist);
+                    return String.Format("[00FF00]{0} ("+MessageLocalizer.Localize(p, "R:Here")+")[FFFFFF]", head, (int)dist);
                 else
                     return String.Format("{0} ({1} m)", head, (int)dist);
             }

@@ -1,6 +1,7 @@
 ﻿using _7DTDManager.Commands;
 using _7DTDManager.Config;
 using _7DTDManager.Interfaces;
+using _7DTDManager.Localize;
 using _7DTDManager.Players;
 using NLog;
 using NLog.Config;
@@ -55,7 +56,10 @@ namespace _7DTDManager
                         
             Config.UpdateDefaults();
 
-           
+            MessageLocalizer.Init();
+            MessageLocalizer.InitTranslation("english-default");
+            MessageLocalizer.SaveTranslation();
+
             CommandManager.Init();
             
 
@@ -79,12 +83,14 @@ namespace _7DTDManager
                     }
                     else
                     {
-                        string[] largs = cline.ToLowerInvariant().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                        /*
+                         string[] largs = cline.ToLowerInvariant().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                         if (!CommandManager.AllCommands.ContainsKey(largs[0]))
                         {
                             Program.Server.Execute(cline);
                             continue;
                         }
+                         * */
                         _7DTDManager.LineHandlers.lineServerCommand c = new _7DTDManager.LineHandlers.lineServerCommand();
                         c.ProcessLine(Program.Server, "INF GMSG: Server: /" + cline);
                         //bool res = cmd.Execute(Server, ServerPlayer, largs);

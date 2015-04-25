@@ -18,7 +18,8 @@ namespace _7DTDManager.Interfaces
         string CommandUsage { get; set; }
         string[] CommandAliases { get; set; }
 
-        void Init(ILogger logger);
+        void Init(ILogger logger,IMessageLocalizer localizer);
+        bool Handles(string command);
         bool Execute(IServerConnection server, IPlayer p, params string[] args);
         bool AdminExecute(IServerConnection server, IPlayer p, params string[] args);
     }

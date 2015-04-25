@@ -100,6 +100,12 @@ namespace _7DTDManager.ShopSystem
             }
             return true;
         }
+
+
+        IShop IShopItem.Shop
+        {
+            get { return Shop; }
+        }
     }
 
     

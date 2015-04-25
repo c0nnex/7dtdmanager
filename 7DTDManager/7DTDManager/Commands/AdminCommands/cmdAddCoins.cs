@@ -13,19 +13,15 @@ namespace _7DTDManager.AdminCommands
 
         public cmdAddCoins()
         {
-            CommandHelp = "Add coins to a player";
-            CommandName = "addcoins";
-            CommandLevel = 100;
+            CommandHelp = "R:Cmd.AddCoins.Help";
+            CommandName = "R:Cmd.AddCoins.Command";
+            CommandLevel = 100;           
         }
 
         public override bool Execute(IServerConnection server, IPlayer p, params string[] args)
-        {
-            if (!p.IsAdmin)
-            {
-                p.Message("Nice try!");
-                return true;
-            }
+        {           
             p.AddCoins(1000, "Cheating");
+            p.Confirm("R:Cmd.AddCoins.ConfirmMsg", 1000);
             return true;
         }
 

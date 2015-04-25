@@ -46,6 +46,8 @@ namespace _7DTDManager.Config
         public int ProtectionPriceOneWeek { get; set; }
         public int ProtectionPriceOneMonth { get; set; }
 
+        public string DefaultLanguage { get; set; }
+
         [XmlArrayItem(ElementName="Admin")]
         public AdminList Admins { get; set; }
 
@@ -69,6 +71,8 @@ namespace _7DTDManager.Config
         }
         [XmlIgnore]
         public Shop GlobalShop = null;
+        [XmlIgnore]
+        private Dictionary<string, string> ConfigValues = null;
 
         public Configuration()
         {
@@ -93,6 +97,7 @@ namespace _7DTDManager.Config
             ProtectionPriceOneWeek = 300;
             ProtectionPriceOneMonth = 1000;
             EnableProtection = true;
+            DefaultLanguage = "english";
             Admins = new AdminList();
             Commands = new CommandConfigurationList();
             Shops = new List<ShopSystem.Shop>();
@@ -164,7 +169,16 @@ namespace _7DTDManager.Config
         }
 
         public void Init()
-        {            
+        {
+            ConfigValues = new Dictionary<string, string>();
+
+            foreach (var prop in this.GetType().GetProperties())
+            {
+                if (prop.PropertyType.ToString().StartsWith("System.") && (prop.Name != "ServerPassword"))
+                {
+                    ConfigValues.Add("{"+prop.Name+"}", prop.GetValue(this).ToString());
+                }
+            }
             foreach (var item in Shops)
             {
                 item.Init();
@@ -179,6 +193,17 @@ namespace _7DTDManager.Config
             }
         }
 
+        public string ReplaceConfigValues(string inStr)
+        {
+            if (inStr.Contains('{'))
+            {
+                foreach (var item in ConfigValues)
+                {
+                    inStr = inStr.Replace(item.Key, item.Value);
+                }
+            }
+            return inStr;
+        }
 
         public int RegisterShop(ShopSystem.Shop shop)
         {

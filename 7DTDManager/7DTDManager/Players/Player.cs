@@ -1,5 +1,6 @@
 ﻿using _7DTDManager.Commands;
 using _7DTDManager.Interfaces;
+using _7DTDManager.Localize;
 using _7DTDManager.Objects;
 using NLog;
 using System;
@@ -25,6 +26,7 @@ namespace _7DTDManager.Players
         public string EntityID { get; set; }
 
         public string IPAddress { get; set; }
+        public string Language { get; set; }
         public DateTime FirstLogin { get; set; }
         public DateTime LastLogin { get; set; }
         public DateTime LastPayday { get; set; }
@@ -109,6 +111,8 @@ namespace _7DTDManager.Players
             Mailbox = new Mailbox();
             LandProtections = new ExposedList<AreaProtection, IAreaProtection>();
             ProxyPlayer = null;
+            ExecuteAs = null;
+            Language = "english";
         }
 
         /// <summary>
@@ -162,7 +166,7 @@ namespace _7DTDManager.Players
                 OnChanged();
                 PlayersManager.Instance.OnPlayerLogin(this);
                 if (Mailbox.Mails.Count > 0)
-                    Confirm("You have {0} unread mail(s). Use '/mail read' to read them.", Mailbox.Mails.Count);
+                    Confirm("R:Mail.Inbox", Mailbox.Mails.Count);
             }
         }
 
@@ -357,20 +361,21 @@ namespace _7DTDManager.Players
 
         public virtual void Message(string p, params object[] args)
         {
+            string msg = MessageLocalizer.Localize(this, p, args);
             if ( (ProxyPlayer != null) && ( (ProxyPlayer.IsOnline) || (ProxyPlayer == Program.ServerPlayer)) && (ProxyPlayer != this))
-                ProxyPlayer.Message(p, args);
+                ProxyPlayer.Message(msg);
             if (IsOnline)
-                Program.Server.PrivateMessage(this, String.Format(p, args));
+                Program.Server.PrivateMessage(this,msg);
         }
 
         public void Error(string msg, params object[] args)
         {
-            Message("[FF0000]" + msg + "[FFFFFF]", args);
+            Message("[FF0000]" +  MessageLocalizer.Localize(this,msg,args) + "[FFFFFF]");
         }
 
         public void Confirm(string msg, params object[] args)
         {
-            Message("[00FF00]" + msg + "[FFFFFF]", args);
+            Message("[00FF00]" +  MessageLocalizer.Localize(this,msg,args) + "[FFFFFF]");
         }
 
         public void AddBounty(int howmuch, string why)
@@ -382,7 +387,7 @@ namespace _7DTDManager.Players
                 Bounty = 0;
             logger.Info("{0} Bounty Change [{3}]: {1} (new {2})", Name, howmuch, Bounty, why);
             if ( howmuch > 0 )
-                Message("A bounty of {0} coins has been set on your head. Total bounty: {1}", howmuch, Bounty);
+                Message("R:Bounty.AddedBounty", howmuch, Bounty);
             OnChanged();
         }
 
@@ -454,12 +459,31 @@ namespace _7DTDManager.Players
             {
                 logger.Info("{0}: PingKicks ({1}) cleared", Name, PingKicks);
                 PingKicks = 0;
+                OnChanged();
             }
         }
 
         public void Dirty()
         {
-            Program.Config.IsDirty = true;
+            OnChanged();
+        }
+
+
+        public void SetIPAddress(string ip)
+        {
+            IPAddress = ip;
+            OnChanged();
+        }
+
+        public void SetLanguage(string lang)
+        {
+            Language = lang;
+            OnChanged();
+        }
+
+        public string Localize(string key,params object[] args)
+        {
+            return MessageLocalizer.Localize(this, key,args);
         }
     }
 

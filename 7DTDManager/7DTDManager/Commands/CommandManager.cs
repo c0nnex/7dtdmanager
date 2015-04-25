@@ -1,6 +1,7 @@
 ﻿
 using _7DTDManager.Interfaces;
 using _7DTDManager.Interfaces.Commands;
+using _7DTDManager.Localize;
 using NLog;
 using System;
 using System.Collections.Generic;
@@ -31,14 +32,26 @@ namespace _7DTDManager.Commands
 
         public static void Init()
         {            
-            allCommands["coins"] = new InfoCommand(String.Format("You will get {0} coin(s) per minute playtime (not idletime!) and {1} coin(s) per zombie slain.",Program.Config.CoinsPerMinute,Program.Config.CoinsPerZombiekill));
+/*            allCommands["coins"] = new InfoCommand(String.Format("You will get {0} coin(s) per minute playtime (not idletime!) and {1} coin(s) per zombie slain.",Program.Config.CoinsPerMinute,Program.Config.CoinsPerZombiekill));
             allCommands["death"] = new InfoCommand(String.Format("You will loose {0} coin(s) if you die (not exterminated by another player!)",Program.Config.CoinLossPerDeath));
             allCommands["bounties"] = new InfoCommand(String.Format("When you eliminate another player a bounty will be set on your head"));
-
+            */
             RegisterCommandHandlers(System.Reflection.Assembly.GetExecutingAssembly());
             LoadCommands();
         }
 
+        public static ICommand FindCommand(string command)
+        {
+            if (AllCommands.ContainsKey(command))
+                return AllCommands[command];
+            foreach (var cmd in AllCommands.Values)
+            {
+                if (cmd.Handles(command))
+                    return cmd;                
+            }
+
+            return null;
+        }
         public static void LoadCommands()
         {
             logger.Info("Loading Commands ...");
@@ -87,7 +100,7 @@ namespace _7DTDManager.Commands
 
                     allCommands[ex.CommandName] = ex;
                     ILogger l = LogManager.GetLogger(t.ToString(),typeof(ExtensionLogger)) as ILogger;
-                    ex.Init(l);
+                    ex.Init(l,MessageLocalizer.Instance); 
                     if (!Program.Config.Commands.ContainsCommand(ex.CommandName))
                     {
                         Program.Config.Commands.Add(new Config.CommandConfiguration(ex));

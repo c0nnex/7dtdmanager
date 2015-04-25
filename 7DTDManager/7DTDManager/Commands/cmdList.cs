@@ -14,9 +14,9 @@ namespace _7DTDManager.Commands
         public cmdList()
         {
             CommandArgs = 0;
-            CommandName = "list";
-            CommandHelp = "Shows the items in stock in a shop.";
-            CommandUsage = "/list [page]";
+            CommandName = "R:Cmd.List.Command";
+            CommandHelp = "R:Cmd.List.Help";
+            CommandUsage = "R:Cmd.List.Usage";
         }
 
         public override bool Execute(IServerConnection server, IPlayer p, params string[] args)
@@ -24,12 +24,12 @@ namespace _7DTDManager.Commands
             Shop shop = p.GetCurrentShop() as Shop;
             if (shop == null)
             {
-                p.Error("You are not inside a shop area. see /shops for a list of shops.");
+                p.Error("R:Shop.NotInside");
                 return false;
             }
             if (!shop.IsOpen())
             {
-                p.Error("The shop is currently closed.");
+                p.Error("R:Shop.Closed",shop.ShopOpensAt,shop.ShopClosesAt);
                 return false;
             }
             
@@ -43,7 +43,7 @@ namespace _7DTDManager.Commands
                 }
                 startitem--;
             }
-            p.Message(String.Format("{0,3} {1,-15} {2,5} {3,5}", "#", "name", "price", "stock").Replace(' ', (Char)160));
+            p.Message(String.Format("{0,3} {1,-15} {2,5} {3,5}", "#", Localizer.Localize(p, "R:Shop.Item.Name"), Localizer.Localize(p, "R:Shop.Item.Price"), Localizer.Localize(p, "R:Shop.Item.Stock")).Replace(' ', (Char)160));
 
             for (int i = startitem*5; i < (startitem+1)*5; i++)
             {
@@ -54,7 +54,7 @@ namespace _7DTDManager.Commands
                     p.Message(String.Format("{0,3} {1,-15} {2,5} {3,5}", item.ItemID, item.ItemName, price, item.StockAmount).Replace(' ', (Char)160));
                 }
             }
-            p.Message("--- Page {0} of {1} ----", startitem + 1, ((shop.ShopItems.Count+5) / 5));
+            p.Message("R:List.Page", startitem + 1, ((shop.ShopItems.Count+5) / 5));
             return true;
         }
 
@@ -64,7 +64,7 @@ namespace _7DTDManager.Commands
             {
                 p.Confirm(shop.ShopName);
 
-                p.Message(String.Format("{0,3} {1,-15} {2,5} {3,5}", "#", "name", "price", "stock").Replace(' ', (Char)160));
+                p.Message(String.Format("{0,3} {1,-15} {2,5} {3,5}", "#", Localizer.Localize(p, "R:Shop.Item.Name"), Localizer.Localize(p, "R:Shop.Item.Price"), Localizer.Localize(p, "R:Shop.Item.Stock")).Replace(' ', (Char)160));
 
                 for (int i = 0; i < shop.ShopItems.Count; i++)
                 {

@@ -11,10 +11,10 @@ namespace _7DTDManager.ShopSystem
     {
         public string HandlerName { get; set; }
         public string Error { get; set; }
-        public abstract bool ItemBought(Interfaces.IServerConnection server, Interfaces.IPlayer buyer, ShopItem shopItem, int amount, int price);
-        public abstract bool ItemSold(Interfaces.IServerConnection server, Interfaces.IPlayer buyer, ShopItem shopItem, int amount, int price);
-        public abstract int EvaluateBuy(IServerConnection server, IPlayer buyer, ShopItem item, int amount);
-        public abstract int EvaluateSell(IServerConnection server, IPlayer seller, ShopItem item, int amount);
+        public abstract bool ItemBought(Interfaces.IServerConnection server, Interfaces.IPlayer buyer, IShopItem shopItem, int amount, int price);
+        public abstract bool ItemSold(Interfaces.IServerConnection server, Interfaces.IPlayer buyer, IShopItem shopItem, int amount, int price);
+        public abstract int EvaluateBuy(IServerConnection server, IPlayer buyer, IShopItem item, int amount);
+        public abstract int EvaluateSell(IServerConnection server, IPlayer seller, IShopItem item, int amount);
 
     }
 }

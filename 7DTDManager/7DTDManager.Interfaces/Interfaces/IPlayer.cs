@@ -10,7 +10,8 @@ namespace _7DTDManager.Interfaces
         string Name { get; }
         string SteamID { get; }
         string EntityID { get; }
-        string IPAddress { get; set; }
+        string IPAddress { get; }
+        string Language { get;  }
         int Age { get; }
         int Ping { get; }
         
@@ -81,6 +82,9 @@ namespace _7DTDManager.Interfaces
 
         void ClearPingKicks();
         void Dirty();
+        void SetIPAddress(string ip);
+        void SetLanguage(string lang);
+        string Localize(string key, params object[] args);
     }
 
     public class PlayerMovementEventArgs : EventArgs

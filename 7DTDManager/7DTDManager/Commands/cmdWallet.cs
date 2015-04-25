@@ -12,13 +12,13 @@ namespace _7DTDManager.Commands
     {
         public cmdWallet()
         {
-            CommandHelp = "Show your current coin balance.";
-            CommandName = "wallet";
+            CommandHelp = "R:Cmd.Wallet.Help";
+            CommandName = "R:Cmd.Wallet.Command";
         }
 
         public override bool Execute(IServerConnection server, IPlayer p, params string[] args)
         {
-            p.Message("You have {0} coins.", p.zCoins);
+            p.Confirm("R:Cmd.Wallet.ResultMsg", p.zCoins);
             return true;
         }
         

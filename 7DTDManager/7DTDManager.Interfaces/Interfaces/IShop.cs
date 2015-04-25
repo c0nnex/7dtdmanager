@@ -4,34 +4,37 @@ namespace _7DTDManager.Interfaces
 {
     public interface IShopItem
     {
-        int BuyPrice { get; }
-        double EconomyFactor { get; }
-        string HandlerName { get; }
-        string ItemName { get; }
-        int LevelRequired { get; }
-        DateTime NextRestock { get; }
-        int RestockAmount { get; }
-        TimeSpan RestockDelay { get; }
-        int SellPrice { get; }
-        int StockAmount { get; }
-        int TotalSold { get; }
+        int ItemID { get; }
+        IShop Shop { get; }
+        int BuyPrice { get;set; }
+        double EconomyFactor { get;set; }
+        string HandlerName { get;set; }
+        string ItemName { get;set; }
+        int LevelRequired { get;set; }
+        DateTime NextRestock { get;set; }
+        int RestockAmount { get;set; }
+        TimeSpan RestockDelay { get;set; }
+        int SellPrice { get;set; }
+        int StockAmount { get;set; }
+        int TotalSold { get;set; }
     }
 
     public interface IShop
     {
-        double EconomyFactor { get; }
-        bool HasOpeningHours { get; }
+        int ShopID { get; }
+        double EconomyFactor { get;set; }
+        bool HasOpeningHours { get;set; }
         
-        int ShopClosesAt { get; }
+        int ShopClosesAt { get;set; }
         IReadOnlyList<IShopItem> ShopItems { get; }
-        string ShopName { get; }
-        int ShopOpensAt { get; }
+        string ShopName { get;set; }
+        int ShopOpensAt { get;set; }
         IAreaDefiniton ShopPosition { get; }
-        bool ShopRestocks { get; }
-        int TotalCustomers { get; }
-        int TotalDeals { get; }
-        int TotalRevenue { get; }
-        int TotalSales { get; }
+        bool ShopRestocks { get;set; }
+        int TotalCustomers { get;set; }
+        int TotalDeals { get;set; }
+        int TotalRevenue { get;set; }
+        int TotalSales { get;set; }
 
         bool IsOpen();
     }

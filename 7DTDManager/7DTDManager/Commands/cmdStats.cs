@@ -13,8 +13,8 @@ namespace _7DTDManager.Commands
     {
         public cmdStats()
         {
-            CommandHelp = "Show your stats.";
-            CommandName = "stats";
+            CommandHelp = "R:Cmd.Stats.Help";
+            CommandName = "R:Cmd.Stats.Command";
         }
 
         public override bool Execute(IServerConnection server, IPlayer p, params string[] args)
@@ -25,23 +25,23 @@ namespace _7DTDManager.Commands
                 IPlayer target = server.AllPlayers.FindPlayerByNameOrID(args[1],false);
                 if ((target == null))
                 {
-                    p.Message("Targetplayer '{0}' was not found.", args[1]);
+                    p.Message(MESSAGES.ERR_TARGETNOTFOUND, args[1]);
                     return false;
                 }
                 targetPlayer = target;
             }
             if (targetPlayer != p)
-                p.Message("Stats for {0}:", targetPlayer.Name);
+                p.Message("R:Cmd.Stats.StatsFor", targetPlayer.Name);
 
             TimeSpan t = new TimeSpan(0, targetPlayer.Age, 0);
-            p.Message("Age: {0} Coins: {1}", t.ToDaysHoursMinutesString(), targetPlayer.zCoins);
-            p.Message("Bounties collected: {0} coins Bloodmoney collected: {1} coins", targetPlayer.BountyCollected, targetPlayer.BloodCoins);
+            p.Message("R:Cmd.Stats.AgeCoins", t.ToString(p), targetPlayer.zCoins);
+            p.Message("R:Cmd.Stats.BountyCollected", targetPlayer.BountyCollected, targetPlayer.BloodCoins);
             if (targetPlayer.DistanceTravelled > 0)
-                p.Message("You travelled {0} km so far.", (int)(targetPlayer.DistanceTravelled / 1000.0));
+                p.Message("R:Cmd.Stats.Travel", (int)(targetPlayer.DistanceTravelled / 1000.0));
             if (targetPlayer.Bounty > 0)
-                p.Error("Bounty on your head: {0} coins", targetPlayer.Bounty);
+                p.Error("R:Cmd.Stats.Bounty", targetPlayer.Bounty);
             if ((targetPlayer == p) && (targetPlayer.Mailbox.Mails.Count > 0))
-                p.Confirm("You have {0} unread mails.", targetPlayer.Mailbox.Mails.Count);
+                p.Confirm("R:Mail.Inbox", targetPlayer.Mailbox.Mails.Count);
             return true;
         }
         
