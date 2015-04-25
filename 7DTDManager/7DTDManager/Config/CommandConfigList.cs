@@ -117,7 +117,7 @@ namespace _7DTDManager.Config
 
         public CommandConfiguration(ICommand cmd) : this()
         {
-            Command = cmd.CommandName.ToLowerInvariant();
+            Command = MessageLocalizer.GetDefaultLocalization(cmd.CommandName).ToLowerInvariant();
             Cost = cmd.CommandCost;
             CoolDown = cmd.CommandCoolDown;
             Enabled = true;

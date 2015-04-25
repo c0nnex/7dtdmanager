@@ -98,10 +98,10 @@ namespace _7DTDManager.Commands
                     logger.Info("Loading Command {0} from {1}", t.FullName, x.GetName().Name);
                     ICommand ex = Activator.CreateInstance(t) as ICommand;
 
-                    allCommands[ex.CommandName] = ex;
+                    allCommands[MessageLocalizer.GetDefaultLocalization(ex.CommandName)] = ex;
                     ILogger l = LogManager.GetLogger(t.ToString(),typeof(ExtensionLogger)) as ILogger;
-                    ex.Init(l,MessageLocalizer.Instance); 
-                    if (!Program.Config.Commands.ContainsCommand(ex.CommandName))
+                    ex.Init(l,MessageLocalizer.Instance);
+                    if (!Program.Config.Commands.ContainsCommand(MessageLocalizer.GetDefaultLocalization(ex.CommandName)))
                     {
                         Program.Config.Commands.Add(new Config.CommandConfiguration(ex));
                     }
