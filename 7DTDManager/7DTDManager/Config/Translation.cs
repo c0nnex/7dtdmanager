@@ -62,6 +62,16 @@ namespace _7DTDManager.Localize
             return Program.Config.ReplaceConfigValues(retVal); 
         }
 
+        public static string GetDefaultLocalization(string key,params object[] args)
+        {
+            string tKey = key.ToLowerInvariant();
+            if (tKey.StartsWith("r:"))
+                key = defaultLanguage.Translate(tKey.Substring(2));
+            if ((args != null) && (args.Length > 0))
+                return String.Format(key, args);
+            return key;
+        }
+
         public static string GetLocalization(IPlayer p, string key)
         {
             string retVal = String.Empty;

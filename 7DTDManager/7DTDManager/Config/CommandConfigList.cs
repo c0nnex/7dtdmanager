@@ -1,4 +1,5 @@
 ﻿using _7DTDManager.Interfaces;
+using _7DTDManager.Localize;
 using NLog;
 using System;
 using System.Collections.Generic;
@@ -56,11 +57,11 @@ namespace _7DTDManager.Config
 
         internal void UpdateCommand(ICommand cmd)
         {
-            CommandConfiguration config = this[cmd.CommandName];
+            CommandConfiguration config = this[MessageLocalizer.GetDefaultLocalization(cmd.CommandName)];
             cmd.CommandCoolDown = config.CoolDown;
             cmd.CommandCost = config.Cost;
             if (cmd.CommandLevel != config.Level)
-                logger.Warn("{0} Changing Level from {1} to {2}", cmd.CommandName, cmd.CommandLevel, config.Level);
+                logger.Warn("{0} Changing Level from {1} to {2}",MessageLocalizer.GetDefaultLocalization( cmd.CommandName ), cmd.CommandLevel, config.Level);
             cmd.CommandLevel = config.Level;
             if (config.Alias.Length > 0)
                 cmd.CommandAliases = config.Alias;

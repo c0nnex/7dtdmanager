@@ -43,10 +43,10 @@ namespace _7DTDManager.Commands
                 p.Error(MESSAGES.ERR_NOSUCHCOMAND, command);
                 return true;
             }
-            p.Message("R:Cmd.Help.HelpCommand", cmd.CommandName);
+            p.Message("R:Cmd.Help.HelpCommand", p.Localize(cmd.CommandName));
             p.Message(cmd.CommandHelp);
             if (!String.IsNullOrEmpty(cmd.CommandUsage))
-                p.Message("R:Cmd.Help.HelpUsage", cmd.CommandUsage);
+                p.Message("R:Cmd.Help.HelpUsage", p.Localize(cmd.CommandUsage));
             if (cmd.CommandCost > 0 )
                 p.Message("R:Cmd.Help.HelpCost", cmd.CommandCost);
             if (cmd.CommandCoolDown > 0)
