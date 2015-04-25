@@ -1,5 +1,6 @@
 ﻿using _7DTDManager.Commands;
 using _7DTDManager.Interfaces;
+using _7DTDManager.Interfaces.Helper;
 using _7DTDManager.Localize;
 using _7DTDManager.Objects;
 using NLog;

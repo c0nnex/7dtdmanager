@@ -37,40 +37,6 @@ namespace _7DTDManager.Objects
             return field;
         }
 
-        public static string ToString(this TimeSpan t,IPlayer p)
-        {
-            StringBuilder sb = new StringBuilder();
-            if (t.Days > 0)
-                sb.Append( MessageLocalizer.Localize(p,"R:TimeSpan.Days",t.Days)+" ");
-            if (t.Hours > 0)
-                sb.Append(MessageLocalizer.Localize(p, "R:TimeSpan.Hours", t.Hours) + " ");
-            sb.Append(MessageLocalizer.Localize(p, "R:TimeSpan.Minutes", t.Minutes));
-
-            return sb.ToString();
-        }
-       
-        public static string ToStringShort(this TimeSpan t,IPlayer p)
-        {
-            StringBuilder sb = new StringBuilder();
-            if (t.Days > 0)
-                sb.Append(MessageLocalizer.Localize(p, "R:TimeSpan.ShortDays", t.Days) + " ");
-            if (t.Hours > 0)
-                sb.Append(MessageLocalizer.Localize(p, "R:TimeSpan.ShortHours", t.Hours) + " ");
-            sb.Append(MessageLocalizer.Localize(p, "R:TimeSpan.ShortMinutes", t.Minutes));
-            return sb.ToString();
-        }
-
-        public static string ToDistanceString(this double dist,IPlayer p, string head,bool inside)
-        {
-            if (dist >= 1000.0)
-                return String.Format("{0} ({1} km)", head, (int)(dist / 1000.0));
-            else
-            {
-                if (inside)
-                    return String.Format("[00FF00]{0} ("+MessageLocalizer.Localize(p, "R:Here")+")[FFFFFF]", head, (int)dist);
-                else
-                    return String.Format("{0} ({1} m)", head, (int)dist);
-            }
-        }
+        
     }
 }

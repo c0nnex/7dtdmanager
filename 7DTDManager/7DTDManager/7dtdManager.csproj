@@ -108,7 +108,6 @@
     <Compile Include="Manager.cs" />
     <Compile Include="Network\EventDrivenTCPClient.cs" />
     <Compile Include="Objects\AreaDefiniton.cs" />
-    <Compile Include="Objects\ExposedList.cs" />
     <Compile Include="Objects\ExtensionManager.cs" />
     <Compile Include="Objects\Extensions.cs" />
     <Compile Include="Objects\MessageCallout.cs" />

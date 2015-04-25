@@ -50,6 +50,8 @@
     <Compile Include="BaseClasses\BaseLineHandler.cs" />
     <Compile Include="BaseClasses\InfoCommandBase.cs" />
     <Compile Include="BaseClasses\PublicCommandBase.cs" />
+    <Compile Include="HelperClasses\ExposedList.cs" />
+    <Compile Include="HelperClasses\Extensions.cs" />
     <Compile Include="Interfaces\IExtension.cs" />
     <Compile Include="Interfaces\IMessageLocalizer.cs" />
     <Compile Include="Interfaces\IAreaDefiniton.cs" />

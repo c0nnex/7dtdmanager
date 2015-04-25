@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace _7DTDManager.Objects
+namespace _7DTDManager.Interfaces.Helper
 {
     [Serializable]
     public class ExposedList<BaseType,ExposedType> : IExposedList<ExposedType> where BaseType : ExposedType
