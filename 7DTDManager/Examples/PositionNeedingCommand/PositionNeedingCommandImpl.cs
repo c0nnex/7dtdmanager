@@ -12,9 +12,9 @@ namespace PositionNeedingCommand
      * To Add this command to 7DTDManager, compile it and place DLL in "ext" Folder.
     */
 
-    public class Class1 : PublicCommandBase
+    public class PositionNeedingCommandImpl : PublicCommandBase
     {
-        public Class1()
+        public PositionNeedingCommandImpl()
         {
             CommandName = "ex1";
             CommandHelp = "Example 1: Command needing most current position.";
