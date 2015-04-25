@@ -8,6 +8,9 @@ namespace _7DTDManager.Interfaces
 
         event EventHandler PlayerLogin;
         event EventHandler PlayerLogout;
+        event EventHandler PlayerSave;
+        event AreaEventDelegate AreaInitialize;
+       
 
         IPlayer AddPlayer(string name, string steamid, string entityid);
         IPlayer FindPlayerByNameOrID(string name, bool onlyonline = true);

@@ -1,6 +1,9 @@
 ﻿using System;
 namespace _7DTDManager.Interfaces
 {
+
+    public delegate void AreaEventDelegate(IAreaDefiniton area, AreaEventArgs e);
+
     public interface IAreaDefiniton
     {
         IPosition Center { get; }
@@ -9,31 +12,29 @@ namespace _7DTDManager.Interfaces
 
         bool IsInside(IPosition pos);
         bool IsNear(IPosition pos);
+
+        event AreaEventDelegate AreaEvent;
+
+        void OnPlayerEnter(IPlayer player);
+        void OnPlayerLeave(IPlayer player);
+        void OnDestroy();
     }
 
-    public interface IAreaProtectionEvent
+    public class AreaEventArgs : EventArgs
     {
-        TimeSpan HowLong { get;  }
-        DateTime When { get;  }
-        string Who { get;  }
+        public IPlayer Player;
+        public AreaEventType EventType;
+
+        public AreaEventArgs(IPlayer p, AreaEventType eventType)
+        {
+            Player = p;
+            EventType = eventType;
+        }
     }
-
-    public interface IAreaProtection : IAreaDefiniton
+    
+    public enum AreaEventType
     {
-        DateTime Expires { get; }
-        string OwnedBy { get; }
-        IPlayer Owner { get;  }
-        bool IsExpired { get; }
-        int AreaProtectionID { get; }
-        IExposedList<IAreaProtectionEvent> RecordedEvents { get; }
-
-        void RecordEvent(AreaProtectionEventType eventType);
-        void Update(TimeSpan extend);
-        string ToString(IPosition pos);
-    }
-
-    public enum AreaProtectionEventType
-    {
+        Init,
         PlayerEnter,
         PlayerLeave,
         PlayerStay,

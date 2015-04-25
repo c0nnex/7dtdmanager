@@ -1,7 +1,9 @@
 ﻿using _7DTDManager.Interfaces;
 using _7DTDManager.Objects;
+using _7DTDManager.Players;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -70,9 +72,34 @@ namespace _7DTDManager
         }
 
 
-        public IAreaProtection CreateProtection(IPosition pos, IPlayer owner)
+        public IAreaDefiniton CreateArea(IPlayer p, IPosition pos, double size = 10.0)
         {
-            return new AreaProtection { Center = pos as Position, SizeX = 10.0, SizeZ = 10.0, OwnedBy = owner.SteamID,  AreaProtectionID = Program.Config.NewAreaProtectionID() };
+            IAreaDefiniton area = new AreaDefiniton { Center = pos as Position, SizeX = size, SizeZ = size };
+            Players.PlayersManager.Instance.OnAreaInitialize(area,p);
+            return area;
+        }
+
+
+        public string SavePath
+        {
+            get 
+            {
+                return PlayersManager.ProfilePath;
+            }
+        }
+
+        IPositionManager IServerConnection.PositionManager
+        {
+            get { return PositionManager.Instance; }
+        }
+
+
+        public IShop GlobalShop
+        {
+            get
+            {
+                return Program.Config.GlobalShop;
+            }
         }
     }
 }

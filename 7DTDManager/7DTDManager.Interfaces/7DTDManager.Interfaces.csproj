@@ -50,6 +50,7 @@
     <Compile Include="BaseClasses\BaseLineHandler.cs" />
     <Compile Include="BaseClasses\InfoCommandBase.cs" />
     <Compile Include="BaseClasses\PublicCommandBase.cs" />
+    <Compile Include="Interfaces\IExtension.cs" />
     <Compile Include="Interfaces\IMessageLocalizer.cs" />
     <Compile Include="Interfaces\IAreaDefiniton.cs" />
     <Compile Include="Interfaces\ICallout.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="Interfaces\IPlayer.cs" />
     <Compile Include="Interfaces\IPlayersManager.cs" />
     <Compile Include="Interfaces\IPosition.cs" />
+    <Compile Include="Interfaces\IPositionManager.cs" />
     <Compile Include="Interfaces\IPositionTrackable.cs" />
     <Compile Include="Interfaces\IServerConnection.cs" />
     <Compile Include="Interfaces\IServerLineHandler.cs" />

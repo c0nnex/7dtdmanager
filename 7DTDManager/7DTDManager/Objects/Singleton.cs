@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace _7DTDManager.Objects
 {
-    public class Singleton<T> where T : class,new()
+    public class Singleton<T>  where T : ISingleton,new()
     {
-        private static T instance;
+        public static T instance;
 
         public Singleton() 
         {            
@@ -27,5 +27,18 @@ namespace _7DTDManager.Objects
                 instance = value;
             }
         }
+
+        public virtual void InitInstance()
+        { }
+
+        public static void Init()
+        {
+            Instance.InitInstance();
+        }
+    }
+
+    public interface ISingleton
+    {
+        void InitInstance();
     }
 }

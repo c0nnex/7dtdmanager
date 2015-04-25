@@ -2,6 +2,7 @@
 using _7DTDManager.Config;
 using _7DTDManager.Interfaces;
 using _7DTDManager.Localize;
+using _7DTDManager.Objects;
 using _7DTDManager.Players;
 using NLog;
 using NLog.Config;
@@ -21,7 +22,7 @@ namespace _7DTDManager
     class Program
     {
         static Logger logger = LogManager.GetCurrentClassLogger();
-        public static string VERSION = "V1.4";
+        public static string VERSION = "V1.5";
         public static string HELLO = String.Format("This Server runs 7DTDManager Version {0}. See /help for available commands.", VERSION);
 
         public static String ApplicationDirectory
@@ -56,22 +57,28 @@ namespace _7DTDManager
                         
             Config.UpdateDefaults();
 
-            MessageLocalizer.Init();
-            MessageLocalizer.InitTranslation("english-default");
-            MessageLocalizer.SaveTranslation();
-
-            CommandManager.Init();
-            
-
             if (Config.IsNewConfiguration)
             {
                 Config.Save();
                 Console.WriteLine("Configuration not found. A default-config has been created for you. Please change to your needs and restart the application.");
                 return;
             }
+
+            MessageLocalizer.Init();
+            MessageLocalizer.InitTranslation("english-default");
+            MessageLocalizer.SaveTranslation();
+
             Server = new Manager();
+
+            ExtensionManager.LoadExtensions(Server);
+
+            CommandManager.Init();
+            PositionManager.Init();            
+            
             PlayersManager.Instance.RegisterPlayers();
+
             Server.Connect();
+            
             while (1 == 1)
             {
                     string cline = Console.ReadLine();

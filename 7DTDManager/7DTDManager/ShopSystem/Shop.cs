@@ -37,7 +37,7 @@ namespace _7DTDManager.ShopSystem
         public void Init()
         {
             if (!GlobalShop)
-                PositionManager.AddTrackableObject(this);
+                PositionManager.Instance.AddTrackableObject(this);
             foreach (var item in ShopItems)
             {
                 item.Shop = this;
@@ -49,7 +49,7 @@ namespace _7DTDManager.ShopSystem
         public void Deinit()
         {
             if (!GlobalShop)
-                PositionManager.RemoveTrackableObject(this);
+                PositionManager.Instance.RemoveTrackableObject(this);
 
             foreach (var item in ShopItems)
             {

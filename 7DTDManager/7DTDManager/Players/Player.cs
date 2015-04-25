@@ -53,7 +53,7 @@ namespace _7DTDManager.Players
         // ShopSystem Stuff       
         public List<string> Friends { get; set; }
         public Mailbox Mailbox { get; set; }
-        public ExposedList<AreaProtection, IAreaProtection> LandProtections {get;set;}
+        public ExposedList<AreaDefiniton, IAreaDefiniton> LandProtections {get;set;}
 
         private int LastDeaths = 0, LastPlayerKills = 0, LastZombieKills = 0;
         private DateTime LastUpdate = DateTime.Now;
@@ -109,7 +109,7 @@ namespace _7DTDManager.Players
             IsOnline = false;
             Friends = new List<string>();          
             Mailbox = new Mailbox();
-            LandProtections = new ExposedList<AreaProtection, IAreaProtection>();
+            LandProtections = new ExposedList<AreaDefiniton, IAreaDefiniton>();
             ProxyPlayer = null;
             ExecuteAs = null;
             Language = "english";
@@ -123,13 +123,7 @@ namespace _7DTDManager.Players
         {
             foreach (var protection in LandProtections.Items)
             {
-                
-                if ( protection.Expires < DateTime.Now )
-                {                    
-                    continue;
-                }
-
-                protection.Update(TimeSpan.Zero);
+                PlayersManager.Instance.OnAreaInitialize(protection,this);                
             }
         }
 
@@ -445,9 +439,9 @@ namespace _7DTDManager.Players
        
 
         [XmlIgnore]
-        IExposedList<IAreaProtection> IPlayer.LandProtections
+        IExposedList<IAreaDefiniton> IPlayer.LandProtections
         {
-            get { return LandProtections as IExposedList<IAreaProtection>; }
+            get { return LandProtections as IExposedList<IAreaDefiniton>; }
           
         }
 

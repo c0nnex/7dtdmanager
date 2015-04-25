@@ -13,6 +13,8 @@ namespace _7DTDManager.Objects
         public Double SizeX { get; set; }
         public Double SizeZ { get; set; }
 
+        public event AreaEventDelegate AreaEvent;
+
         public AreaDefiniton()
         {
 
@@ -41,6 +43,28 @@ namespace _7DTDManager.Objects
         IPosition IAreaDefiniton.Center
         {
             get { return Center; }
+        }
+
+
+        public void OnPlayerEnter(IPlayer player)
+        {
+            AreaEventDelegate handler = AreaEvent;
+            if (handler != null)
+                handler(this, new AreaEventArgs(player, AreaEventType.PlayerEnter));
+        }
+
+        public void OnPlayerLeave(IPlayer player)
+        {
+            AreaEventDelegate handler = AreaEvent;
+            if (handler != null)
+                handler(this, new AreaEventArgs(player, AreaEventType.PlayerLeave));
+        }
+
+        public void OnDestroy()
+        {
+            AreaEventDelegate handler = AreaEvent;
+            if (handler != null)
+                handler(this, new AreaEventArgs(null, AreaEventType.Destroyed));
         }
     }
 }

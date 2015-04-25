@@ -41,7 +41,7 @@ namespace _7DTDManager.Interfaces
 
         IExposedList<IPlayer> Friends { get; }
         IMailbox Mailbox { get; }
-        IExposedList<IAreaProtection> LandProtections { get; }
+        IExposedList<IAreaDefiniton> LandProtections { get; }
         IPlayer ProxyPlayer { get; set; }
         IPlayer ExecuteAs { get; set; }
 

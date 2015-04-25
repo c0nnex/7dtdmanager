@@ -8,17 +8,17 @@ using System.Threading.Tasks;
 
 namespace _7DTDManager.Objects
 {
-    public static class PositionManager
+    public class PositionManager : Singleton<PositionManager> , ISingleton, IPositionManager
     {
-        static List<IPositionTrackable> trackedObjects = new List<IPositionTrackable>();
-        static object lockObject = new Object();
+        List<IPositionTrackable> trackedObjects = new List<IPositionTrackable>();
+        object lockObject = new Object();
 
-        public static void Init()
+        public PositionManager ()
         {
             PlayersManager.Instance.PlayerMoved += Instance_PlayerMoved;
         }
 
-        public static void AddTrackableObject(IPositionTrackable trackable)
+        public void AddTrackableObject(IPositionTrackable trackable)
         {
             lock (lockObject)
             {
@@ -26,7 +26,7 @@ namespace _7DTDManager.Objects
             }
         }
 
-        public static void RemoveTrackableObject(IPositionTrackable trackable)
+        public void RemoveTrackableObject(IPositionTrackable trackable)
         {
             lock (lockObject)
             {
@@ -34,12 +34,12 @@ namespace _7DTDManager.Objects
             }
         }
 
-        public static bool IsTracked(IPositionTrackable trackable)
+        public bool IsTracked(IPositionTrackable trackable)
         {
             return trackedObjects.Contains(trackable);
         }
 
-        static void Instance_PlayerMoved(object sender, PlayerMovementEventArgs e)
+        void Instance_PlayerMoved(object sender, PlayerMovementEventArgs e)
         {
             lock (lockObject)
             {
@@ -50,7 +50,7 @@ namespace _7DTDManager.Objects
             }
         }
 
-        public static bool SomeoneNearTrackable()
+        public bool SomeoneNearTrackable()
         {
             var players = (from a in Program.Server.AllPlayers.Players where a.IsOnline select a);
             if ((players == null) || (players.Count() == 0))
@@ -64,6 +64,11 @@ namespace _7DTDManager.Objects
                 }
             }
             return false;
+        }
+
+        void ISingleton.InitInstance()
+        {
+            
         }
     }
 }

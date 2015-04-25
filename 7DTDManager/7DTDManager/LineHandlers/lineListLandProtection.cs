@@ -17,7 +17,7 @@ namespace _7DTDManager.LineHandlers
         static Regex rgLLPEnd = new Regex("Total of (?<numstones>[0-9]+) keystones in the game");
 
         private IPlayer currentPlayer = null;
-        private List<IAreaProtection> found = null;
+        private List<IAreaDefiniton> found = null;
         bool IsFirst = true;
         
         int countStones = 0;
@@ -39,7 +39,7 @@ namespace _7DTDManager.LineHandlers
 
                 IPlayer p = serverConnection.AllPlayers.FindPlayerBySteamID(groups["steamid"].Value);
                 currentPlayer = p;
-                found = new List<IAreaProtection>();  
+                found = new List<IAreaDefiniton>();  
                 if (p != null)
                 {
                     logger.Debug("Parsing LandProtections of {0}", p.Name);                                      
@@ -59,10 +59,10 @@ namespace _7DTDManager.LineHandlers
                 if ( (newLP != null) && (currentPlayer != null))
                 {
                     
-                    IAreaProtection protection = (from p in currentPlayer.LandProtections.Items where p.Center.Equals(newLP) select p).FirstOrDefault();
+                    IAreaDefiniton protection = (from p in currentPlayer.LandProtections.Items where p.Center.Equals(newLP) select p).FirstOrDefault();
                     if (protection == null)
                     {
-                        protection = serverConnection.CreateProtection(newLP,currentPlayer);
+                        protection = serverConnection.CreateArea(currentPlayer,newLP,10.0);
                         currentPlayer.LandProtections.Add(protection);                        
                     }
                     found.Add(protection);
@@ -84,6 +84,7 @@ namespace _7DTDManager.LineHandlers
                 }
                 if (currentPlayer != null) // Switch to Next Player
                     CleanupProtections();
+                serverConnection.AllPlayers.Save(true);
                 return true;
             }
             return false;
@@ -93,10 +94,10 @@ namespace _7DTDManager.LineHandlers
         {
             foreach (var item in currentPlayer.LandProtections.Items)
             {
-                IAreaProtection protection = (from p in found where p.Center == item.Center select p).FirstOrDefault();
+                IAreaDefiniton protection = (from p in found where p.Center == item.Center select p).FirstOrDefault();
                 if (protection == null)
                 {
-                    item.RecordEvent(AreaProtectionEventType.Destroyed);
+                    item.OnDestroy();
                 }
             }
         }

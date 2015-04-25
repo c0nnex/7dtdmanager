@@ -14,7 +14,7 @@ namespace _7DTDManager.Players
 {
     [Serializable]
     [XmlRoot(ElementName = "Players")]
-    public class PlayersManager : Singleton<PlayersManager>,IPlayersManager
+    public class PlayersManager : Singleton<PlayersManager>,IPlayersManager,ISingleton
     {
         static Logger logger = LogManager.GetCurrentClassLogger();
         public List<Player> players { get; set;}
@@ -27,6 +27,8 @@ namespace _7DTDManager.Players
         public event PlayerMovedDelegate PlayerMoved;
         public event EventHandler PlayerLogin;
         public event EventHandler PlayerLogout;
+        public event EventHandler PlayerSave;
+        public event AreaEventDelegate AreaInitialize;
 
         public PlayersManager() : base()
         {
@@ -138,7 +140,7 @@ namespace _7DTDManager.Players
                 IsDirty = false;
                 logger.Trace("Saving Players.");
                 Directory.CreateDirectory(ProfilePath);
-
+                OnPlayerSave();
                /* XmlSerializer<PlayersManager> serializer = new XmlSerializer<PlayersManager>(
                     new XmlSerializationOptions(null, Encoding.UTF8, null, true).DisableRedact(), null);
                 */
@@ -179,6 +181,20 @@ namespace _7DTDManager.Players
                 handler(p, new PlayerMovementEventArgs { OldPosition = oldPos, NewPosition = newPos });
         }
 
+        public void OnAreaInitialize(IAreaDefiniton area,IPlayer p)
+        {
+            AreaEventDelegate handler = AreaInitialize;
+            if (handler != null)
+                handler(area, new AreaEventArgs(p, AreaEventType.Init));
+        }
+
+        public void OnPlayerSave()
+        {
+            EventHandler handler = PlayerSave;
+            if (handler != null)
+                handler(this, EventArgs.Empty);
+        }
+
         [XmlIgnore]
         public IReadOnlyList<IPlayer> Players
         {
@@ -195,7 +211,9 @@ namespace _7DTDManager.Players
             return FindPlayerByNameOrID(name, onlyonline) as IPlayer;
         }
 
-
-        
+        void ISingleton.InitInstance()
+        {
+           
+        }
     }
 }

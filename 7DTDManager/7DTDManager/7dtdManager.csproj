@@ -69,18 +69,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\AdminCommands\cmdAddCoins.cs" />
-    <Compile Include="Commands\AdminCommands\cmdClearBounty.cs" />
     <Compile Include="Commands\AdminCommands\cmdClearLLP.cs" />
-    <Compile Include="Commands\AdminCommands\cmdClearPings.cs" />
     <Compile Include="Commands\AdminCommands\cmdProxy.cs" />
+    <Compile Include="Commands\AdminCommands\cmdClearPings.cs" />
+    <Compile Include="Commands\AdminCommands\cmdClearBounty.cs" />
     <Compile Include="Commands\AdminCommands\cmdReload.cs" />
+    <Compile Include="Commands\cmdLanguage.cs" />
     <Compile Include="Commands\cmdList.cs" />
     <Compile Include="Commands\cmdBuy.cs" />
     <Compile Include="Commands\cmdHelp.cs" />
     <Compile Include="Commands\cmdHome.cs" />
     <Compile Include="Commands\AdminCommands\cmdClearCooldown.cs" />
     <Compile Include="Commands\AdminCommands\cmdRecalc.cs" />
-    <Compile Include="Commands\cmdLanguage.cs" />
     <Compile Include="Commands\cmdSetHome.cs" />
     <Compile Include="Commands\AdminCommands\cmdShop.cs" />
     <Compile Include="Commands\cmdBounty.cs" />
@@ -91,8 +91,8 @@
     <Compile Include="Commands\cmdStats.cs" />
     <Compile Include="Commands\cmdWallet.cs" />
     <Compile Include="Config\AdminList.cs" />
-    <Compile Include="Config\CommandConfigList.cs" />
     <Compile Include="Config\Configuration.cs" />
+    <Compile Include="Config\CommandConfigList.cs" />
     <Compile Include="Config\Translation.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="LineHandlers\LineManager.cs" />
@@ -108,8 +108,8 @@
     <Compile Include="Manager.cs" />
     <Compile Include="Network\EventDrivenTCPClient.cs" />
     <Compile Include="Objects\AreaDefiniton.cs" />
-    <Compile Include="Objects\AreaProtection.cs" />
     <Compile Include="Objects\ExposedList.cs" />
+    <Compile Include="Objects\ExtensionManager.cs" />
     <Compile Include="Objects\Extensions.cs" />
     <Compile Include="Objects\MessageCallout.cs" />
     <Compile Include="Objects\CalloutManager.cs" />

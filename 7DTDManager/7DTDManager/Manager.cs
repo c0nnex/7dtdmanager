@@ -41,16 +41,17 @@ namespace _7DTDManager
 #endif
 
         public Manager()
-        {            
-            allPlayers = PlayersManager.Load();
-            PositionManager.Init();
+        {                                   
             pollTimer = new System.Timers.Timer();
             pollTimer.Interval = Program.Config.PollInterval;
             pollTimer.AutoReset = true;
             pollTimer.Elapsed += pollTimer_Elapsed;            
         }
 
-        
+        public void Init()
+        {
+            allPlayers = PlayersManager.Load();
+        }
 
         internal bool Connect()
         {
@@ -108,8 +109,8 @@ namespace _7DTDManager
             {
                 serverConnection.WriteLine(Program.Config.ServerPassword);
                 bIsFirst = false;               
-                serverConnection.WriteLine("allitems");
-                serverConnection.WriteLine("lp");
+                Execute("allitems");
+                Execute("lp");
                 PublicMessage("7DTDManager Servercommands {0} online. See /help for commands", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString());
             }
             line += Convert.ToString(e.Data);
@@ -141,7 +142,7 @@ namespace _7DTDManager
             // Check if someone is online and near a tracked area (e.g. shop )
             if (allPlayers.OnlinePlayers > 0)
             {
-                if (PositionManager.SomeoneNearTrackable())
+                if (PositionManager.Instance.SomeoneNearTrackable())
                 {
                     pollTimer.Interval = Program.Config.PositionInterval;
                     logger.Trace("Someone near trackable Area new Poll Intervall {0}", Program.Config.PositionInterval);

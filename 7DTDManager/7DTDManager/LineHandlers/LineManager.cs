@@ -1,4 +1,5 @@
 ﻿using _7DTDManager.Interfaces;
+using _7DTDManager.Objects;
 using NLog;
 using System;
 using System.Collections.Generic;
@@ -14,10 +15,10 @@ namespace _7DTDManager.Commands
     {
         static Logger logger = LogManager.GetCurrentClassLogger();
 
-        static List<IServerLineHandler> allHandlers = new List<IServerLineHandler>();
-        static List<string> loadedDLLs = new List<string>();
+        static List<IServerLineHandler> allHandlers = new List<IServerLineHandler>();       
 
         public static object lockObject = new Object();
+        static bool WasInitialized = false;
 
         static LineManager()
         {
@@ -28,42 +29,21 @@ namespace _7DTDManager.Commands
         {
             lock (lockObject)
             {
-                RegisterLineHandlers(System.Reflection.Assembly.GetExecutingAssembly(), serverConnection);
+                if (!WasInitialized)
+                {
+                    RegisterLineHandlers(System.Reflection.Assembly.GetExecutingAssembly(), serverConnection);
+                    LoadLineHandlers(serverConnection);
+                }
+                WasInitialized = true;
             }
         }
 
         public static void LoadLineHandlers(IServerConnection serverConnection)
         {
-            logger.Info("Loading LineHandlers ...");
-            String path = System.IO.Path.Combine(Program.ApplicationDirectory, "ext");
-            if (!Directory.Exists(path))
-            {
-                Directory.CreateDirectory(path);
-            }
-
-            foreach (var file in Directory.EnumerateFiles(path, "*.dll"))
-            {
-                try
-                {
-                    if (loadedDLLs.Contains(file))
-                        continue;
-                    Assembly x = Assembly.LoadFile(file);
-                    /*
-                    if (x.FullName.Contains("PublicKeyToken=null"))
-                    {
-                        logger.Warn("Assembly {0} has no strong name. Loading skipped....", x.FullName);
-                        x = null;
-                        continue;
-                    }*/
-                    logger.Info("Loading Commands from {0}", x.FullName);
-                    RegisterLineHandlers(x,serverConnection);
-                    loadedDLLs.Add(file);
-
-                }
-                catch (Exception ex)
-                {
-                    logger.Error("Error loading {0}: {1}", file, ex.ToString());
-                }
+            logger.Info("Loading LineHandlers ...");           
+            foreach (var assembly in ExtensionManager.AllExtensions)
+            {                                  
+                    RegisterLineHandlers(assembly,serverConnection);                                   
             }
         }
 
@@ -75,11 +55,18 @@ namespace _7DTDManager.Commands
                 {
                     if (t.IsAbstract)
                         continue;
-                    logger.Info("Loading LineHandler {0} from {1}", t.FullName, x.FullName);
-                    IServerLineHandler ex = Activator.CreateInstance(t) as IServerLineHandler;
-                    ILogger l = LogManager.GetLogger(t.ToString(), typeof(ExtensionLogger)) as ILogger;
-                    ex.Init(serverConnection,l);
-                    allHandlers.Add(ex);                                        
+                    try
+                    {
+                        logger.Info("Loading LineHandler {0} from {1}", t.FullName, x.FullName);
+                        IServerLineHandler ex = Activator.CreateInstance(t) as IServerLineHandler;
+                        ILogger l = LogManager.GetLogger(t.ToString(), typeof(ExtensionLogger)) as ILogger;
+                        ex.Init(serverConnection, l);
+                        allHandlers.Add(ex);
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.Error("Error loading {0}: {1}", t.ToString(), ex.ToString());
+                    }
                 }
             }
         }
