@@ -83,14 +83,14 @@ namespace _7DTDManager
                     }
                     else
                     {
-                        /*
-                         string[] largs = cline.ToLowerInvariant().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                        if (!CommandManager.AllCommands.ContainsKey(largs[0]))
+                        
+                       
+                        if (cline.StartsWith("#"))
                         {
                             Program.Server.Execute(cline);
                             continue;
                         }
-                         * */
+                         
                         _7DTDManager.LineHandlers.lineServerCommand c = new _7DTDManager.LineHandlers.lineServerCommand();
                         c.ProcessLine(Program.Server, "INF GMSG: Server: /" + cline);
                         //bool res = cmd.Execute(Server, ServerPlayer, largs);

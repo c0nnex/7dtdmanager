@@ -35,7 +35,7 @@ namespace _7DTDManager
 
         // Set to true to have nothing send to the server but lp command
 #if DEBUG
-        private bool _Testing = true;
+        private bool _Testing = false;
 #else
         private bool _Testing = false;
 #endif

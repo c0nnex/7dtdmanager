@@ -43,7 +43,7 @@ namespace _7DTDManager.Commands
                 }
                 startitem--;
             }
-            p.Message(String.Format("{0,3} {1,-15} {2,5} {3,5}", "#", Localizer.Localize(p, "R:Shop.Item.Name"), Localizer.Localize(p, "R:Shop.Item.Price"), Localizer.Localize(p, "R:Shop.Item.Stock")).Replace(' ', (Char)160));
+            p.Message(String.Format("{0,3} {1,-15} {2,5} {3,5}", "#", p.Localize("R:Shop.Item.Name"), p.Localize("R:Shop.Item.Price"), p.Localize("R:Shop.Item.Stock")).Replace(' ', (Char)160));
 
             for (int i = startitem*5; i < (startitem+1)*5; i++)
             {
@@ -64,7 +64,7 @@ namespace _7DTDManager.Commands
             {
                 p.Confirm(shop.ShopName);
 
-                p.Message(String.Format("{0,3} {1,-15} {2,5} {3,5}", "#", Localizer.Localize(p, "R:Shop.Item.Name"), Localizer.Localize(p, "R:Shop.Item.Price"), Localizer.Localize(p, "R:Shop.Item.Stock")).Replace(' ', (Char)160));
+                p.Message(String.Format("{0,3} {1,-15} {2,5} {3,5}", "#", p.Localize("R:Shop.Item.Name"), p.Localize( "R:Shop.Item.Price"), p.Localize("R:Shop.Item.Stock")).Replace(' ', (Char)160));
 
                 for (int i = 0; i < shop.ShopItems.Count; i++)
                 {
