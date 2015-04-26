@@ -26,20 +26,20 @@ namespace _7DTDManager.LineHandlers
         {
             if (rgLLPStart.IsMatch(currentLine)) // Start of ListLandProtections deteced
             {
-                PriorityProcess = true;               
+                PriorityProcess = true;
 
                 if (IsFirst)
+                {
                     countStones = 0;
-
-                if (currentPlayer != null) // Switch to Next Player
-                    CleanupProtections();
-
+                    found = new List<IAreaDefiniton>();  
+                }
+                
                 Match match = rgLLPStart.Match(currentLine);
                 GroupCollection groups = match.Groups;
 
                 IPlayer p = serverConnection.AllPlayers.FindPlayerBySteamID(groups["steamid"].Value);
                 currentPlayer = p;
-                found = new List<IAreaDefiniton>();  
+                
                 if (p != null)
                 {
                     logger.Debug("Parsing LandProtections of {0}", p.Name);                                      
@@ -82,23 +82,30 @@ namespace _7DTDManager.LineHandlers
                 {
                     logger.Warn("Number mismatch in ListLandProtection! {0} != {1}",targetNum,countStones);
                 }
-                if (currentPlayer != null) // Switch to Next Player
-                    CleanupProtections();
+                logger.Info("LandProtection Parsing done.");                
+                CleanupProtections(serverConnection);
                 serverConnection.AllPlayers.Save(true);
                 return true;
             }
             return false;
         }
 
-        private void CleanupProtections()
+        private void CleanupProtections(IServerConnection server)
         {
-            foreach (var item in currentPlayer.LandProtections.Items)
+            foreach (var checkPlayer in server.AllPlayers.Players)
             {
-                IAreaDefiniton protection = (from p in found where p.Center == item.Center select p).FirstOrDefault();
-                if (protection == null)
+                IAreaDefiniton[] oldList = checkPlayer.LandProtections.Items.ToArray();
+                foreach (var item in oldList)
                 {
-                    item.OnDestroy();
+                    IAreaDefiniton protection = (from p in found where p.Center == item.Center select p).FirstOrDefault();
+                    if (protection == null)
+                    {
+                        logger.Info("KeyStone {0} ({1}) destroyed ({2})", item.Identifier, item.Center.ToString(), checkPlayer.Name);
+                        item.OnDestroy();
+                        currentPlayer.LandProtections.Remove(item);
+                    }
                 }
+                
             }
         }
        
