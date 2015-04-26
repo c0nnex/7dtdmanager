@@ -116,5 +116,11 @@ namespace _7DTDManager.ShopSystem
         {
             get { return ShopPosition; }
         }
+
+
+        public IShopHandler GetShopHandler()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

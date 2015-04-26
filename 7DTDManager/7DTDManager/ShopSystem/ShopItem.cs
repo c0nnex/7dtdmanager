@@ -106,6 +106,12 @@ namespace _7DTDManager.ShopSystem
         {
             get { return Shop; }
         }
+
+
+        IShopHandler IShopItem.ShopHandler
+        {
+            get { return Program.Config.ShopHandlers[HandlerName]; }
+        }
     }
 
     

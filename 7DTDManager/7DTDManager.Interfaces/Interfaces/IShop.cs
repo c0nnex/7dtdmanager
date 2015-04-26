@@ -17,6 +17,8 @@ namespace _7DTDManager.Interfaces
         int SellPrice { get;set; }
         int StockAmount { get;set; }
         int TotalSold { get;set; }
+
+        IShopHandler ShopHandler { get; }
     }
 
     public interface IShop
@@ -37,6 +39,7 @@ namespace _7DTDManager.Interfaces
         int TotalSales { get;set; }
 
         bool IsOpen();
+        IShopHandler GetShopHandler();
     }
 
     

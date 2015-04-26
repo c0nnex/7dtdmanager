@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace _7DTDManager.ShopSystem
 {
-    public abstract class ShopHandler
+    public abstract class ShopHandler : IShopHandler
     {
         public string HandlerName { get; set; }
         public string Error { get; set; }
