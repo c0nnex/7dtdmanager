@@ -1,5 +1,19 @@
 7DTDManager Changelog
 
+1.5
+* Added shop support ( see https://github.com/c0nnex/7dtdmanager/wiki/Shops )
+* Add localization support. Players can set their language ( Command: /language )
+* Finalized Extensions-Support
+* add /mail to send messages to offline players
+* removed sell-command until a way i found to move items from the playes inventory
+* Added alias-support for commands (configurable in the config)
+* New Configuration options see ( https://github.com/c0nnex/7dtdmanager/wiki/Configuration )
+* Added proxy-support for admins. /proyx [target] will make you execute all commands as the target. /proxy none to clear it again.
+* Added Pinglimit options: If ping > limit -> KICK , if 5 (default) times kicked -> BAN
+
+1.4
+Non Public release
+
 1.3.4
 * Fixed say/pm for Alpha 11.3
 
