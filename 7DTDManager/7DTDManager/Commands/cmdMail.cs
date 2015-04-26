@@ -29,7 +29,7 @@ namespace _7DTDManager.Commands
                     p.Confirm("R:Mail.InboxEmpty");
                 return true;
             }
-            if (args[1] == "read")
+            if (args[1] == p.Localize("R:read"))
             {
                 if (p.Mailbox.Mails.Count <= 0)
                 {

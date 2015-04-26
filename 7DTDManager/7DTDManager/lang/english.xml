@@ -40,7 +40,8 @@
     <TranslatedMessage Key="Cmd.Stats.Help">Show your stats</TranslatedMessage>
     <TranslatedMessage Key="Cmd.Stats.StatsFor">Stats for {0}:</TranslatedMessage>
     <TranslatedMessage Key="Cmd.Stats.AgeCoins">Age: {0} Coins: {1}</TranslatedMessage>
-    <TranslatedMessage Key="Cmd.Stats.BountyCollected">Bounties collected: {0} coins Bloodmoney collected: {1} coins</TranslatedMessage>
+    <TranslatedMessage Key="Cmd.Stats.SessionAge">Online: {0}</TranslatedMessage>
+    <TranslatedMessage Key="Cmd.Stats.BountyCollected">Bounties collected: {0} Bloodcoins collected: {1} </TranslatedMessage>
     <TranslatedMessage Key="Cmd.Stats.Travel">You travelled {0} km so far.</TranslatedMessage>
     <TranslatedMessage Key="Cmd.Stats.Bounty">Bounty on your head: {0} coins</TranslatedMessage>
     <TranslatedMessage Key="Cmd.Transfer.Command">transfer</TranslatedMessage>
@@ -88,6 +89,9 @@
     <TranslatedMessage Key="events">events</TranslatedMessage>
     <TranslatedMessage Key="list">list</TranslatedMessage>
     <TranslatedMessage Key="buy">buy</TranslatedMessage>
+    <TranslatedMessage Key="no">NO</TranslatedMessage>
+    <TranslatedMessage Key="destroyed">Destroyed</TranslatedMessage>
+    <TranslatedMessage Key="read">read</TranslatedMessage>
     <TranslatedMessage Key="Bounty.AddedBounty">A bounty of {0} coins has been set on your head. Total bounty: {1}</TranslatedMessage>
     <TranslatedMessage Key="Mail.Inbox">You have {0} unread mail(s). Use '/mail read' to read them.</TranslatedMessage>
     <TranslatedMessage Key="Mail.InboxEmpty">You have no unread mail.</TranslatedMessage>
