@@ -4,8 +4,8 @@ namespace _7DTDManager.Interfaces
 
     public delegate void AreaEventDelegate(IAreaDefiniton area, AreaEventArgs e);
 
-    public interface IAreaDefiniton
-    {
+    public interface IAreaDefiniton : IIdentifyable
+    {        
         IPosition Center { get; }
         double SizeX { get; }
         double SizeZ { get; }

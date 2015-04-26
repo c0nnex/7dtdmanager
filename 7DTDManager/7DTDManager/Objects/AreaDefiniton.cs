@@ -17,7 +17,7 @@ namespace _7DTDManager.Objects
 
         public AreaDefiniton()
         {
-
+            Identifier = Guid.NewGuid().ToString("D");
         }
 
         public AreaDefiniton(IPosition center, double size = 10)
@@ -66,5 +66,8 @@ namespace _7DTDManager.Objects
             if (handler != null)
                 handler(this, new AreaEventArgs(null, AreaEventType.Destroyed));
         }
+
+        public string Identifier { get; set; }
+        
     }
 }
