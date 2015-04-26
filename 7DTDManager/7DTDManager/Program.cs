@@ -69,11 +69,16 @@ namespace _7DTDManager
             MessageLocalizer.SaveTranslation();
 
             Server = new Manager();
-
+            
+            PlayersManager.Init();
+            
             ExtensionManager.LoadExtensions(Server);
 
+            PlayersManager.Load();
+
             CommandManager.Init();
-            PositionManager.Init();            
+            PositionManager.Init();
+
             
             PlayersManager.Instance.RegisterPlayers();
 
@@ -92,9 +97,9 @@ namespace _7DTDManager
                     {
                         
                        
-                        if (cline.StartsWith("#"))
+                        if (cline.StartsWith("!"))
                         {
-                            Program.Server.Execute(cline);
+                            Program.Server.Execute(cline.Substring(1));
                             continue;
                         }
                          
