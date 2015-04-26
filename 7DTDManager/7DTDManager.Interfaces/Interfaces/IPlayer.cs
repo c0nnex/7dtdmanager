@@ -13,6 +13,7 @@ namespace _7DTDManager.Interfaces
         string IPAddress { get; }
         string Language { get;  }
         int Age { get; }
+        int SessionAge { get; }
         int Ping { get; }
         
 

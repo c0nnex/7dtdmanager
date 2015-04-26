@@ -38,6 +38,7 @@ namespace _7DTDManager.Players
         public Int32 BountyCollected { get; set; }
         public Int32 BloodCoins { get; set; }
         public Int32 Age { get; set; }
+        public Int32 SessionAge { get; set; }
         public Int32 Spent { get; set; }
         public double DistanceTravelled { get; set; }
         public Position CurrentPosition { get; set; }
@@ -194,6 +195,8 @@ namespace _7DTDManager.Players
                 {
                     double distance = 0.0;
 
+                    SessionAge += span.Minutes;
+
                     if ((LastPaydayPosition != Position.InvalidPosition) && (CurrentPosition != Position.InvalidPosition))
                     {
                         distance = CurrentPosition.Distance(LastPaydayPosition);
@@ -202,6 +205,7 @@ namespace _7DTDManager.Players
                             logger.Info("{0} NO payday Distance: {1} / {2}", Name, distance, Program.Config.MinimumDistanceForPayday);
                             LastPaydayPosition = CurrentPosition;
                             LastPayday = DateTime.Now;
+                            OnChanged();
                             return;
                         }
                     }
