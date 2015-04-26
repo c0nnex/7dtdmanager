@@ -15,6 +15,8 @@ namespace _7DTDManager.Objects
     {
         static Logger logger = LogManager.GetCurrentClassLogger();
         public static List<Assembly> AllExtensions = new List<Assembly>();
+        public static List<IExtension> AllExtensionInterfaces = new List<IExtension>();
+
         static List<string> loadedDLLs = new List<string>();
 
         public static void LoadExtensions(IServerConnection server)
@@ -53,6 +55,7 @@ namespace _7DTDManager.Objects
                             ex.InitializeExtension(server, l);
                             logger.Info("Extension {0} Author {1} WebSite {2} Version {3}", ex.Name, ex.Author, ex.WebSite, ex.Version);
                             AllExtensions.Add(x);
+                            AllExtensionInterfaces.Add(ex);
                             loadedDLLs.Add(file);
                             break;
                         }

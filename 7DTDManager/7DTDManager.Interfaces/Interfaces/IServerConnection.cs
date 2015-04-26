@@ -14,6 +14,7 @@ namespace _7DTDManager.Interfaces
         IConfiguration Configuration { get; }
         IPositionManager PositionManager { get; }
         IShop             GlobalShop { get; }
+        IReadOnlyList<IExtension> AllExtensions { get; }
 
         bool IsConnected { get; }
         bool CommandsDisabled { get; set; }

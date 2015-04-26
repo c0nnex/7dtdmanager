@@ -101,5 +101,11 @@ namespace _7DTDManager
                 return Program.Config.GlobalShop;
             }
         }
+
+
+        public IReadOnlyList<IExtension> AllExtensions
+        {
+            get { return ExtensionManager.AllExtensionInterfaces; }
+        }
     }
 }

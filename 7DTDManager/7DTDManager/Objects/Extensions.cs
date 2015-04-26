@@ -37,6 +37,18 @@ namespace _7DTDManager.Objects
             return field;
         }
 
-        
+        public static string Green(this string str)
+        {
+            return String.Format("[00FF00]{0}[FFFFFF]", str);
+        }
+
+        public static string Red(this string str)
+        {
+            return String.Format("[FF0000]{0}[FFFFFF]", str);
+        }
+        public static string Url(this string str)
+        {
+            return String.Format("[url]{0}[/url]", str);
+        }
     }
 }
