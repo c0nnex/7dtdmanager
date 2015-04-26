@@ -36,7 +36,7 @@ namespace _7DTDManager.Commands
             TimeSpan t = TimeSpan.FromMinutes(targetPlayer.Age);
             TimeSpan s = TimeSpan.FromMinutes(targetPlayer.SessionAge);
             p.Message("R:Cmd.Stats.AgeCoins", t.ToString(p), targetPlayer.zCoins);
-            p.Message("R:Cmd.Stats.SessionAge", t.ToString(p), targetPlayer.zCoins);
+            p.Message("R:Cmd.Stats.SessionAge", s.ToString(p), targetPlayer.zCoins);
             p.Message("R:Cmd.Stats.BountyCollected", targetPlayer.BountyCollected, targetPlayer.BloodCoins);
             if (targetPlayer.DistanceTravelled > 0)
                 p.Message("R:Cmd.Stats.Travel", (int)(targetPlayer.DistanceTravelled / 1000.0));
