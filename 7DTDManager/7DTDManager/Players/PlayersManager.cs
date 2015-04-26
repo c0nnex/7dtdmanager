@@ -100,22 +100,27 @@ namespace _7DTDManager.Players
             try
             {
                 Directory.CreateDirectory(ProfilePath);
-
+                logger.Info("Loading Players....");
                 //XmlSerializer<PlayersManager> serializer = new XmlSerializer<PlayersManager>(new XmlSerializationOptions(null, Encoding.UTF8, null, true).DisableRedact(),null);
                 XmlSerializer serializer = new XmlSerializer(typeof(PlayersManager));
                 StreamReader reader = new StreamReader(Path.Combine(ProfilePath, "players.xml"));
                 PlayersManager p = (PlayersManager)serializer.Deserialize(reader);
                 reader.Close();
                 if (p.players == null)
-                    p.players = new List<Player>();                
-                PlayersManager.Instance = p;
-                return p;
+                    Instance.players = new List<Player>();
+                else
+                    Instance.players = p.players;               
+                return Instance;
             }
-            catch (IOException ex)
+            catch (Exception ex)
             {
-                logger.Info("Problem loading players");
-                logger.Info(ex.ToString());
-                return new PlayersManager();
+                if (!(ex is IOException))
+                {
+                    logger.Error("Problem loading players");
+                    logger.Error(ex.ToString());
+                }
+                Instance.players = new List<Player>();
+                return Instance;
             }
         }
 
@@ -138,7 +143,7 @@ namespace _7DTDManager.Players
                 if ((!IsDirty) && (!force))
                     return;
                 IsDirty = false;
-                logger.Trace("Saving Players.");
+                logger.Info("Saving Players...");
                 Directory.CreateDirectory(ProfilePath);
                 OnPlayerSave();
                /* XmlSerializer<PlayersManager> serializer = new XmlSerializer<PlayersManager>(
@@ -183,9 +188,17 @@ namespace _7DTDManager.Players
 
         public void OnAreaInitialize(IAreaDefiniton area,IPlayer p)
         {
-            AreaEventDelegate handler = AreaInitialize;
-            if (handler != null)
-                handler(area, new AreaEventArgs(p, AreaEventType.Init));
+            try
+            {
+                logger.Info("AreaInitialize {0} {1}", area.Identifier, p.SteamID);
+                AreaEventDelegate handler = AreaInitialize;
+                if (handler != null)
+                    handler(area, new AreaEventArgs(p, AreaEventType.Init));
+            }
+            catch (Exception ex)
+            {
+                logger.Error("OnAreaInitialize: {0}", ex.ToString());
+            }
         }
 
         public void OnPlayerSave()
