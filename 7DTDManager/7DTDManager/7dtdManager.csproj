@@ -160,7 +160,7 @@
     <Content Include="lang\english.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="lang\Svenska.xml">
+    <Content Include="lang\svenska.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Licences\NLog-2.0-Mono2-License.txt">

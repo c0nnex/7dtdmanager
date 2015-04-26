@@ -52,7 +52,7 @@ namespace _7DTDManager
 
         public IPlayersManager AllPlayers
         {
-            get { return allPlayers as IPlayersManager; }
+            get { return PlayersManager.Instance; }
         }
 
         public IPosition CreatePosition(string pos)

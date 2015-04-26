@@ -26,8 +26,7 @@ namespace _7DTDManager
     {
         static Logger logger = LogManager.GetCurrentClassLogger();
 
-        EventDrivenTCPClient serverConnection = null;
-        private PlayersManager allPlayers = new PlayersManager();
+        EventDrivenTCPClient serverConnection = null;        
         private System.Timers.Timer pollTimer = null;
 
         DateTime lastPayday = DateTime.Now;
@@ -47,12 +46,7 @@ namespace _7DTDManager
             pollTimer.AutoReset = true;
             pollTimer.Elapsed += pollTimer_Elapsed;            
         }
-
-        public void Init()
-        {
-            allPlayers = PlayersManager.Load();
-        }
-
+       
         internal bool Connect()
         {
             try
@@ -108,8 +102,8 @@ namespace _7DTDManager
             if (bIsFirst) // First Receive, we assume password. This is lazy i know!
             {
                 serverConnection.WriteLine(Program.Config.ServerPassword);
-                bIsFirst = false;               
-                Execute("allitems");
+                bIsFirst = false;
+                CalloutManager.AddCallout(new ServerCommandCallout("allitems"), TimeSpan.FromSeconds(30), false);
                 Execute("lp");
                 PublicMessage("7DTDManager Servercommands {0} online. See /help for commands", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString());
             }
@@ -140,7 +134,7 @@ namespace _7DTDManager
             pollTimer.Interval = Program.Config.PollInterval;
 
             // Check if someone is online and near a tracked area (e.g. shop )
-            if (allPlayers.OnlinePlayers > 0)
+            if (PlayersManager.Instance.OnlinePlayers > 0)
             {
                 if (PositionManager.Instance.SomeoneNearTrackable())
                 {
@@ -165,15 +159,15 @@ namespace _7DTDManager
 
             if (span.Minutes > Program.Config.PaydayInterval)
             {
-                if (allPlayers.OnlinePlayers > 0)
+                if (PlayersManager.Instance.OnlinePlayers > 0)
                 {
                     logger.Info("Payday!");
-                    allPlayers.Payday();
+                    PlayersManager.Instance.Payday();
                 }
                 lastPayday = DateTime.Now;
             }
 
-            if ( (serverConnection.ConnectionState == ConnectionStatus.Connected) && (allPlayers.OnlinePlayers > 0))
+            if ((serverConnection.ConnectionState == ConnectionStatus.Connected) && (PlayersManager.Instance.OnlinePlayers > 0))
             {
                 span = DateTime.Now - lastLP;
                 if (span.TotalMilliseconds > Program.Config.PositionInterval)
@@ -185,7 +179,7 @@ namespace _7DTDManager
                     catch
                     {
                         logger.Info("Server Disconnected... Trying to reconnect");
-                        allPlayers.Save();
+                        PlayersManager.Instance.Save();
                     }
                     lastLP = DateTime.Now;
                 }
@@ -200,7 +194,7 @@ namespace _7DTDManager
                 string currentLine = linesToProcess.Dequeue();
                 LineManager.ProcessLine(this, currentLine);
             }
-            allPlayers.Save();
+            PlayersManager.Instance.Save();
         }
 
         
@@ -218,6 +212,23 @@ namespace _7DTDManager
         {
             Dispose(true);
             GC.SuppressFinalize(this);
+        }
+    }
+
+    public class ServerCommandCallout : ICalloutCallback
+    {
+        public string Command;       
+
+        public ServerCommandCallout(string cmd)
+        {
+            Command = cmd;
+        }
+
+
+        public bool CalloutCallback(ICallout c, IServerConnection serverConnection)
+        {
+            serverConnection.Execute(Command);
+            return false;
         }
     }
 }

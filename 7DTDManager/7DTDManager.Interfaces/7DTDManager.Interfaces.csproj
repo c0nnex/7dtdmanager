@@ -53,6 +53,7 @@
     <Compile Include="HelperClasses\ExposedList.cs" />
     <Compile Include="HelperClasses\Extensions.cs" />
     <Compile Include="Interfaces\IExtension.cs" />
+    <Compile Include="Interfaces\IIdentifyable.cs" />
     <Compile Include="Interfaces\IMessageLocalizer.cs" />
     <Compile Include="Interfaces\IAreaDefiniton.cs" />
     <Compile Include="Interfaces\ICallout.cs" />
@@ -68,6 +69,7 @@
     <Compile Include="Interfaces\IServerConnection.cs" />
     <Compile Include="Interfaces\IServerLineHandler.cs" />
     <Compile Include="Interfaces\IShop.cs" />
+    <Compile Include="Interfaces\IShopHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
