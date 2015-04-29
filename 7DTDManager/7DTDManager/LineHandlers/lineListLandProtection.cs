@@ -119,8 +119,8 @@ namespace _7DTDManager.LineHandlers
         public override void Init(IServerConnection serverConnection, ILogger logger) 
         {
             base.Init(serverConnection, logger);
-            // Update LandProtections every 15 Minutes
-            serverConnection.CalloutManager.AddCallout(this, new TimeSpan(0, 5, 0), true);
+            // Update LandProtections every 5 Minutes
+            serverConnection.CalloutManager.AddCallout(this, this, new TimeSpan(0, 5, 0), true);
             serverConnection.Execute("llp");
         }
     }

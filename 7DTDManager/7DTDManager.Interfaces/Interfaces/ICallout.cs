@@ -27,7 +27,7 @@ namespace _7DTDManager.Interfaces
 
     public interface ICalloutManager
     {
-        ICallout AddCallout(ICalloutCallback owner, TimeSpan delay, bool persistant);
+        ICallout AddCallout(object owner, ICalloutCallback callback, TimeSpan delay, bool persistant);
         void RemoveCallout(ICallout callout);
         void RemoveAllCalloutsFor(object owner);
     }

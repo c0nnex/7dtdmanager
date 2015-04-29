@@ -70,7 +70,7 @@ namespace _7DTDManager.ShopSystem
                     NextRestock = DateTime.Now + RestockDelay;
                 }
                 logger.Info("{0}: Start restocking {1}  Delay = {2}", Shop.ShopName,ItemName, RestockDelay.ToString());
-                CalloutManagerImpl.Instance.AddCallout(this, RestockDelay, true);
+                CalloutManagerImpl.Instance.AddCallout(this,this, RestockDelay, true);
               
             }
         }

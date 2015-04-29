@@ -103,7 +103,7 @@ namespace _7DTDManager
             {
                 serverConnection.WriteLine(Program.Config.ServerPassword);
                 bIsFirst = false;
-                CalloutManager.AddCallout(new ServerCommandCallout("allitems"), TimeSpan.FromSeconds(30), false);
+                CalloutManager.AddCallout(this, new ServerCommandCallout("allitems"), TimeSpan.FromSeconds(30), false);
                 Execute("lp");
                 PublicMessage("7DTDManager Servercommands {0} online. See /help for commands", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString());
             }

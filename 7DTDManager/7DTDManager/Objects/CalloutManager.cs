@@ -76,11 +76,11 @@ namespace _7DTDManager.Objects
             UpdateCallouts();
         }
 
-        public ICallout AddCallout(ICalloutCallback owner, TimeSpan delay, bool persistant)
+        public ICallout AddCallout(object owner, ICalloutCallback callback, TimeSpan delay, bool persistant)
         {
             BasicCallout c = new BasicCallout();
             c.When = DateTime.Now + delay;
-            c.Callback = owner;
+            c.Callback = callback;
             c.Owner = owner;
             c.Persistent = persistant;
             c.Delay = delay;
@@ -116,8 +116,8 @@ namespace _7DTDManager.Objects
             {
                 if (Callback != null)
                 {
-                    Callback.CalloutCallback(this, serverConnection);
-                    if (!Persistent)
+                    bool bRepeat = Callback.CalloutCallback(this, serverConnection);
+                    if (!Persistent && !bRepeat)
                         Done = true;
                     else
                         When = DateTime.Now + Delay;
