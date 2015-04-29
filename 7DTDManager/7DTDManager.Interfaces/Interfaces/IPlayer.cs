@@ -69,7 +69,7 @@ namespace _7DTDManager.Interfaces
         bool CanExecute(ICommand cmd);
         int GetCoolDown(ICommand cmd);
         void SetCoolDown(ICommand cmd);
-        void ClearCooldowns();
+        void ClearCooldowns(ICommand cmd = null);
        
         void AddBounty(int howmuch, string why);
         void CollectBounty(int howmuch, string why);

@@ -39,6 +39,7 @@ namespace _7DTDManager.Commands
 
         public static ICommand FindCommand(string command)
         {
+            command = command.ToLowerInvariant();
             if (AllCommands.ContainsKey(command))
                 return AllCommands[command];
             foreach (var cmd in AllCommands.Values)

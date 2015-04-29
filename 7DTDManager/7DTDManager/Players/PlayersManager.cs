@@ -143,7 +143,7 @@ namespace _7DTDManager.Players
                 if ((!IsDirty) && (!force))
                     return;
                 IsDirty = false;
-                logger.Info("Saving Players...");
+                logger.Trace("Saving Players...");
                 Directory.CreateDirectory(ProfilePath);
                 OnPlayerSave();
                /* XmlSerializer<PlayersManager> serializer = new XmlSerializer<PlayersManager>(

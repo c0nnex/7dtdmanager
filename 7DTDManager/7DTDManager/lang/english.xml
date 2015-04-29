@@ -60,7 +60,8 @@
     <TranslatedMessage Key="Cmd.Language.Available">Available languages: {0}</TranslatedMessage>
     <TranslatedMessage Key="Cmd.Language.Current">Current language: {0}</TranslatedMessage>
     <TranslatedMessage Key="Cmd.Language.Unknown">Unknown language '{0}'</TranslatedMessage>
-     <TranslatedMessage Key="Protection.ExpireMsg">Protection for area #{0} will expire in {1}</TranslatedMessage>
+    <TranslatedMessage Key="Cmd.Clearcooldown.Message">{0} cleared your cooldowns: {1}</TranslatedMessage>
+    <TranslatedMessage Key="Protection.ExpireMsg">Protection for area #{0} will expire in {1}</TranslatedMessage>
     <TranslatedMessage Key="Protection.Enter">entered area</TranslatedMessage>
     <TranslatedMessage Key="Protection.Leave">left area</TranslatedMessage>
     <TranslatedMessage Key="Protection.Visit">visited area</TranslatedMessage>
@@ -92,6 +93,7 @@
     <TranslatedMessage Key="no">NO</TranslatedMessage>
     <TranslatedMessage Key="destroyed">Destroyed</TranslatedMessage>
     <TranslatedMessage Key="read">read</TranslatedMessage>
+    <TranslatedMessage Key="all">all</TranslatedMessage>
     <TranslatedMessage Key="Bounty.AddedBounty">A bounty of {0} coins has been set on your head. Total bounty: {1}</TranslatedMessage>
     <TranslatedMessage Key="Mail.Inbox">You have {0} unread mail(s). Use '/mail read' to read them.</TranslatedMessage>
     <TranslatedMessage Key="Mail.InboxEmpty">You have no unread mail.</TranslatedMessage>

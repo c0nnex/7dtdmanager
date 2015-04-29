@@ -15,5 +15,7 @@ namespace _7DTDManager
        public static readonly string ERR_ALLCOMMANDSDISABLED = "R:Error.CommandsDisabled";
        public static readonly string ERR_COMMANDDISABLED = "R:Error.CommandsDisabled";
        public static readonly string ERR_COOLDOWN = "R:Error.Cooldown";
+
+       public static readonly string WORD_ALL = "R:All";
    }
 }

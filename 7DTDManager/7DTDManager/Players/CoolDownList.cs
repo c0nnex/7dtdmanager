@@ -31,10 +31,14 @@ namespace _7DTDManager.Players
                 var t = (from cmds in this where cmds.Command.ToLowerInvariant() == key.ToLowerInvariant() select cmds).FirstOrDefault();
                 if (t == null)
                 {
-                    this.Add(new CommandCoolDown(key.ToLowerInvariant(), value));
+                    if ( value > 0 )
+                        this.Add(new CommandCoolDown(key.ToLowerInvariant(), value));
                     return;
                 }
-                t.LastUsedAge = value;
+                if (value > 0)
+                    t.LastUsedAge = value;
+                else
+                    this.Remove(t);
             }
         }
     }

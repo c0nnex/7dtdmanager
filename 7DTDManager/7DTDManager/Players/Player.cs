@@ -325,9 +325,9 @@ namespace _7DTDManager.Players
             if (cmd.CommandCoolDown <= 0)
                 return 0;
 
-            if (CommandCoolDowns.ContainsCommand(cmd.CommandName))
+            if (CommandCoolDowns.ContainsCommand(MessageLocalizer.GetDefaultLocalization(cmd.CommandName)))
             {
-                timePassed = Age - CommandCoolDowns[cmd.CommandName];
+                timePassed = Age - CommandCoolDowns[MessageLocalizer.GetDefaultLocalization(cmd.CommandName)];
                 return (timePassed > cmd.CommandCoolDown) ? 0 : cmd.CommandCoolDown - timePassed;
             }
             return 0;
@@ -337,7 +337,7 @@ namespace _7DTDManager.Players
         {
             if (cmd.CommandCoolDown <= 0)
                 return;
-            CommandCoolDowns[cmd.CommandName] = Age;
+            CommandCoolDowns[MessageLocalizer.GetDefaultLocalization(cmd.CommandName)] = Age;
         }
 
         [XmlIgnore]
@@ -353,9 +353,12 @@ namespace _7DTDManager.Players
         }
 
 
-        public void ClearCooldowns()
+        public void ClearCooldowns(ICommand cmd = null)
         {
-            CommandCoolDowns.Clear();
+            if ( cmd == null )
+                CommandCoolDowns.Clear();
+            else
+                CommandCoolDowns[MessageLocalizer.GetDefaultLocalization(cmd.CommandName)] = 0;
         }
 
         public virtual void Message(string p, params object[] args)

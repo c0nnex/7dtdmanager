@@ -102,7 +102,7 @@ namespace _7DTDManager.LineHandlers
                     {
                         logger.Info("KeyStone {0} ({1}) destroyed ({2})", item.Identifier, item.Center.ToString(), checkPlayer.Name);
                         item.OnDestroy();
-                        currentPlayer.LandProtections.Remove(item);
+                        currentPlayer.LandProtections.Remove(item); //TODO: Does not remove item?
                     }
                 }
                 
