@@ -487,6 +487,34 @@ namespace _7DTDManager.Players
         {
             return MessageLocalizer.Localize(this, key,args);
         }
+
+
+        public string LocalizeLower(string key, params object[] args)
+        {
+            return Localize(Localize(key).ToLowerInvariant(), args);
+        }
+
+
+        public string DynamicUsage(string cmdName, params string[] args)
+        {
+            bool firstarg = true;
+            StringBuilder sb = new StringBuilder();
+            sb.AppendFormat("/{0}", LocalizeLower(cmdName));
+            if ((args != null) && (args.Length > 0))
+            {
+                sb.Append(" ");
+                foreach (var item in args)
+                {
+                    if (!firstarg)
+                    {
+                        sb.Append("|");
+                    }
+                    sb.Append( LocalizeLower(item));
+                    firstarg = false;
+                }
+            }
+            return sb.ToString();
+        }
     }
 
     public class PingTracker

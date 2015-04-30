@@ -86,6 +86,8 @@ namespace _7DTDManager.Interfaces
         void SetIPAddress(string ip);
         void SetLanguage(string lang);
         string Localize(string key, params object[] args);
+        string LocalizeLower(string key, params object[] args);
+        string DynamicUsage(string cmdName, params string[] args);
     }
 
     public class PlayerMovementEventArgs : EventArgs
