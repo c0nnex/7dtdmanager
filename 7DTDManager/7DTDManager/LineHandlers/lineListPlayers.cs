@@ -15,7 +15,7 @@ namespace _7DTDManager.LineHandlers
         static Regex rgLPLine = new Regex("^[0-9]+. id=(?<enityid>[0-9]+), (?<name>.*), pos=\\((?<pos>.*)\\), rot=.*, deaths=(?<deaths>[0-9]+), zombies=(?<zombies>[0-9]+), players=(?<players>[0-9]+), score=.*, steamid=(?<steamid>[0-9]+), ip=(?<ip>.*), ping=(?<ping>[0-9]+)");
         static Regex rgLPEnd = new Regex("Total of (?<numplayers>[0-9]+) in the game");
 
-        private List<IPlayer> found = null;
+        private List<IPlayer> found = new List<IPlayer>();
         bool IsFirst = true;
         int countPlayers = 0;
 
