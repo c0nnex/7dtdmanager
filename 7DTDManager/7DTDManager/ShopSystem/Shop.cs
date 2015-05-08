@@ -53,9 +53,10 @@ namespace _7DTDManager.ShopSystem
 
             foreach (var item in ShopItems)
             {
-                item.Shop = null;
+               
                 if (ShopRestocks)
                     item.StopRestocking();
+                item.Shop = null;
             }
 
         }
