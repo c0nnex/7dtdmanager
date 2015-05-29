@@ -105,6 +105,7 @@ namespace _7DTDManager.Players
             ZombieKills = 0;
             PlayerKills = 0;
             Ping = 0;
+            SessionAge = 0;
             CurrentPosition = Position.InvalidPosition;
             HomePosition = Position.InvalidPosition;
             LastPaydayPosition = Position.InvalidPosition;
@@ -156,6 +157,7 @@ namespace _7DTDManager.Players
                 LastPlayerKills = PlayerKills;
                 LastZombieKills = ZombieKills;
                 CurrentPosition = Position.InvalidPosition;
+                SessionAge = 0;
                 if (!String.IsNullOrEmpty(Program.Config.MOTD))
                     CalloutManagerImpl.RegisterCallout(new MessageCallout(this, CalloutType.Error, Program.Config.MOTD));
                 CalloutManagerImpl.RegisterCallout(new MessageCallout(this, new TimeSpan(0, 0, 90), CalloutType.Error, Program.HELLO));
