@@ -4,7 +4,6 @@ Headless 7 Days to Die Manager. Supports Windows and Linux (Mono)
 * You will need to have Alloc's Fixes running on the server ( https://7dtd.illy.bz/ )
 * See the wiki ( https://github.com/c0nnex/7dtdmanager/wiki ) for further information.
 
-For Discussions/Feedback please use the forum at http://fsgs.com/forums/ .
 
 ## Linux
 
