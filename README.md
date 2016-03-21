@@ -6,11 +6,6 @@ Headless 7 Days to Die Manager. Supports Windows and Linux (Mono)
 
 For Discussions/Feedback please use the forum at http://fsgs.com/forums/ .
 
-To see it in action you can head to my "7 Days to Die" Server at
-```
-81.169.234.52:25000
-```
-
 ## Linux
 
 You will need a full mono installation to run 7dtdmanager on your linux box:
